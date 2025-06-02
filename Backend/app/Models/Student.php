@@ -15,6 +15,8 @@ class Student extends Model
         'last_name',
     ];
 
+
+
     public function subjects()
     {
         return $this->belongsToMany(Subject::class);

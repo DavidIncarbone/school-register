@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\StudentResource;
+use App\Models\Student;
 use Illuminate\Http\Request;
 
 class StudentController extends Controller
@@ -11,7 +13,14 @@ class StudentController extends Controller
      */
     public function index()
     {
-        return "index";
+
+        $students = Student::all();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Richiesta effettuata con successo',
+            'data' => new StudentResource($students),
+        ], 200);
     }
 
     /**
