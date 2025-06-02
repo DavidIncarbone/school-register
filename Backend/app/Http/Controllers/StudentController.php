@@ -35,11 +35,7 @@ class StudentController extends Controller
 
         $students = $query->paginate(30);
 
-        //  return response()->json([
-        //     'success' => true,
-        //     'message' => 'Richiesta effettuata con successo',
-        //     'data' => $students,
-        // ], 200);
+
         return response()->json($students);
     }
 

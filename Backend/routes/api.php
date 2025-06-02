@@ -8,5 +8,5 @@ Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::apiResource("/students", StudentController::class)->middleware(['auth:sanctum']);
-// Route::apiResource("/students", StudentController::class);
+// Route::apiResource("/students", StudentController::class)->middleware(['auth:sanctum']);
+Route::apiResource("/students", StudentController::class);
