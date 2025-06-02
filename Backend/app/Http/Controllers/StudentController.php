@@ -13,8 +13,6 @@ class StudentController extends Controller
      */
     public function index()
     {
-
-
         // * SIMULAZIONE
         // 1. ricavare lo user loggato tramite request()
         // !  $user = request()->user();
