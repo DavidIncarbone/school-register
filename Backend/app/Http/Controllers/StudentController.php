@@ -15,9 +15,45 @@ class StudentController extends Controller
     {
 
 
+        // * SIMULAZIONE
         // 1. ricavare lo user loggato tramite request()
-        $user = request()->user();
+        // !  $user = request()->user();
+        $user = "utente autenticato";
+        $userType = "student";
         // 2. interpolare la query degli student in base al tipo di utente (student, teacher, admin)
+        if ($userType == "student") {
+            return response()->json([
+                'success' => true,
+                'message' => 'Richiesta effettuata con successo',
+                'data' => Student::where('tax_id', $user->tax_id)->first(),
+            ], 200);
+        } elseif ($userType == "teacher") {
+            $fields = request()->validate([
+                "course_id" => "required|integer|min:1",
+                "last_name" => "string|max:100"
+            ]);
+
+            $query = Student::query();
+
+            if (isset($fields['last_name'])) {
+                $query->where("last_name", "like", $fields['last_name'] . "%");
+            }
+            if (isset($fields['course_id'])) {
+                $query->where("course_id", $fields['course_id']);
+            }
+            $students = $query->get();
+            return response()->json([
+                'success' => true,
+                'message' => 'Richiesta effettuata con successo',
+                'data' => $students,
+            ], 200);
+        } elseif ($userType == "admin") {
+            $students = Student::paginate(30);
+            return $students;
+        } else
+            return response()->json("lohacker", 400);
+
+
 
         $fields = request()->validate([
             "course_id" => "integer|min:1",
