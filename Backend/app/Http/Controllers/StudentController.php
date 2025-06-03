@@ -6,6 +6,7 @@ use App\Http\Resources\StudentResource;
 use App\Models\Student;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class StudentController extends Controller
 {
@@ -17,8 +18,12 @@ class StudentController extends Controller
         // * SIMULAZIONE
         // 1. ricavare lo user loggato tramite request()
         // !  $user = request()->user();
+
+
         $user = request()->user();
+        Log::info($user);
         $userType = $user->type;
+
         // 2. interpolare la query degli student in base al tipo di utente (student, teacher, admin)
         if ($userType == "student") {
             return response()->json([
@@ -28,7 +33,7 @@ class StudentController extends Controller
             ], 200);
         } elseif ($userType == "teacher") {
             $fields = request()->validate([
-                "course_id" => "required|integer|min:1",
+                "course_id" => "integer|min:1",
                 "last_name" => "string|max:100"
             ]);
 
