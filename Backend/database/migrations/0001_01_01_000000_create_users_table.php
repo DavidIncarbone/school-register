@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
+            $table->string("tax_id")->unique();
             $table->enum('type', config('userType'));
             $table->string('name');
             $table->string('email')->unique();

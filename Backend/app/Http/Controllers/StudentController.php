@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\StudentResource;
 use App\Models\Student;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class StudentController extends Controller
@@ -16,8 +17,8 @@ class StudentController extends Controller
         // * SIMULAZIONE
         // 1. ricavare lo user loggato tramite request()
         // !  $user = request()->user();
-        $user = "utente autenticato";
-        $userType = "student";
+        $user = request()->user();
+        $userType = $user->type;
         // 2. interpolare la query degli student in base al tipo di utente (student, teacher, admin)
         if ($userType == "student") {
             return response()->json([
@@ -50,27 +51,6 @@ class StudentController extends Controller
             return $students;
         } else
             return response()->json("lohacker", 400);
-
-
-
-        $fields = request()->validate([
-            "course_id" => "integer|min:1",
-            "last_name" => "string|max:100"
-        ]);
-
-        $query = Student::query();
-
-        if (isset($fields['last_name'])) {
-            $query->where("last_name", "like", $fields['last_name'] . "%");
-        }
-        if (isset($fields['course_id'])) {
-            $query->where("course_id", $fields['course_id']);
-        }
-
-        $students = $query->paginate(30);
-
-
-        return response()->json($students);
     }
 
     /**
@@ -78,7 +58,16 @@ class StudentController extends Controller
      */
     public function store(Request $request)
     {
-        //
+
+        $data = $request->all();
+        $newUser = new User();
+        $newUser->type = $data["type"];
+        $newUser->name = $data["name"];
+        $newUser->email = $data["email"];
+        $newUser->password = $data["password"];
+        $newUser->tax_id = $data["tax_id"];
+
+        $newUser->save();
     }
 
     /**
