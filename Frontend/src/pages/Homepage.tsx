@@ -53,15 +53,21 @@ export default function Homepage() {
 
   useEffect(() => {
     const fetchStudents = async () => {
-      const res = await api.get("/api/students?course_id=10", {
+      const res = await api.get("/api/students?course_id=7", {
         withCredentials: true,
         withXSRFToken: true,
       });
 
       console.log(res.data);
     };
+
+    // const fetchTax = async () => {
+    //   const res = await api.get("/api/teachers");
+    // };
     if (isAuth) {
       console.log("test");
+      //   fetchTax();
+
       fetchStudents();
     }
   }, [isAuth]);
@@ -92,11 +98,12 @@ export default function Homepage() {
             <input
               type="password"
               placeholder="Password"
-              defaultValue="11111111"
+              defaultValue="ciaociao"
               name="password"
               required
             />
           </div>
+
           <button
             className="px-4 py-2 rounded-md border cursor-pointer"
             type="submit"
@@ -134,8 +141,8 @@ export default function Homepage() {
           <input
             type="text"
             placeholder="Tax Id"
-            id="tax_id"
-            name="tax_id"
+            id="tax_code"
+            name="tax_code"
             defaultValue="laboriosam"
             // name="email"
             required

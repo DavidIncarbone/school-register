@@ -2,7 +2,9 @@
 
 namespace Database\Seeders;
 
-
+use App\Models\Course;
+use App\Models\Subject;
+use App\Models\Teacher;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -17,10 +19,12 @@ class DatabaseSeeder extends Seeder
 
         User::factory()->create([
 
-            'name' => 'admin',
+            'name' => 'Luigi Mosca',
             'email' => 'admin@example.com',
-            'password' => '11111111'
+            'password' => 'ciaociao'
         ]);
+
+
 
         $this->call([
             SubjectSeeder::class,
@@ -29,5 +33,18 @@ class DatabaseSeeder extends Seeder
             StudentSeeder::class,
             PresenceSeeder::class,
         ]);
+
+        $subjectsCount = Subject::all()->count();
+        $courseCount = Course::all()->count();
+        $teacher = Teacher::factory()->create([
+
+            "subject_id" => rand(1, $subjectsCount),
+            "first_name" => "Luigi",
+            "last_name" => "Mosca",
+            "email" => "admin@example.com"
+
+        ]);
+
+        $teacher->courses()->attach(rand(1, $courseCount));
     }
 }

@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId("subject_id")->constrained();
             $table->string("first_name");
             $table->string("last_name");
-            $table->string("tax_id")->unique();
+            $table->string("email")->unique();
             $table->timestamps();
         });
     }

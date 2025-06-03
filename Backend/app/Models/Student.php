@@ -12,7 +12,7 @@ class Student extends Model
 
     protected $fillable = [
         'course_id',
-        'tax_id',
+        'tax_code',
         'first_name',
         'last_name',
     ];

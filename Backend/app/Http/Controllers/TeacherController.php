@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Teacher;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class TeacherController extends Controller
 {
@@ -12,23 +13,35 @@ class TeacherController extends Controller
      */
     public function index()
     {
-        //
+        $fields = request()->validate([
+            "tax_code" => ["required", "string", "max:50"]
+        ]);
+
+        Log::info($fields);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Richiesta effettuata con successo',
+            'data' => Teacher::where("tax_code", $fields["tax_code"])->with("courses")->get(),
+        ], 200);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
-    {
-        //
-    }
+    public function store(Request $request) {}
 
     /**
      * Display the specified resource.
      */
     public function show(Teacher $teacher)
     {
-        //
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Richiesta effettuata con successo',
+            'data' => $teacher->load("courses"),
+        ], 200);
     }
 
     /**

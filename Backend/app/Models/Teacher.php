@@ -14,7 +14,7 @@ class Teacher extends Model
         'subject_id',
         'first_name',
         'last_name',
-        'tax_id'
+        'email'
     ];
 
     public function courses()

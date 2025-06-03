@@ -24,7 +24,7 @@ class TeacherFactory extends Factory
             "subject_id" => rand(1, $subjectsCount),
             "first_name" => fake()->firstName(),
             "last_name" => fake()->lastName(),
-            "tax_id" => fake()->unique()->word(),
+            "email" => fake()->unique()->email(),
         ];
     }
 }

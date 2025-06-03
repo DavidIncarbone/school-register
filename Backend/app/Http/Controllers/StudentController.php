@@ -19,8 +19,6 @@ class StudentController extends Controller
         // * SIMULAZIONE
         // 1. ricavare lo user loggato tramite request()
         // !  $user = request()->user();
-
-
         $user = request()->user();
         Log::info($user);
         $userType = $user->type;
@@ -30,24 +28,31 @@ class StudentController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Richiesta effettuata con successo',
-                'data' => Student::where('tax_id', $user->tax_id)->first(),
+                'data' => Student::where('tax_code', $user->tax_code)->first(),
             ], 200);
         } elseif ($userType == "teacher") {
             $fields = request()->validate([
-                "course_id" => "integer|min:1",
+                "course_id" => "required|integer|min:1",
                 "last_name" => "string|max:100"
             ]);
 
-            $teacher = Teacher::where("tax_id", $user->tax_id)->first();
+            $coursesIds = Teacher::where("email", $user->email)->first()->courses()->pluck("course_id")->toArray();
+
+            Log::info($coursesIds);
 
             $query = Student::query();
 
+            if (!in_array($fields["course_id"], $coursesIds)) {
+                return response()->json([], 400);
+            }
+
+
             if (isset($fields['last_name'])) {
-                $query->where("last_name", "like", $fields['last_name'] . "%");
+                $query->where("last_name", "like", $fields['full_name'] . "%");
             }
-            if (isset($fields['course_id'])) {
-                $query->where("course_id", $fields['course_id']);
-            }
+
+            $query->where("course_id", $fields['course_id']);
+
             $students = $query->get();
             return response()->json([
                 'success' => true,
@@ -73,7 +78,7 @@ class StudentController extends Controller
         $newUser->name = $data["name"];
         $newUser->email = $data["email"];
         $newUser->password = $data["password"];
-        $newUser->tax_id = $data["tax_id"];
+        $newUser->tax_code = $data["tax_code"];
 
         $newUser->save();
     }

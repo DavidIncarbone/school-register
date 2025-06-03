@@ -22,7 +22,7 @@ class RegisteredUserController extends Controller
     public function store(Request $request): Response
     {
         $request->validate([
-            'tax_id' => ['required', 'string', 'max:50'],
+            'tax_code' => ['required', 'string', 'max:50'],
             'type' => ['required', 'string', Rule::in(config("userType"))],
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
@@ -30,7 +30,7 @@ class RegisteredUserController extends Controller
         ]);
 
         $user = User::create([
-            'tax_id' => $request->tax_id,
+            'tax_code' => $request->tax_code,
             'type' => $request->type,
             'name' => $request->name,
             'email' => $request->email,
