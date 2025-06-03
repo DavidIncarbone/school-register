@@ -53,7 +53,7 @@ export default function Homepage() {
 
   useEffect(() => {
     const fetchStudents = async () => {
-      const res = await api.get("/api/students", {
+      const res = await api.get("/api/students?course_id=10", {
         withCredentials: true,
         withXSRFToken: true,
       });
@@ -82,7 +82,6 @@ export default function Homepage() {
             <input
               type="email"
               placeholder="Email"
-              id="email"
               defaultValue="admin@example.com"
               name="email"
               required
@@ -93,7 +92,6 @@ export default function Homepage() {
             <input
               type="password"
               placeholder="Password"
-              id="password"
               defaultValue="11111111"
               name="password"
               required

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\StudentResource;
 use App\Models\Student;
+use App\Models\Teacher;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -36,6 +37,8 @@ class StudentController extends Controller
                 "course_id" => "integer|min:1",
                 "last_name" => "string|max:100"
             ]);
+
+            $teacher = Teacher::where("tax_id", $user->tax_id)->first();
 
             $query = Student::query();
 
