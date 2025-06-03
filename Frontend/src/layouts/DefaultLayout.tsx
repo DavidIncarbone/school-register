@@ -6,7 +6,7 @@ export default function DefaultLayout() {
     return (
         <>
             <Sidebar />
-            <div className="grow bg-amber-300 flex flex-col">
+            <div className="grow bg-amber-800 flex flex-col">
                 <Header />
                 <main className="grow ">
                     <Outlet />
