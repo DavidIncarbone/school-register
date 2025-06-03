@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Course;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,10 +18,13 @@ class StudentFactory extends Factory
     public function definition(): array
     {
 
+        $courseCount = Course::all()->count();
+
         return [
             "first_name" => fake()->firstName(),
             "last_name" => fake()->lastName(),
             "tax_id" => fake()->unique()->word(),
+            "course_id" => rand(1, $courseCount),
         ];
     }
 }
