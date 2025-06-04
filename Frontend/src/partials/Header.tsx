@@ -5,13 +5,13 @@ import { useNavigate } from "react-router";
 
 export default function Header() {
     const navigate = useNavigate();
-    const setAuthUser = useGlobalStore((state) => state.setAuthUser);
+    const { setAuthUser } = useGlobalStore((state) => state);
 
     const handleLogout = async () => {
+        setAuthUser(null);
+        navigate("/login");
         try {
             await api.post("/logout");
-            setAuthUser(null);
-            navigate("/login");
         } catch (err) {
             console.error(err);
         }
@@ -30,7 +30,10 @@ export default function Header() {
             </div>
 
             <div className="flex items-center gap-2 px-4 bg-blue-300">
-                <div className="w-16 aspect-square bg-green-300 rounded-full"></div>
+                <div
+                    onClick={() => navigate("/")}
+                    className="w-16 aspect-square bg-green-300 rounded-full"
+                ></div>
                 <div className="flex items-center gap-2">
                     <span>David Martini</span>
                     <FaArrowCircleDown

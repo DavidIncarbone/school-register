@@ -7,8 +7,8 @@ import { api } from "../services/api";
 export default function PrivateRoutes() {
     console.log("render private routes");
     const navigate = useNavigate();
-    const authUser = useGlobalStore((state) => state.authUser);
-    const { setAuthUser } = useGlobalStore((state) => state);
+    const { authUser, setAuthUser, setIsAuthLoading } =
+        useGlobalStore((state) => state);
 
     useEffect(() => {
         const fetchAndSetAuthUser = async () => {
@@ -17,13 +17,18 @@ export default function PrivateRoutes() {
                 const user = res.data as User;
                 setAuthUser(user);
             } catch {
-                console.log("redirect login");
                 navigate("/login");
+            } finally {
+                console.log("ciao");
+                setIsAuthLoading(false);
             }
         };
 
-        fetchAndSetAuthUser();
-    }, [setAuthUser, navigate]);
+        if (!authUser) {
+            console.log("test");
+            fetchAndSetAuthUser();
+        }
+    }, []);
 
-    return authUser ? <Outlet /> : <pre>loading</pre>;
+    return authUser ? <Outlet /> : <pre>loading private</pre>;
 }
