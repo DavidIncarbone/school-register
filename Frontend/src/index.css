@@ -23,5 +23,9 @@
     input {
         @apply ring px-4 py-2 rounded-md
     }
+
+    .auth-form {
+       @apply px-16 py-12 bg-[#25282d] flex flex-col gap-2 rounded-lg;
+    }
 }
 

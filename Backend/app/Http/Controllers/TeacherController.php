@@ -3,11 +3,30 @@
 namespace App\Http\Controllers;
 
 use App\Models\Teacher;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
 class TeacherController extends Controller
 {
+    public function retrieveTeacherFromMail()
+    {
+        // ricavo la mail dal corpo della richiesta
+        $fields = request()->validate([
+            'email' => 'required|email',
+        ]);
+        $email = $fields['email'];
+        // faccio una query al DB (teachers) per mail
+        $user = User::where("email", $email)->first();
+        if (isset($user)) {
+            return response()->json(["message" => "ah coglioneee sei gia registratoooo"], 401);
+        }
+
+        $teacher = Teacher::where("email", $email)->firstOrFail();
+        // se esiste mando un 204 no content (success)
+        return response()->json($teacher, 200);
+        // se non esiste mando un 404 not found (error)
+    }
     /**
      * Display a listing of the resource.
      */

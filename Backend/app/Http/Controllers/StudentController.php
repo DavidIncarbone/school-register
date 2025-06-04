@@ -46,7 +46,6 @@ class StudentController extends Controller
                 return response()->json([], 400);
             }
 
-
             if (isset($fields['last_name'])) {
                 $query->where("last_name", "like", $fields['full_name'] . "%");
             }
