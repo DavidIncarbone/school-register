@@ -77,6 +77,7 @@ export default function Homepage() {
     }, []);
 
     useEffect(() => {
+        // ! da cancellare pero gestire l'if sotto
         let paramsFromUrl = searchParams.toString();
         paramsFromUrl = paramsFromUrl && "?" + paramsFromUrl;
 
