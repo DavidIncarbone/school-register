@@ -1,8 +1,8 @@
-import { useEffect, useState, type FormEvent } from "react";
+import { useState, type FormEvent } from "react";
 import { useNavigate } from "react-router";
 import { useGlobalStore } from "../store/useGlobalStore";
 import { api } from "../services/api";
-import type { Student, Teacher, User } from "../config/types";
+import { type Student, type Teacher, type User } from "../config/types";
 
 type Data = {
     name: string;
@@ -57,90 +57,86 @@ export default function RegistrationPage() {
     return (
         !authUser && (
             <div className="h-full flex justify-center items-center">
-                <form onSubmit={handleSubmit} className="auth-form">
-                    <div className="w-full">
-                        <h2 className="capitalize text-3xl ">Register</h2>
-                    </div>
-                    {isEmailVerified && (
+                <div className="auth-form">
+                    <h2 className="capitalize text-3xl text-center">
+                        Register
+                    </h2>
+                    <form onSubmit={handleSubmit}>
+                        {isEmailVerified && (
+                            <div className="flex flex-col space-y-0.5">
+                                <label htmlFor="name">Name</label>
+                                <input
+                                    disabled={isEmailVerified}
+                                    className={`${
+                                        isEmailVerified && "cursor-not-allowed"
+                                    }`}
+                                    type="name"
+                                    defaultValue={
+                                        profile?.first_name &&
+                                        profile?.last_name &&
+                                        `${profile.first_name} ${profile.last_name}`
+                                    }
+                                    id="name"
+                                    name="name"
+                                    required
+                                    autoFocus
+                                />
+                            </div>
+                        )}
+
                         <div className="flex flex-col space-y-0.5">
-                            <label htmlFor="name">Name</label>
+                            <label htmlFor="email">Email</label>
                             <input
                                 disabled={isEmailVerified}
                                 className={`${
                                     isEmailVerified && "cursor-not-allowed"
                                 }`}
-                                type="name"
+                                type="email"
+                                placeholder="example@example.com"
                                 defaultValue={
-                                    profile?.first_name &&
-                                    profile?.last_name &&
-                                    `${profile.first_name} ${profile.last_name}`
+                                    profile?.email ? profile.email : ""
                                 }
-                                id="name"
-                                name="name"
+                                id="email"
+                                name="email"
                                 required
-                                autoFocus
                             />
                         </div>
-                    )}
 
-                    <div className="flex flex-col space-y-0.5">
-                        <label htmlFor="email">Email</label>
-                        <input
-                            disabled={isEmailVerified}
-                            className={`${
-                                isEmailVerified && "cursor-not-allowed"
-                            }`}
-                            type="email"
-                            placeholder="example@example.com"
-                            defaultValue={profile?.email ? profile.email : ""}
-                            id="email"
-                            name="email"
-                            required
-                        />
-                    </div>
-
-                    {isEmailVerified && (
-                        <>
-                            <div className="flex flex-col space-y-0.5">
-                                <label htmlFor="password">Password</label>
-                                <input
-                                    type="password"
-                                    placeholder="password"
-                                    // defaultValue="ciaociao"
-                                    name="password"
-                                    required
-                                />
-                            </div>
-                            <div className="flex flex-col space-y-0.5">
-                                <label htmlFor="password_confirmation">
-                                    Conferma password
-                                </label>
-                                <input
-                                    type="password"
-                                    placeholder="password_confirmation"
-                                    // defaultValue="ciaociao"
-                                    name="password_confirmation"
-                                    required
-                                />
-                            </div>
-                        </>
-                    )}
-                    {!isEmailVerified ? (
-                        <button
-                            className="px-4 py-2 rounded-md border cursor-pointer bg-[#007498]"
-                            type="submit"
-                        >
-                            Verifica email
-                        </button>
-                    ) : (
-                        <button
-                            className="px-4 py-2 rounded-md border cursor-pointer bg-[#007498]"
-                            type="submit"
-                        >
-                            Abilita account
-                        </button>
-                    )}
-                </form>
+                        {isEmailVerified && (
+                            <>
+                                <div className="flex flex-col space-y-0.5">
+                                    <label htmlFor="password">Password</label>
+                                    <input
+                                        type="password"
+                                        placeholder="password"
+                                        // defaultValue="ciaociao"
+                                        name="password"
+                                        required
+                                    />
+                                </div>
+                                <div className="flex flex-col space-y-0.5">
+                                    <label htmlFor="password_confirmation">
+                                        Conferma password
+                                    </label>
+                                    <input
+                                        type="password"
+                                        placeholder="password_confirmation"
+                                        // defaultValue="ciaociao"
+                                        name="password_confirmation"
+                                        required
+                                    />
+                                </div>
+                            </>
+                        )}
+                        {!isEmailVerified ? (
+                            <button type="submit">Verifica email</button>
+                        ) : (
+                            <button className="" type="submit">
+                                Abilita account
+                            </button>
+                        )}
+                    </form>
+                </div>
             </div>
         )
     );

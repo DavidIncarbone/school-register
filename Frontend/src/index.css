@@ -21,11 +21,21 @@
 
 @layer components {
     input {
-        @apply ring px-4 py-2 rounded-md
+        @apply ring px-4 py-2 rounded-sm;
     }
 
     .auth-form {
-       @apply px-16 py-12 bg-[#25282d] flex flex-col gap-2 rounded-lg;
+        @apply px-20 py-12 bg-[#1e2125] flex flex-col gap-2 rounded-lg shadow-sm shadow-stone-950;
+
+        & form {
+            @apply flex flex-col gap-6 items-center rounded-lg mt-2 mb-4;
+        }
+        & form > div {
+            @apply w-fit;
+        }
+
+        & form > button[type="submit"] {
+            @apply px-4 py-2 rounded-sm border cursor-pointer bg-[#007498] w-full;
+        }
     }
 }
-

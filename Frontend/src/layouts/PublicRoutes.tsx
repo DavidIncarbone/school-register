@@ -10,19 +10,18 @@ export default function PublicRoutes() {
     const { isAuthLoading, authUser, setAuthUser, setIsAuthLoading } =
         useGlobalStore((state) => state);
 
-    const fetchAndSetUser = async () => {
-        try {
-            const res = await api.get("/api/user");
-            setAuthUser(res.data as User);
-            navigate("/");
-        } catch (err) {
-            console.error(err);
-        } finally {
-            setIsAuthLoading(false);
-        }
-    };
-
     useEffect(() => {
+        const fetchAndSetUser = async () => {
+            try {
+                const res = await api.get("/api/user");
+                setAuthUser(res.data as User);
+                navigate("/");
+            } catch (err) {
+                console.error(err);
+            } finally {
+                setIsAuthLoading(false);
+            }
+        };
         if (!authUser) {
             fetchAndSetUser();
         }

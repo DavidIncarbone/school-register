@@ -16,12 +16,12 @@ class TeacherController extends Controller
             'email' => 'required|email',
         ]);
         $email = $fields['email'];
-        // faccio una query al DB (teachers) per mail
         $user = User::where("email", $email)->first();
         if (isset($user)) {
             return response()->json(["message" => "ah coglioneee sei gia registratoooo"], 401);
         }
 
+        // faccio una query al DB (teachers) per mail
         $teacher = Teacher::where("email", $email)->firstOrFail();
         // se esiste mando un 204 no content (success)
         return response()->json($teacher, 200);

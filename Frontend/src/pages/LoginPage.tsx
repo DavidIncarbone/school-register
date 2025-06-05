@@ -34,10 +34,7 @@ export default function LoginPage() {
             <div className="h-full flex justify-center items-center">
                 <div className="auth-form">
                     <h2 className="capitalize text-3xl  text-center">login</h2>
-                    <form
-                        onSubmit={handleSubmit}
-                        className="flex flex-col gap-4 items-center rounded-lg mt-2 mb-4"
-                    >
+                    <form onSubmit={handleSubmit}>
                         <div className="flex flex-col space-y-0.5">
                             <label htmlFor="email">Email</label>
                             <input
@@ -60,12 +57,7 @@ export default function LoginPage() {
                                 required
                             />
                         </div>
-                        <button
-                            className="px-4 py-2 bg-[#007498] uppercase rounded-md border cursor-pointer w-full"
-                            type="submit"
-                        >
-                            Accedi
-                        </button>
+                        <button type="submit">Accedi</button>
                     </form>
 
                     <div className="text-sm space-x-1">
