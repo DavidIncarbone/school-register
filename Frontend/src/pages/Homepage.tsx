@@ -1,14 +1,14 @@
-import { useEffect, useState, type ChangeEvent } from "react";
+import { useEffect, useRef, useState, type ChangeEvent } from "react";
 import { api } from "../services/api";
 import type { Course } from "../config/types";
 import { useSearchParams } from "react-router";
+import { debounce } from "lodash";
 
 export default function Homepage() {
-    console.log("render homepage");
+    // console.log("render homepage");
     // vars, let const ... ...
     const [courses, setCourses] = useState<Course[] | null>(null);
     const [searchParams, setSearchParams] = useSearchParams();
-    const [inputData, setInputData] = useState("");
 
     // actions
     // ? l'utente studente ricevera solo la propria scheda da questa chiamata
@@ -21,37 +21,46 @@ export default function Homepage() {
         }
     };
 
-    const handleInputChange = async (e: ChangeEvent<HTMLInputElement>) => {
-        const last_name = e.target.value;
-        const key = "last_name";
+    const updateSearchParam = (
+        key: string,
+        value: string,
+        currentParams: URLSearchParams
+    ) => {
+        const newParams = new URLSearchParams(currentParams); // clona quelli esistenti
+        newParams.set(key, value);
+        // if (!value) newParams.delete(key);
+        setSearchParams(newParams);
+    };
 
-        try {
-            const res = await api.get(
-                `/api/students?${key}=${selectedCourseId}`
-            );
-            setSearchParams({
-                [key]: selectedCourseId,
-            });
-            console.log(res.data);
-        } catch (err) {
-            console.error(err);
-        }
+    const handleInputChange = (
+        e: ChangeEvent<HTMLInputElement>,
+        currentParams: URLSearchParams
+    ) => {
+        const key = "last_name";
+        const last_name = e.target.value;
+        updateSearchParam(key, last_name, currentParams);
+    };
+
+    const debouncedFn = useRef(
+        debounce(
+            (
+                e: ChangeEvent<HTMLInputElement>,
+                currentParams: URLSearchParams
+            ) => {
+                handleInputChange(e, currentParams);
+            },
+            500
+        )
+    ).current;
+
+    const onInput = (e: ChangeEvent<HTMLInputElement>) => {
+        debouncedFn(e, searchParams);
     };
 
     const handleCourseSelected = async (e: ChangeEvent<HTMLSelectElement>) => {
-        const selectedCourseId = e.target.value;
         const key = "course_id";
-        try {
-            const res = await api.get(
-                `/api/students?${key}=${selectedCourseId}`
-            );
-            setSearchParams({
-                [key]: selectedCourseId,
-            });
-            console.log(res.data);
-        } catch (err) {
-            console.error(err);
-        }
+        const selectedCourseId = e.target.value;
+        updateSearchParam(key, selectedCourseId, searchParams);
     };
 
     // effects
@@ -68,21 +77,29 @@ export default function Homepage() {
     }, []);
 
     useEffect(() => {
-        let queryStr = searchParams.toString();
-        queryStr = queryStr && "?" + queryStr;
-        // let params: Record<string, string> = {};
-        // searchParams.forEach((val, key) => {
-        //     params = { ...params, [key]: val };
-        // });
+        let paramsFromUrl = searchParams.toString();
+        paramsFromUrl = paramsFromUrl && "?" + paramsFromUrl;
+
+        let params: Record<string, string> = {};
+        searchParams.forEach((value, key) => {
+            if (value) {
+                params = { ...params, [key]: value };
+            } else {
+                delete params[key];
+            }
+        });
+
+        console.log(params);
+
         const fetchStudents = async () => {
             try {
-                const res = await api.get(`/api/students${queryStr}`);
-                console.log(res.data);
+                const res = await api.get(`/api/students`, { params });
+                // console.log(res.data);
             } catch (err) {
                 console.error(err);
             }
         };
-        if (queryStr) {
+        if (paramsFromUrl) {
             fetchStudents();
         }
     }, [searchParams]);
@@ -97,7 +114,7 @@ export default function Homepage() {
             <div className="auth-form">
                 <div>
                     <input
-                        onChange={handleInputChange}
+                        onChange={onInput}
                         type="text"
                         name="last_name"
                         placeholder="Cerca per cognome"
