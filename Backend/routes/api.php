@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CourseController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\TeacherController;
 use App\Models\Student;
@@ -19,6 +20,23 @@ Route::apiResource("/students", StudentController::class)->middleware(['auth:san
 
 // teachers
 Route::apiResource("/teachers", TeacherController::class)->middleware(['auth:sanctum']);
+
+// courses
+Route::apiResource("/courses", CourseController::class)->middleware(['auth:sanctum']);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // rotta custom per recupero dati necessari all'abilitazione dell'acc
 Route::post("/retrieve-temp-user", function () {

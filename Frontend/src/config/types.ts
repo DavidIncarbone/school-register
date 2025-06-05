@@ -18,10 +18,17 @@ export type Teacher = {
     last_name: string;
     email: string;
 };
+
 export type Student = {
     id: number;
     course_id: number;
     first_name: string;
     last_name: string;
     email: string;
+};
+
+export type Course = {
+    id: number;
+    name: string;
+    description: string;
 };

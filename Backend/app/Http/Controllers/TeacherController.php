@@ -9,23 +9,23 @@ use Illuminate\Support\Facades\Log;
 
 class TeacherController extends Controller
 {
-   
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $fields = request()->validate([
-            "tax_code" => ["required", "string", "max:50"]
-        ]);
+        // $fields = request()->validate([
+        //     "tax_code" => ["required", "string", "max:50"]
+        // ]);
 
-        Log::info($fields);
+        // Log::info($fields);
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Richiesta effettuata con successo',
-            'data' => Teacher::where("tax_code", $fields["tax_code"])->with("courses")->get(),
-        ], 200);
+        // return response()->json([
+        //     'success' => true,
+        //     'message' => 'Richiesta effettuata con successo',
+        //     'data' => Teacher::where("tax_code", $fields["tax_code"])->with("courses")->get(),
+        // ], 200);
     }
 
     /**

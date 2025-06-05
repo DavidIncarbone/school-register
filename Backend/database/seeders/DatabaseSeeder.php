@@ -24,8 +24,6 @@ class DatabaseSeeder extends Seeder
             'password' => 'ciaociao'
         ]);
 
-
-
         $this->call([
             SubjectSeeder::class,
             CourseSeeder::class,
@@ -45,6 +43,10 @@ class DatabaseSeeder extends Seeder
 
         ]);
 
-        $teacher->courses()->attach(rand(1, $courseCount));
+        // $nCourses = 
+
+        for ($i = 0; $i < rand(2, $courseCount); $i++) {
+            $teacher->courses()->attach($i + 1);
+        }
     }
 }

@@ -25,6 +25,10 @@
         @apply ring px-4 py-2 rounded-sm;
     }
 
+    .btn {
+        @apply px-4 py-2 border rounded-md cursor-pointer;
+    }
+
     option {
         @apply bg-[#1e2125];
     }

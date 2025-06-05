@@ -16,19 +16,17 @@ class StudentController extends Controller
      */
     public function index()
     {
-        // * SIMULAZIONE
-        // 1. ricavare lo user loggato tramite request()
-        // !  $user = request()->user();
         $user = request()->user();
         Log::info($user);
         $userType = $user->type;
+        $userEmail = $user->email;
 
         // 2. interpolare la query degli student in base al tipo di utente (student, teacher, admin)
         if ($userType == "student") {
             return response()->json([
                 'success' => true,
                 'message' => 'Richiesta effettuata con successo',
-                'data' => Student::where('tax_code', $user->tax_code)->first(),
+                'data' => Student::where('email', $userEmail)->first(),
             ], 200);
         } elseif ($userType == "teacher") {
             $fields = request()->validate([
@@ -77,7 +75,7 @@ class StudentController extends Controller
         $newUser->name = $data["name"];
         $newUser->email = $data["email"];
         $newUser->password = $data["password"];
-        $newUser->tax_code = $data["tax_code"];
+        // $newUser->tax_code = $data["tax_code"];
 
         $newUser->save();
     }
@@ -85,11 +83,7 @@ class StudentController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
-    {
-        //
-    }
-
+    public function show(Student $student) {}
     /**
      * Update the specified resource in storage.
      */

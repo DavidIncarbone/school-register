@@ -69,8 +69,9 @@ export default function RegistrationPage() {
         !authUser && (
             <div className="h-full flex justify-center items-center">
                 <div className="auth-form">
-                    <h2 className="capitalize text-3xl text-center">
-                        Register
+                    <h2 className="text-3xl text-center">
+                        <span className="capitalize">{tempUser?.type}</span>{" "}
+                        <span>register</span>
                     </h2>
                     <form onSubmit={handleSubmit}>
                         {isEmailVerified && (
@@ -156,12 +157,29 @@ export default function RegistrationPage() {
                                 </div>
                             </>
                         )}
+                        {/* {isEmailVerified && (
+                            <>
+                                <input type="checkbox" />
+                            </>
+                        )} */}
                         {!isEmailVerified ? (
                             <button type="submit">Verifica email</button>
                         ) : (
-                            <button className="" type="submit">
-                                Abilita account
-                            </button>
+                            <>
+                                <div className="flex items-center space-x-1">
+                                    <input
+                                        id="terms"
+                                        type="checkbox"
+                                        required
+                                    />
+                                    <label htmlFor="terms" className="text-xs">
+                                        Accetta i Termini e Condizioni
+                                    </label>
+                                </div>
+                                <button className="" type="submit">
+                                    Abilita account
+                                </button>
+                            </>
                         )}
                     </form>
                 </div>
