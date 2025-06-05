@@ -46,15 +46,12 @@ export default function RegistrationPage() {
             }
         } else {
             try {
-                if (
-                    tempUser?.email &&
-                    tempUser.first_name &&
-                    tempUser.last_name
-                ) {
+                if (tempUser) {
                     data = {
                         ...data,
                         email: tempUser.email,
                         name: `${tempUser.first_name} ${tempUser.last_name}`,
+                        type: tempUser.type,
                     };
                 }
                 console.log(data);
