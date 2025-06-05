@@ -56,9 +56,6 @@ class StudentController extends Controller
                 'message' => 'Richiesta effettuata con successo',
                 'data' => $students,
             ], 200);
-        } elseif ($userType == "admin") {
-            $students = Student::paginate(30);
-            return $students;
         } else
             return response()->json("lohacker", 400);
     }
