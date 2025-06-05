@@ -20,8 +20,13 @@
 }
 
 @layer components {
-    input {
+    input,
+    select {
         @apply ring px-4 py-2 rounded-sm;
+    }
+
+    option {
+        @apply bg-[#1e2125];
     }
 
     .auth-form {
@@ -31,7 +36,7 @@
             @apply flex flex-col gap-6 items-center rounded-lg mt-2 mb-4;
         }
         & form > div {
-            @apply w-fit;
+            @apply w-full;
         }
 
         & form > button[type="submit"] {

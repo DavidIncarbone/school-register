@@ -25,6 +25,7 @@ class StudentFactory extends Factory
             "last_name" => fake()->lastName(),
             "tax_code" => fake()->unique()->word(),
             "course_id" => rand(1, $courseCount),
+            "email" => fake()->unique()->email(),
         ];
     }
 }

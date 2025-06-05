@@ -15,6 +15,7 @@ class Student extends Model
         'tax_code',
         'first_name',
         'last_name',
+        'email',
     ];
 
 

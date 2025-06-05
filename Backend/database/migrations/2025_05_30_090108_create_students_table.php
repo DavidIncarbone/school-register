@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('course_id')->constrained();
             $table->string("tax_code")->unique();
+            $table->string("email")->unique();
             $table->string("first_name");
             $table->string("last_name");
             $table->timestamps();

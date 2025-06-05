@@ -2,13 +2,21 @@ import { useState, type FormEvent } from "react";
 import { useNavigate } from "react-router";
 import { useGlobalStore } from "../store/useGlobalStore";
 import { api } from "../services/api";
-import { type Student, type Teacher, type User } from "../config/types";
+import { UserType, type User } from "../config/types";
 
 type Data = {
     name: string;
     email: string;
+    type: UserType;
     password: string;
     password_confirmation: string;
+};
+
+type TempUser = {
+    first_name: string;
+    last_name: string;
+    email: string;
+    type: UserType;
 };
 
 export default function RegistrationPage() {
@@ -18,7 +26,7 @@ export default function RegistrationPage() {
     // vars
     const navigate = useNavigate();
     const [isEmailVerified, setIsEmailVerified] = useState(false);
-    const [profile, setProfile] = useState<Teacher | Student | null>(null);
+    const [tempUser, setTempUser] = useState<TempUser | null>(null);
 
     // actions
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -28,19 +36,25 @@ export default function RegistrationPage() {
 
         if (!isEmailVerified) {
             try {
-                const res = await api.post("/api/retrieve-teacher", data);
-                setProfile(res.data as Teacher);
+                const res = await api.post("/api/retrieve-temp-user", data);
+                let tempUser: TempUser = res.data;
+                tempUser = { ...tempUser, type: data.type };
+                setTempUser(tempUser);
                 setIsEmailVerified(true);
             } catch (err: unknown) {
                 console.error(err);
             }
         } else {
             try {
-                if (profile?.email && profile.first_name && profile.last_name) {
+                if (
+                    tempUser?.email &&
+                    tempUser.first_name &&
+                    tempUser.last_name
+                ) {
                     data = {
                         ...data,
-                        email: profile.email,
-                        name: `${profile.first_name} ${profile.last_name}`,
+                        email: tempUser.email,
+                        name: `${tempUser.first_name} ${tempUser.last_name}`,
                     };
                 }
                 console.log(data);
@@ -72,9 +86,9 @@ export default function RegistrationPage() {
                                     }`}
                                     type="name"
                                     defaultValue={
-                                        profile?.first_name &&
-                                        profile?.last_name &&
-                                        `${profile.first_name} ${profile.last_name}`
+                                        tempUser?.first_name &&
+                                        tempUser?.last_name &&
+                                        `${tempUser.first_name} ${tempUser.last_name}`
                                     }
                                     id="name"
                                     name="name"
@@ -94,13 +108,30 @@ export default function RegistrationPage() {
                                 type="email"
                                 placeholder="example@example.com"
                                 defaultValue={
-                                    profile?.email ? profile.email : ""
+                                    tempUser?.email ? tempUser.email : ""
                                 }
                                 id="email"
                                 name="email"
                                 required
                             />
                         </div>
+
+                        {!isEmailVerified && (
+                            <div className="flex flex-col space-y-0.5">
+                                <label htmlFor="type">Ruolo</label>
+                                <select id="type" name="type" required>
+                                    <option value="" selected disabled hidden>
+                                        Seleziona il tuo ruolo
+                                    </option>
+                                    <option value={UserType.STUDENT}>
+                                        Studente
+                                    </option>
+                                    <option value={UserType.TEACHER}>
+                                        Insegnante
+                                    </option>
+                                </select>
+                            </div>
+                        )}
 
                         {isEmailVerified && (
                             <>
