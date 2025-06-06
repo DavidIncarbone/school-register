@@ -32,10 +32,9 @@ class StudentController extends Controller
 
             $query->where(function ($q) use ($first, $last) {
                 $q->where("first_name", 'like', $first . "%")
-                    ->orWhere("first_name", 'like', $last . '%');
-            })->where(function ($q) use ($first, $last) {
-                $q->where("last_name", 'like', $first . '%')
-                    ->orWhere("last_name", 'like', $last . '%');
+                    ->orWhere("first_name", 'like', $last . '%')
+                    ->orWhere("last_name", 'like', $first . '%')
+                    ->orWhere("last_name", 'like', $last . '%');;
             });
 
         }
