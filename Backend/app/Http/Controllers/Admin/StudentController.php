@@ -31,11 +31,11 @@ class StudentController extends Controller
             $last = $nameArr[1] ?? null; // secondo elemento, se esiste
 
             $query->where(function ($q) use ($first, $last) {
-                $q->where("first_name", $first)
-                    ->orWhere("first_name", $last);
+                $q->where("first_name", 'like', $first . "%")
+                    ->orWhere("first_name", 'like', $last . '%');
             })->where(function ($q) use ($first, $last) {
-                $q->where("last_name", $first)
-                    ->orWhere("last_name", $last);
+                $q->where("last_name", 'like', $first . '%')
+                    ->orWhere("last_name", 'like', $last . '%');
             });
 
 
