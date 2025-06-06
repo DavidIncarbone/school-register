@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\StudentController as AdminStudentController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\TeacherController;
@@ -23,6 +24,9 @@ Route::apiResource("/teachers", TeacherController::class)->middleware(['auth:san
 
 // courses
 Route::apiResource("/courses", CourseController::class)->middleware(['auth:sanctum']);
+
+Route::apiResource("/admin/students", AdminStudentController::class)/*->middleware(['auth:sanctum'])*/;
+
 
 
 
