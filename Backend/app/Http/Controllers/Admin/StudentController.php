@@ -29,15 +29,21 @@ class StudentController extends Controller
             $nameArr = explode(" ", $name); // divide la stringa per spazio
             $first = $nameArr[0] ?? null; // primo elemento
             $last = $nameArr[1] ?? null; // secondo elemento, se esiste
+            // $query->where(function ($q) use ($first, $last) {
+            //     $q->where("first_name", 'like', $first . "%")
+            //         ->orWhere("first_name", 'like', $last . '%')
+            //         ->orWhere("last_name", 'like', $first . '%')
+            //         ->orWhere("last_name", 'like', $last . '%');;
+            // });
 
-            $query->where(function ($q) use ($first, $last) {
-                $q->where("first_name", 'like', $first . "%")
-                    ->orWhere("first_name", 'like', $last . '%')
-                    ->orWhere("last_name", 'like', $first . '%')
-                    ->orWhere("last_name", 'like', $last . '%');;
-            });
-
+            $count = $query->where("first_name", 'like', $first . "%")->where("last_name", 'like', $last . '%')->count();
+            if ($count == 0) {
+                $query->where("first_name", 'like', $first . "%")->where("last_name", 'like', $last . '%');
+            }
         }
+
+        // name = eugenio
+
         if (request()->email) {
             $query->where("email", "like", request()->email . "%");
         }
