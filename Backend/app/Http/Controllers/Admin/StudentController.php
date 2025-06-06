@@ -23,6 +23,23 @@ class StudentController extends Controller
         $query = Student::query();
 
         if (request()->name) {
+            $name = request()->name;
+
+            $name = trim($name); // rimuove spazi all'inizio e alla fine
+            $nameArr = explode(" ", $name); // divide la stringa per spazio
+            $first = $nameArr[0] ?? null; // primo elemento
+            $last = $nameArr[1] ?? null; // secondo elemento, se esiste
+
+            $query->where(function ($q) use ($first, $last) {
+                $q->where("first_name", $first)
+                    ->orWhere("first_name", $last);
+            })->where(function ($q) use ($first, $last) {
+                $q->where("last_name", $first)
+                    ->orWhere("last_name", $last);
+            });
+
+
+
             $query->where("name", request()->name);
         }
         if (request()->email) {
