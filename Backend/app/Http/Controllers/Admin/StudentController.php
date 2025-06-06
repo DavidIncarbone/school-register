@@ -38,9 +38,6 @@ class StudentController extends Controller
                     ->orWhere("last_name", 'like', $last . '%');
             });
 
-
-
-            $query->where("name", request()->name);
         }
         if (request()->email) {
             $query->where("email", "like", request()->email . "%");
