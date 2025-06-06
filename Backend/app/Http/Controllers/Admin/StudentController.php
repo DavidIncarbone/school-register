@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Student;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class StudentController extends Controller
 {
@@ -27,18 +28,15 @@ class StudentController extends Controller
 
             $name = trim($name); // rimuove spazi all'inizio e alla fine
             $nameArr = explode(" ", $name); // divide la stringa per spazio
-            $first = $nameArr[0] ?? null; // primo elemento
-            $last = $nameArr[1] ?? null; // secondo elemento, se esiste
-            // $query->where(function ($q) use ($first, $last) {
-            //     $q->where("first_name", 'like', $first . "%")
-            //         ->orWhere("first_name", 'like', $last . '%')
-            //         ->orWhere("last_name", 'like', $first . '%')
-            //         ->orWhere("last_name", 'like', $last . '%');;
-            // });
+            $first = $nameArr[0] ?? ""; // primo elemento
+            $last = $nameArr[1] ?? ""; // secondo elemento, se esiste
 
-            $count = $query->where("first_name", 'like', $first . "%")->where("last_name", 'like', $last . '%')->count();
-            if ($count == 0) {
-                $query->where("first_name", 'like', $first . "%")->where("last_name", 'like', $last . '%');
+
+            $queryCount = Student::where("first_name", 'like', $first . "%")->where("last_name", 'like', $last . '%')->count();
+            if ($queryCount == 0) {
+                $query->where("first_name", 'like',  $last . "%")->where("last_name", 'like',  $first . '%');
+            } else {
+                $query->where("first_name", 'like',  $first . "%")->where("last_name", 'like',  $last . '%');
             }
         }
 
