@@ -3,21 +3,16 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Student;
-use Illuminate\Http\JsonResponse;
+use App\Models\Teacher;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
-use Symfony\Component\HttpKernel\Exception\HttpException;
 
-class StudentController extends Controller
+class TeacherController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index(): JsonResponse
+    public function index()
     {
-
-
         request()->validate([
             "name" => ["string", "max:100", "min:1"],
             "email" => ["string", "max:100", "min:1", "lowercase"],
@@ -25,7 +20,7 @@ class StudentController extends Controller
             "dir" => ["string", "in:asc,desc"],
         ]);
 
-        $query = Student::query();
+        $query = Teacher::query();
 
         if (request()->name) {
             $name = request()->name;
@@ -35,7 +30,7 @@ class StudentController extends Controller
             $first = $nameArr[0] ?? "";
             $last = $nameArr[1] ?? "";
 
-            $queryCount = Student::where("first_name", 'like', $first . "%")->where("last_name", 'like', $last . '%')->count();
+            $queryCount = Teacher::where("first_name", 'like', $first . "%")->where("last_name", 'like', $last . '%')->count();
             if ($queryCount == 0) {
                 $query->where("first_name", 'like',  $last . "%")->where("last_name", 'like',  $first . '%');
             } else {
@@ -47,7 +42,7 @@ class StudentController extends Controller
             $query->where("email", "like", request()->email . "%");
         }
 
-        // Student::findOrFail(0);
+        // Teacher::findOrFail(0);
         if (request()->sort) {
             $sort = request()->sort;
             $dir = request()->dir ?? "asc";
@@ -64,13 +59,12 @@ class StudentController extends Controller
             }
         }
 
-        $students = $query->paginate(5);
+        $teachers = $query->paginate(5);
 
         return response()->json(
-            $students
+            $teachers
         );
     }
-
 
     /**
      * Store a newly created resource in storage.
