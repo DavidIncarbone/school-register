@@ -60,10 +60,7 @@ class StudentController extends Controller
                 $first = $nameArr[0] ?? "";
                 $last = $nameArr[1] ?? "";
 
-                Log::info($first);
-                Log::info($last);
-
-                $queryCount = Student::where("first_name", 'like', $first . "%")->where("last_name", 'like', $last . '%')->count();
+                $queryCount = Student::where("course_id", request()->course_id)->where("first_name", 'like', $first . "%")->where("last_name", 'like', $last . '%')->count();
                 if ($queryCount == 0) {
                     $query->where("first_name", 'like',  $last . "%")->where("last_name", 'like',  $first . '%');
                 } else {
