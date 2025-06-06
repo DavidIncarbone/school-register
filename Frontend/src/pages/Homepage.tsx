@@ -128,6 +128,9 @@ export default function Homepage() {
                         name="course_id"
                         id="courses"
                     >
+                        <option value="" selected disabled hidden>
+                            Seleziona il tuo ruolo
+                        </option>
                         {courses &&
                             courses.map((course) => (
                                 <option key={course.id} value={course.id}>
