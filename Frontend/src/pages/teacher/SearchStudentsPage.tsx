@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, type ChangeEvent } from "react";
 import { api } from "../../services/api";
-import type { Course } from "../../config/types";
+import type { Course, Student } from "../../config/types";
 import { useSearchParams } from "react-router";
 import { debounce } from "lodash";
 
@@ -9,6 +9,7 @@ export default function SearchStudentsPage() {
     // vars, let const ... ...
     const [courses, setCourses] = useState<Course[] | null>(null);
     const [searchParams, setSearchParams] = useSearchParams();
+    const [students, setStudents] = useState<Student[] | null>(null);
 
     // actions
     // // ? l'utente studente ricevera solo la propria scheda da questa chiamata
@@ -96,6 +97,7 @@ export default function SearchStudentsPage() {
             try {
                 const res = await api.get(`/api/students`, { params });
                 console.log(res.data);
+                setStudents(res.data.data as Student[]);
             } catch (err) {
                 console.error(err);
             }
@@ -111,8 +113,8 @@ export default function SearchStudentsPage() {
             {/* <button onClick={testStudentIndex} className="btn">
                 test student index
             </button> */}
-
-            <div className="flex justify-center gap-8">
+            {/* ricerca e filtro */}
+            <div className="flex justify-center gap-8 bg-amber-600">
                 <div>
                     <input
                         onChange={onInput}
@@ -134,6 +136,15 @@ export default function SearchStudentsPage() {
                             ))}
                     </select>
                 </div>
+            </div>
+            {/* tabella studenti */}
+            <div className="space-y-2">
+                {students &&
+                    students.map((student) => (
+                        <div key={student.id} className="p-2 border">
+                            {student.first_name} {student.last_name}
+                        </div>
+                    ))}
             </div>
         </div>
     );
