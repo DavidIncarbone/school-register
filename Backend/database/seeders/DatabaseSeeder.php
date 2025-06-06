@@ -18,7 +18,6 @@ class DatabaseSeeder extends Seeder
     {
 
         User::factory()->create([
-
             'name' => 'Luigi Mosca',
             'email' => 'admin@example.com',
             'password' => 'ciaociao'
@@ -35,7 +34,6 @@ class DatabaseSeeder extends Seeder
         $subjectsCount = Subject::all()->count();
         $courseCount = Course::all()->count();
         $teacher = Teacher::factory()->create([
-
             "subject_id" => rand(1, $subjectsCount),
             "first_name" => "Luigi",
             "last_name" => "Mosca",

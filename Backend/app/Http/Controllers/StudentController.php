@@ -29,26 +29,64 @@ class StudentController extends Controller
                 'data' => Student::where('email', $userEmail)->first(),
             ], 200);
         } elseif ($userType == "teacher") {
-            $fields = request()->validate([
+            // $fields = request()->validate([
+            //     "course_id" => "required|integer|min:1",
+            //     "last_name" => "string|max:100"
+            // ]);
+
+            request()->validate([
                 "course_id" => "required|integer|min:1",
-                "last_name" => "string|max:100"
+                "name" => ["string", "max:100", "min:1"],
+                "email" => ["string", "max:100", "min:1", "lowercase"],
+                "sort" => ["string", "in:by_first_name,by_last_name,by_email,by_created_at,by_updated_at", "max:255"],
+                "dir" => ["string", "in:asc,desc"],
             ]);
 
             $coursesIds = Teacher::where("email", $user->email)->first()->courses()->pluck("course_id")->toArray();
 
-            Log::info($coursesIds);
 
-            $query = Student::query();
-
-            if (!in_array($fields["course_id"], $coursesIds)) {
+            if (!in_array(request()->course_id, $coursesIds)) {
                 return response()->json([], 400);
             }
 
-            if (isset($fields['last_name'])) {
-                $query->where("last_name", "like", $fields['full_name'] . "%");
+            $query = Student::query();
+            $query->where("course_id", request()->course_id);
+
+            if (request()->name) {
+                $name = request()->name;
+
+                $name = trim($name);
+                $nameArr = explode(" ", $name);
+                $first = $nameArr[0] ?? "";
+                $last = $nameArr[1] ?? "";
+
+                $queryCount = Student::where("first_name", 'like', $first . "%")->where("last_name", 'like', $last . '%')->count();
+                if ($queryCount == 0) {
+                    $query->where("first_name", 'like',  $last . "%")->where("last_name", 'like',  $first . '%');
+                } else {
+                    $query->where("first_name", 'like',  $first . "%")->where("last_name", 'like',  $last . '%');
+                }
             }
 
-            $query->where("course_id", $fields['course_id']);
+            if (request()->email) {
+                $query->where("email", "like", request()->email . "%");
+            }
+
+            if (request()->sort) {
+                $sort = request()->sort;
+                $dir = request()->dir ?? "asc";
+                if ($sort == "by_first_name") {
+                    $query->orderBy("first_name", $dir);
+                } elseif ($sort == "by_last_name") {
+                    $query->orderBy("last_name", $dir);
+                } elseif ($sort == "by_email") {
+                    $query->orderBy("email", $dir);
+                } elseif ($sort == "by_created_at") {
+                    $query->orderBy("created_at", $dir);
+                } elseif ($sort == "by_updated_at") {
+                    $query->orderBy("updated_at", $dir);
+                }
+            }
 
             $students = $query->get();
             return response()->json([

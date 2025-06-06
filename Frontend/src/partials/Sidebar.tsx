@@ -22,7 +22,7 @@ export default function Sidebar() {
 
     return (
         <nav className="bg-blue-300 max-sm:hidden w-1/4 lg:w-1/5">
-            <div className="bg-red-300 h-[10%] flex justify-center items-center">
+            <div className="bg-red-300 h-[7%] flex justify-center items-center">
                 logo
             </div>
             <div className="bg-green-300 flex flex-col gap-4 p-2">

@@ -1,145 +1,59 @@
-import { useEffect, useRef, useState, type ChangeEvent } from "react";
-import { api } from "../services/api";
-import type { Course } from "../config/types";
-import { useSearchParams } from "react-router";
-import { debounce } from "lodash";
+import { Link } from "react-router";
+import { UserType } from "../config/types";
+import { useGlobalStore } from "../store/useGlobalStore";
 
 export default function Homepage() {
     // console.log("render homepage");
-    // vars, let const ... ...
-    const [courses, setCourses] = useState<Course[] | null>(null);
-    const [searchParams, setSearchParams] = useSearchParams();
-
-    // actions
-    // ? l'utente studente ricevera solo la propria scheda da questa chiamata
-    const testStudentIndex = async () => {
-        try {
-            const res = await api.get("/api/students");
-            console.log(res.data);
-        } catch (err) {
-            console.error(err);
-        }
-    };
-
-    const updateSearchParam = (
-        key: string,
-        value: string,
-        currentParams: URLSearchParams
-    ) => {
-        const newParams = new URLSearchParams(currentParams); // clona quelli esistenti
-        newParams.set(key, value);
-        // if (!value) newParams.delete(key);
-        setSearchParams(newParams);
-    };
-
-    const handleInputChange = (
-        e: ChangeEvent<HTMLInputElement>,
-        currentParams: URLSearchParams
-    ) => {
-        const key = "last_name";
-        const last_name = e.target.value;
-        updateSearchParam(key, last_name, currentParams);
-    };
-
-    const debouncedFn = useRef(
-        debounce(
-            (
-                e: ChangeEvent<HTMLInputElement>,
-                currentParams: URLSearchParams
-            ) => {
-                handleInputChange(e, currentParams);
-            },
-            500
-        )
-    ).current;
-
-    const onInput = (e: ChangeEvent<HTMLInputElement>) => {
-        debouncedFn(e, searchParams);
-    };
-
-    const handleCourseSelected = async (e: ChangeEvent<HTMLSelectElement>) => {
-        const key = "course_id";
-        const selectedCourseId = e.target.value;
-        updateSearchParam(key, selectedCourseId, searchParams);
-    };
-
-    // effects
-    useEffect(() => {
-        const fetchCourses = async () => {
-            try {
-                const res = await api.get("/api/courses");
-                setCourses(res.data.data as Course[]);
-            } catch (err) {
-                console.error(err);
-            }
-        };
-        fetchCourses();
-    }, []);
-
-    useEffect(() => {
-        // ! da cancellare pero gestire l'if sotto
-        let paramsFromUrl = searchParams.toString();
-        paramsFromUrl = paramsFromUrl && "?" + paramsFromUrl;
-
-        let params: Record<string, string> = {};
-        searchParams.forEach((value, key) => {
-            if (value) {
-                params = { ...params, [key]: value };
-            } else {
-                delete params[key];
-            }
-        });
-
-        console.log(params);
-
-        const fetchStudents = async () => {
-            try {
-                const res = await api.get(`/api/students`, { params });
-                // console.log(res.data);
-            } catch (err) {
-                console.error(err);
-            }
-        };
-        if (paramsFromUrl) {
-            fetchStudents();
-        }
-    }, [searchParams]);
+    const { authUser } = useGlobalStore((state) => state);
+    console.log(authUser);
 
     // view
+    if (!authUser) return <pre>auth user loading</pre>;
     return (
-        <div className="flex justify-center items-center h-full gap-8">
-            <button onClick={testStudentIndex} className="btn">
-                test student index
-            </button>
+        <>
+            {authUser.type === UserType.STUDENT ? (
+                <div className="h-full flex flex-col">
+                    <h1 className="text-2xl px-5 py-5">Student Dashboard</h1>
+                    <div className="h-6/12 flex gap-5 p-5 pt-0">
+                        <div className="w-3/5 flex flex-col gap-5">
+                            <div className="bg-red-300 h-2/5"></div>
+                            <div className="h-3/5 flex gap-5">
+                                <div className="bg-blue-300 w-2/5"></div>
+                                <div className="bg-blue-800 grow"></div>
+                            </div>
+                        </div>
+                        <div className="bg-red-700 grow p-5"></div>
+                    </div>
+                    <div className="grow flex pt-0 p-5 gap-5">
+                        <div className="border bg-green-500 border-black h-full grow-3"></div>
+                        <div className="border bg-green-500 border-black h-full grow-2"></div>
+                        <div className="border bg-green-500 border-black h-full grow-2"></div>
+                    </div>
+                </div>
+            ) : (
+                <div className="h-full flex flex-col">
+                    <h1 className="text-2xl px-5 py-5">Teacher Dashboard</h1>
+                    <div className="flex h-full p-5 pt-0 gap-5">
+                        <div className="h-full w-3/5 flex flex-col gap-5">
+                            <div className="h-1/5 bg-blue-950">
+                                <Link
+                                    to="/teacher/search-students"
+                                    role="button"
+                                    className="btn"
+                                >
+                                    Cerca i tuoi pezzenti
+                                </Link>
+                            </div>
 
-            <div className="auth-form">
-                <div>
-                    <input
-                        onChange={onInput}
-                        type="text"
-                        name="last_name"
-                        placeholder="Cerca per cognome"
-                    />
+                            <div className="grow bg-green-800">1</div>
+                        </div>
+                        <div className=" h-full grow flex flex-col gap-5">
+                            <div className="h-3/5 bg-green-800">1</div>
+                            <div className="grow bg-green-300">1</div>
+                        </div>
+                    </div>
                 </div>
-                <div>
-                    <label htmlFor="courses">Seleziona corso</label>
-                    <select
-                        onChange={handleCourseSelected}
-                        name="course_id"
-                        id="courses"
-                    >
-                        <option value="" selected disabled hidden>
-                            Seleziona il tuo ruolo
-                        </option>
-                        {courses &&
-                            courses.map((course) => (
-                                <option key={course.id} value={course.id}>
-                                    {course.name}
-                                </option>
-                            ))}
-                    </select>
-                </div>
-            </div>
-        </div>
+            )}
+        </>
     );
 }

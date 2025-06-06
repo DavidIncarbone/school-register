@@ -18,7 +18,7 @@ export default function Header() {
     };
 
     return (
-        <header className="h-[10%] bg-fuchsia-500 flex">
+        <header className="h-[7%] bg-fuchsia-500 flex">
             <div className="flex items-center grow bg-red-700 px-4">
                 <input type="text" className="w-full xl:w-1/2" />
             </div>
