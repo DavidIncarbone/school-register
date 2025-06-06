@@ -83,9 +83,13 @@ class StudentController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Student $student)
     {
-        //
+        return response()->json([
+            'success' => true,
+            'message' => 'Richiesta effettuata con successo',
+            'data' => $student,
+        ]);
     }
 
     /**
@@ -99,8 +103,10 @@ class StudentController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Student $student)
     {
-        //
+        $student->subjects()->detach();
+        $student->deleteOrFail();
+        return response()->json([], 204);
     }
 }

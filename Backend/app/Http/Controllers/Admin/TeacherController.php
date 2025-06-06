@@ -77,9 +77,13 @@ class TeacherController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Teacher $teacher)
     {
-        //
+        return response()->json([
+            'success' => true,
+            'message' => 'Richiesta effettuata con successo',
+            'data' => $teacher,
+        ]);
     }
 
     /**
@@ -93,8 +97,10 @@ class TeacherController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Teacher $teacher)
     {
-        //
+        $teacher->courses()->detach();
+        $teacher->deleteOrFail();
+        return response()->json([], 204);
     }
 }
