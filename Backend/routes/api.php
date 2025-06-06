@@ -26,22 +26,6 @@ Route::apiResource("/teachers", TeacherController::class)->middleware(['auth:san
 Route::apiResource("/courses", CourseController::class)->middleware(['auth:sanctum']);
 
 Route::apiResource("/admin/students", AdminStudentController::class)/*->middleware(['auth:sanctum'])*/;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // rotta custom per recupero dati necessari all'abilitazione dell'acc
 Route::post("/retrieve-temp-user", function () {
     // ricavo la mail dal corpo della richiesta

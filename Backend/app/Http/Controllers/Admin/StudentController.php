@@ -15,18 +15,40 @@ class StudentController extends Controller
     {
         request()->validate([
             "name" => ["string", "max:100", "min:1"],
-            "email" => ["string", "max:100", "min:1", "email", "lowercase"],
+            "email" => ["string", "max:100", "min:1", "lowercase"],
             "sort" => ["string", "in:by_first_name,by_last_name,by_email,by_created_at,by_updated_at", "max:255"],
             "dir" => ["string", "in:asc,desc"],
         ]);
 
-        $query 
+        $query = Student::query();
 
-        // $students = Student::paginate(5);
+        if (request()->name) {
+            $query->where("name", request()->name);
+        }
+        if (request()->email) {
+            $query->where("email", "like", request()->email . "%");
+        }
+        if (request()->sort) {
+            $sort = request()->sort;
+            $dir = request()->dir ?? "asc";
+            if ($sort == "by_first_name") {
+                $query->orderBy("first_name", $dir);
+            } elseif ($sort == "by_last_name") {
+                $query->orderBy("last_name", $dir);
+            } elseif ($sort == "by_email") {
+                $query->orderBy("email", $dir);
+            } elseif ($sort == "by_created_at") {
+                $query->orderBy("created_at", $dir);
+            } elseif ($sort == "by_updated_at") {
+                $query->orderBy("updated_at", $dir);
+            }
+        }
+
+        $students = $query->paginate(5);
 
         return response()->json(
 
-            // $students
+            $students
         );
     }
 
