@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Course;
+use App\Models\Student;
 use App\Models\Subject;
 use App\Models\Teacher;
 use App\Models\User;
@@ -17,11 +18,17 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
 
-        User::factory()->create([
-            'name' => 'Luigi Mosca',
-            'email' => 'admin@example.com',
-            'password' => 'ciaociao'
-        ]);
+        // User::factory()->createMany([[
+        //     'name' => 'Luigi Mosca',
+        //     'email' => 'mosca@example.com',
+        //     'type' => 'teacher',
+        //     'password' => 'ciaociao'
+        // ], [
+        //     'name' => 'Danilo Raciti',
+        //     'email' => 'raciti@example.com',
+        //     'type' => 'student',
+        //     'password' => 'ciaociao'
+        // ]],);
 
         $this->call([
             SubjectSeeder::class,
@@ -37,8 +44,7 @@ class DatabaseSeeder extends Seeder
             "subject_id" => rand(1, $subjectsCount),
             "first_name" => "Luigi",
             "last_name" => "Mosca",
-            "email" => "admin@example.com"
-
+            "email" => "mosca@example.com"
         ]);
 
         // $nCourses = 
@@ -46,5 +52,11 @@ class DatabaseSeeder extends Seeder
         for ($i = 0; $i < rand(2, $courseCount); $i++) {
             $teacher->courses()->attach($i + 1);
         }
+        Student::factory()->create([
+            "course_id" => rand(1, $courseCount),
+            "first_name" => "Danilo",
+            "last_name" => "Raciti",
+            "email" => "raciti@example.com"
+        ]);
     }
 }

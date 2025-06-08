@@ -29,10 +29,7 @@ class StudentController extends Controller
                 'data' => Student::where('email', $userEmail)->first(),
             ], 200);
         } elseif ($userType == "teacher") {
-            // $fields = request()->validate([
-            //     "course_id" => "required|integer|min:1",
-            //     "last_name" => "string|max:100"
-            // ]);
+
 
             request()->validate([
                 "course_id" => "required|integer|min:1",

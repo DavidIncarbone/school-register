@@ -3,20 +3,21 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\StudentResource;
 use App\Models\Student;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 
 class StudentController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index(): JsonResponse
+    public function index()
     {
-
 
         request()->validate([
             "name" => ["string", "max:100", "min:1"],
@@ -66,9 +67,7 @@ class StudentController extends Controller
 
         $students = $query->paginate(5);
 
-        return response()->json(
-            $students
-        );
+        return new StudentResource($students);
     }
 
 
