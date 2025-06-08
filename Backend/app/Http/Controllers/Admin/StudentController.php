@@ -48,7 +48,6 @@ class StudentController extends Controller
             $query->where("email", "like", request()->email . "%");
         }
 
-        // Student::findOrFail(0);
         if (request()->sort) {
             $sort = request()->sort;
             $dir = request()->dir ?? "asc";
@@ -76,7 +75,36 @@ class StudentController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            "first_name" => ["required", "string", "max:100", "min:1"],
+            "last_name" => ["required", "string", "max:100", "min:1"],
+            "email" => ["required", "string", "max:100", "min:1", "lowercase"],
+            "course_id" => ["required", "integer", "min:1"]
+        ]);
+
+
+        $data = $request->all();
+
+        $emailDB = Student::all()->pluck("email")->toArray();
+
+        if (in_array($data["email"], $emailDB)) {
+            return response()->json([
+                "error" => "conflict",
+                "message" => "Email già registrata"
+            ], 409);
+        }
+        Log::info($data);
+
+        $newStudent = new Student();
+
+        $newStudent->first_name = $data["first_name"];
+        $newStudent->last_name = $data["last_name"];
+        $newStudent->email = $data["email"];
+        $newStudent->course_id = $data["course_id"];
+
+        $newStudent->save();
+
+        return response()->json($newStudent);
     }
 
     /**
