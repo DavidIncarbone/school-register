@@ -2,6 +2,8 @@
 
 namespace Database\Seeders;
 
+use App\Models\Course;
+use App\Models\Student;
 use App\Models\Subject;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -13,6 +15,9 @@ class SubjectSeeder extends Seeder
      */
     public function run(): void
     {
-        Subject::factory(20)->create();
+        $courseCount = Course::all()->count();
+        Subject::factory(20)->create()->each(function ($s) use ($courseCount) {
+            $s->courses()->attach(rand(1, $courseCount));
+        });
     }
 }

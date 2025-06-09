@@ -17,12 +17,12 @@ class Subject extends Model
 
     public function students()
     {
-        return $this->belongsToMany(Student::class);
+        return $this->belongsToMany(Student::class)->withTimestamps();;
     }
 
     public function courses()
     {
-        return $this->belongsToMany(Course::class);
+        return $this->belongsToMany(Course::class)->withTimestamps();
     }
 
     public function teachers()

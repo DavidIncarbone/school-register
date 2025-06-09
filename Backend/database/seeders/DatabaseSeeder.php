@@ -28,11 +28,21 @@ class DatabaseSeeder extends Seeder
             'email' => 'david@example.com',
             'type' => 'admin',
             'password' => 'ciaociao'
+        ], [
+            'name' => 'Danilo',
+            'email' => 'danilo@example.com',
+            'type' => 'teacher',
+            'password' => 'ciaociao'
+        ], [
+            'name' => 'Luigi',
+            'email' => 'luigi@example.com',
+            'type' => 'student',
+            'password' => 'ciaociao'
         ]],);
 
         $this->call([
-            SubjectSeeder::class,
             CourseSeeder::class,
+            SubjectSeeder::class,
             TeacherSeeder::class,
             StudentSeeder::class,
             PresenceSeeder::class,
