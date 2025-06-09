@@ -18,17 +18,17 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
 
-        // User::factory()->createMany([[
-        //     'name' => 'Luigi Mosca',
-        //     'email' => 'mosca@example.com',
-        //     'type' => 'teacher',
-        //     'password' => 'ciaociao'
-        // ], [
-        //     'name' => 'Danilo Raciti',
-        //     'email' => 'raciti@example.com',
-        //     'type' => 'student',
-        //     'password' => 'ciaociao'
-        // ]],);
+        User::factory()->createMany([[
+            'name' => 'AJ',
+            'email' => 'aj@example.com',
+            'type' => 'admin',
+            'password' => 'ciaociao'
+        ], [
+            'name' => 'David',
+            'email' => 'david@example.com',
+            'type' => 'admin',
+            'password' => 'ciaociao'
+        ]],);
 
         $this->call([
             SubjectSeeder::class,

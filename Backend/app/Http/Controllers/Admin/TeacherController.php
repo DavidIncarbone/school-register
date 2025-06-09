@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Teacher;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class TeacherController extends Controller
 {
@@ -66,12 +67,52 @@ class TeacherController extends Controller
         );
     }
 
+    public function create()
+    {
+        //
+    }
+
     /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            "first_name" => ["required", "string", "max:100", "min:1"],
+            "last_name" => ["required", "string", "max:100", "min:1"],
+            "email" => ["required", "string", "max:100", "min:1", "lowercase"],
+            "subject_id" => ["required", "integer", "min:1"],
+            "course_id" => ["required", "integer", "min:1"]
+
+        ]);
+
+
+        $data = $request->all();
+
+        $emailDB = Teacher::all()->pluck("email")->toArray();
+
+        if (in_array($data["email"], $emailDB)) {
+            return response()->json([
+                "error" => "conflict",
+                "message" => "Email già registrata"
+            ], 409);
+        }
+        Log::info($data);
+
+        $newTeacher = new Teacher();
+
+        $newTeacher->first_name = $data["first_name"];
+        $newTeacher->last_name = $data["last_name"];
+        $newTeacher->email = $data["email"];
+        $newTeacher->subject_id = $data["subject_id"];
+
+        $newTeacher->save();
+
+        if (isset(request()->course_id)) {
+            $newTeacher->courses()->attach(request()->course_id);
+        }
+
+        return response()->json($newTeacher);
     }
 
     /**
@@ -86,12 +127,40 @@ class TeacherController extends Controller
         ]);
     }
 
+    public function edit(string $id)
+    {
+        //
+    }
+
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Teacher $teacher)
     {
-        //
+        $request->validate([
+            "first_name" => ["required", "string", "max:100", "min:1"],
+            "last_name" => ["required", "string", "max:100", "min:1"],
+            "email" => ["required", "string", "max:100", "min:1", "lowercase"],
+            "subject_id" => ["required", "integer", "min:1"],
+            "course_id" => ["required", "integer", "min:1"]
+
+        ]);
+
+
+        $data = $request->all();
+
+        $teacher->first_name = $data["first_name"];
+        $teacher->last_name = $data["last_name"];
+        $teacher->email = $data["email"];
+        $teacher->subject_id = $data["subject_id"];
+
+        $teacher->update();
+
+        if (isset($data["course_id"])) {
+            $teacher->courses()->sync($data["course_id"]);
+        }
+
+        return response()->json($teacher);
     }
 
     /**

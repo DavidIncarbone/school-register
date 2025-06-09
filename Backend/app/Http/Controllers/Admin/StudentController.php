@@ -66,7 +66,14 @@ class StudentController extends Controller
 
         $students = $query->paginate(5);
 
-        return new StudentResource($students);
+        return response()->json([
+            $students
+        ]);
+    }
+
+    public function create()
+    {
+        //
     }
 
 
@@ -104,7 +111,11 @@ class StudentController extends Controller
 
         $newStudent->save();
 
-        return response()->json($newStudent);
+        return response()->json([
+            "success" => true,
+            "message" => "Studente aggiunto con successo",
+            "data" => $newStudent
+        ]);
     }
 
     /**
@@ -119,12 +130,41 @@ class StudentController extends Controller
         ]);
     }
 
+    public function edit(string $id)
+    {
+        //
+    }
+
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Student $student)
     {
-        //
+        $request->validate([
+            "first_name" => ["string", "max:100", "min:1"],
+            "last_name" => ["string", "max:100", "min:1"],
+            "email" => ["string", "max:100", "min:1", "lowercase"],
+            "course_id" => ["integer", "min:1"]
+        ]);
+
+
+        $data = $request->all();
+
+        Log::info($data);
+
+
+        $student->first_name = $data["first_name"];
+        $student->last_name = $data["last_name"];
+        $student->email = $data["email"];
+        $student->course_id = $data["course_id"];
+
+        $student->update();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Studente modificato con successo',
+            'data' => $student,
+        ]);
     }
 
     /**

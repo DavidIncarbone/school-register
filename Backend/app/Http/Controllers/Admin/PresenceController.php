@@ -1,16 +1,22 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
-use App\Models\Subject;
+use App\Http\Controllers\Controller;
+use App\Models\Presence;
 use Illuminate\Http\Request;
 
-class SubjectController extends Controller
+class PresenceController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
+    {
+        //
+    }
+
+    public function create()
     {
         //
     }
@@ -26,7 +32,12 @@ class SubjectController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Subject $subject)
+    public function show(Presence $presence)
+    {
+        //
+    }
+
+    public function edit(string $id)
     {
         //
     }
@@ -34,7 +45,7 @@ class SubjectController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Subject $subject)
+    public function update(Request $request, Presence $presence)
     {
         //
     }
@@ -42,7 +53,7 @@ class SubjectController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Subject $subject)
+    public function destroy(Presence $presence)
     {
         //
     }
