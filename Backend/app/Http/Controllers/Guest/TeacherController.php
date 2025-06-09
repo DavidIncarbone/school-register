@@ -39,7 +39,6 @@ class TeacherController extends Controller
      */
     public function show(Teacher $teacher)
     {
-
         return response()->json([
             'success' => true,
             'message' => 'Richiesta effettuata con successo',

@@ -1,26 +1,58 @@
-import { useEffect, useRef, useState, type ChangeEvent } from "react";
+import { useEffect, useRef, type ChangeEvent } from "react";
 import { api } from "../../services/api";
 import type { Course, Student } from "../../config/types";
 import { useSearchParams } from "react-router";
 import { debounce } from "lodash";
+import { useQuery, type UseQueryResult } from "@tanstack/react-query";
 
 export default function SearchStudentsPage() {
-    // console.log("render homepage");
     // vars, let const ... ...
-    const [courses, setCourses] = useState<Course[] | null>(null);
+    // const [courses, setCourses] = useState<Course[] | null>(null);
     const [searchParams, setSearchParams] = useSearchParams();
-    const [students, setStudents] = useState<Student[] | null>(null);
+    // const [students, setStudents] = useState<Student[] | null>(null);
 
-    // actions
-    // // ? l'utente studente ricevera solo la propria scheda da questa chiamata
-    // const testStudentIndex = async () => {
-    //     try {
-    //         const res = await api.get("/api/students");
-    //         console.log(res.data);
-    //     } catch (err) {
-    //         console.error(err);
-    //     }
-    // };
+    const params = Object.fromEntries(searchParams.entries());
+
+    console.log(params);
+
+    const {
+        data: students,
+        // isLoading: isStudentsLoading,
+        isError: isStudentsError,
+    } = useQuery({
+        queryKey: ["students", params], // sta a indicare la chiave che si riferisce alla chiamata api
+        queryFn: async () => {
+            // se params contiene course_id allora fai fetch senno throw error
+            if (!("course_id" in params)) {
+                throw new Error("no course_id");
+            }
+            const res = await api.get(`/api/students`, { params });
+            return res.data.data;
+        },
+        staleTime: 60 * 60 * 1000, // ms
+        refetchInterval: 60 * 60 * 1000,
+    }) as UseQueryResult<Student[], Error>;
+
+    const {
+        data: courses,
+        isLoading: isCoursesLoading,
+        isError: isCoursesError,
+    } = useQuery({
+        queryKey: ["courses"], // sta a indicare la chiave che si riferisce alla chiamata api
+        queryFn: async () => {
+            const res = await api.get(`/api/courses`);
+            return res.data.data;
+        },
+        staleTime: Infinity,
+    }) as UseQueryResult<Course[], Error>;
+
+    useEffect(() => {
+        if (courses && !("course_id" in params)) {
+            setSearchParams({ course_id: String(courses[0].id) });
+        }
+    }, [courses, params]);
+
+    // * actions
 
     const updateSearchParam = (
         key: string,
@@ -64,59 +96,10 @@ export default function SearchStudentsPage() {
         updateSearchParam(key, selectedCourseId, searchParams);
     };
 
-    // effects
-    useEffect(() => {
-        const fetchStudents = async (params: unknown) => {
-            try {
-                const res = await api.get(`/api/students`, { params });
-                console.log(res.data);
-                setStudents(res.data.data as Student[]);
-            } catch (err) {
-                console.error(err);
-            }
-        };
-        const fetchCourses = async () => {
-            try {
-                const res = await api.get("/api/courses");
-                const courses = res.data.data as Course[];
-                setCourses(courses);
-                if (!searchParams.get("course_id")) {
-                    fetchStudents({ course_id: courses[0].id });
-                    setSearchParams({ course_id: res.data.data[0].id });
-                }
-            } catch (err) {
-                console.error(err);
-            }
-        };
-        fetchCourses();
-    }, []);
-
-    useEffect(() => {
-        console.log(searchParams.get("course_id"));
-
-        let params: Record<string, string> = {};
-        searchParams.forEach((value, key) => {
-            if (value) {
-                params = { ...params, [key]: value };
-            } else {
-                delete params[key];
-            }
-        });
-
-        const fetchStudents = async () => {
-            try {
-                const res = await api.get(`/api/students`, { params });
-                console.log(res.data);
-                setStudents(res.data.data as Student[]);
-            } catch (err) {
-                console.error(err);
-            }
-        };
-
-        if (searchParams.get("course_id")) {
-            fetchStudents();
-        }
-    }, [searchParams]);
+    if (isCoursesLoading) return <pre>courses loading</pre>;
+    if (isCoursesError) return <pre>courses error</pre>;
+    // if (isStudentsLoading) return <pre>students loading</pre>;
+    if (isStudentsError) return <pre>students error</pre>;
 
     // view
     return (

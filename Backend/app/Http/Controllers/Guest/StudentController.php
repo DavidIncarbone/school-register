@@ -34,7 +34,7 @@ class StudentController extends Controller
 
             request()->validate([
                 "course_id" => "required|integer|min:1",
-                "name" => ["string", "max:100", "min:1"],
+                "name" => ["string", "max:100", "nullable"],
                 "email" => ["string", "max:100", "min:1", "lowercase"],
                 "sort" => ["string", "in:by_first_name,by_last_name,by_email,by_created_at,by_updated_at", "max:255"],
                 "dir" => ["string", "in:asc,desc"],
