@@ -32,3 +32,8 @@ export type Course = {
     name: string;
     description: string;
 };
+
+export type SearchStudentsParams = {
+    course_id?: number;
+    name?: number;
+};

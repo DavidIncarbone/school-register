@@ -1,50 +1,27 @@
 import { useEffect, useRef, type ChangeEvent } from "react";
-import { api } from "../../services/api";
 import type { Course, Student } from "../../config/types";
 import { useSearchParams } from "react-router";
 import { debounce } from "lodash";
-import { useQuery, type UseQueryResult } from "@tanstack/react-query";
+import { type UseQueryResult } from "@tanstack/react-query";
+import { useQueryIndexStudent } from "../../hooks/studentsQueries";
+import { useQueryIndexCourse } from "../../hooks/coursesQueries";
 
 export default function SearchStudentsPage() {
     // vars, let const ... ...
-    // const [courses, setCourses] = useState<Course[] | null>(null);
     const [searchParams, setSearchParams] = useSearchParams();
-    // const [students, setStudents] = useState<Student[] | null>(null);
-
     const params = Object.fromEntries(searchParams.entries());
-
-    console.log(params);
 
     const {
         data: students,
-        // isLoading: isStudentsLoading,
+        isLoading: isStudentsLoading,
         isError: isStudentsError,
-    } = useQuery({
-        queryKey: ["students", params], // sta a indicare la chiave che si riferisce alla chiamata api
-        queryFn: async () => {
-            // se params contiene course_id allora fai fetch senno throw error
-            if (!("course_id" in params)) {
-                throw new Error("no course_id");
-            }
-            const res = await api.get(`/api/students`, { params });
-            return res.data.data;
-        },
-        staleTime: 60 * 60 * 1000, // ms
-        refetchInterval: 60 * 60 * 1000,
-    }) as UseQueryResult<Student[], Error>;
+    } = useQueryIndexStudent(params) as UseQueryResult<Student[], Error>;
 
     const {
         data: courses,
         isLoading: isCoursesLoading,
         isError: isCoursesError,
-    } = useQuery({
-        queryKey: ["courses"], // sta a indicare la chiave che si riferisce alla chiamata api
-        queryFn: async () => {
-            const res = await api.get(`/api/courses`);
-            return res.data.data;
-        },
-        staleTime: Infinity,
-    }) as UseQueryResult<Course[], Error>;
+    } = useQueryIndexCourse() as UseQueryResult<Course[], Error>;
 
     useEffect(() => {
         if (courses && !("course_id" in params)) {
@@ -53,7 +30,6 @@ export default function SearchStudentsPage() {
     }, [courses, params]);
 
     // * actions
-
     const updateSearchParam = (
         key: string,
         value: string,
@@ -104,9 +80,6 @@ export default function SearchStudentsPage() {
     // view
     return (
         <div className="h-full p-5">
-            {/* <button onClick={testStudentIndex} className="btn">
-                test student index
-            </button> */}
             {/* ricerca e filtro */}
             <div className="flex justify-center gap-8 bg-amber-600">
                 <div>
@@ -123,9 +96,9 @@ export default function SearchStudentsPage() {
                         name="course_id"
                         className="w-48"
                     >
-                        {/* <option value="" selected disabled hidden>
+                        <option value="" selected disabled hidden>
                             Seleziona corso
-                        </option> */}
+                        </option>
                         {courses &&
                             courses.map((course) => (
                                 <option
