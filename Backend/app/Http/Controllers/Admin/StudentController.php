@@ -7,6 +7,7 @@ use App\Http\Resources\StudentResource;
 use App\Models\Student;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
@@ -18,6 +19,8 @@ class StudentController extends Controller
      */
     public function index()
     {
+
+        // Gate::aut
 
         request()->validate([
             "name" => ["string", "max:100", "min:1"],

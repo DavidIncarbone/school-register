@@ -15,29 +15,30 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Validation\Rule;
 
+
 Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
     return $request->user();
 });
 
 // ***** AUTH GUEST *****
-
-// students
-Route::apiResource("/students", StudentController::class)->middleware(['auth:sanctum']);
-
-// teachers
-Route::apiResource("/teachers", TeacherController::class)->middleware(['auth:sanctum']);
-
-// courses
-Route::apiResource("/courses", CourseController::class)->middleware(['auth:sanctum']);
+Route::middleware(["auth:sanctum"])->group(function () {
+    // students
+    Route::apiResource("/students", StudentController::class);
+    // teachers
+    Route::apiResource("/teachers", TeacherController::class);
+    // courses
+    Route::apiResource("/courses", CourseController::class);
+});
 
 // ***** AUTH ADMIN *****
+Route::middleware(['auth:sanctum', 'admin-access'])->prefix("/admin")->name('admin.')->group(function () {
+    Route::apiResource("/students", AdminStudentController::class);
+    Route::apiResource("/teachers", AdminTeacherController::class);
+    Route::apiResource("/courses", AdminCourseController::class);
+    Route::apiResource("/subjects", AdminSubjectController::class);
+    Route::apiResource("/presences", AdminPresenceController::class);
+});
 
-Route::apiResource("/admin/students", AdminStudentController::class)->names("admin.students");
-
-Route::apiResource("/admin/teachers", AdminTeacherController::class)->names("admin.teachers")->middleware(['auth:sanctum']);
-Route::apiResource("/admin/courses", AdminCourseController::class)->names("admin.courses")->middleware(['auth:sanctum']);
-Route::apiResource("/admin/subjects", AdminSubjectController::class)->names("admin.subjects")->middleware(['auth:sanctum']);
-Route::apiResource("/admin/presences", AdminPresenceController::class)->names("admin.presences")->middleware(['auth:sanctum']);
 // rotta custom per recupero dati necessari all'abilitazione dell'acc
 Route::post("/retrieve-temp-user", function () {
     // ricavo la mail dal corpo della richiesta
