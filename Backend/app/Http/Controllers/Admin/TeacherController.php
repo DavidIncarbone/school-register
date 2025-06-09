@@ -67,11 +67,6 @@ class TeacherController extends Controller
         );
     }
 
-    public function create()
-    {
-        //
-    }
-
     /**
      * Store a newly created resource in storage.
      */
@@ -125,11 +120,6 @@ class TeacherController extends Controller
             'message' => 'Richiesta effettuata con successo',
             'data' => $teacher,
         ]);
-    }
-
-    public function edit(string $id)
-    {
-        //
     }
 
     /**

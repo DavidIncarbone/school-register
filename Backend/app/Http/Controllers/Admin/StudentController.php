@@ -20,8 +20,6 @@ class StudentController extends Controller
     public function index()
     {
 
-        // Gate::aut
-
         request()->validate([
             "name" => ["string", "max:100", "min:1"],
             "email" => ["string", "max:100", "min:1", "lowercase"],
@@ -73,12 +71,6 @@ class StudentController extends Controller
             $students
         ]);
     }
-
-    public function create()
-    {
-        //
-    }
-
 
     /**
      * Store a newly created resource in storage.
@@ -133,11 +125,6 @@ class StudentController extends Controller
         ]);
     }
 
-    public function edit(string $id)
-    {
-        //
-    }
-
     /**
      * Update the specified resource in storage.
      */
@@ -154,7 +141,6 @@ class StudentController extends Controller
         $data = $request->all();
 
         Log::info($data);
-
 
         $student->first_name = $data["first_name"];
         $student->last_name = $data["last_name"];
