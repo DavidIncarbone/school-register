@@ -66,10 +66,24 @@ export default function SearchStudentsPage() {
 
     // effects
     useEffect(() => {
+        const fetchStudents = async (params: unknown) => {
+            try {
+                const res = await api.get(`/api/students`, { params });
+                console.log(res.data);
+                setStudents(res.data.data as Student[]);
+            } catch (err) {
+                console.error(err);
+            }
+        };
         const fetchCourses = async () => {
             try {
                 const res = await api.get("/api/courses");
-                setCourses(res.data.data as Course[]);
+                const courses = res.data.data as Course[];
+                setCourses(courses);
+                if (!searchParams.get("course_id")) {
+                    fetchStudents({ course_id: courses[0].id });
+                    setSearchParams({ course_id: res.data.data[0].id });
+                }
             } catch (err) {
                 console.error(err);
             }
@@ -78,9 +92,7 @@ export default function SearchStudentsPage() {
     }, []);
 
     useEffect(() => {
-        // ! da cancellare pero gestire l'if sotto
-        let paramsFromUrl = searchParams.toString();
-        paramsFromUrl = paramsFromUrl && "?" + paramsFromUrl;
+        console.log(searchParams.get("course_id"));
 
         let params: Record<string, string> = {};
         searchParams.forEach((value, key) => {
@@ -91,8 +103,6 @@ export default function SearchStudentsPage() {
             }
         });
 
-        console.log(params);
-
         const fetchStudents = async () => {
             try {
                 const res = await api.get(`/api/students`, { params });
@@ -102,7 +112,8 @@ export default function SearchStudentsPage() {
                 console.error(err);
             }
         };
-        if (paramsFromUrl) {
+
+        if (searchParams.get("course_id")) {
             fetchStudents();
         }
     }, [searchParams]);
@@ -124,13 +135,25 @@ export default function SearchStudentsPage() {
                     />
                 </div>
                 <div>
-                    <select onChange={handleCourseSelected} name="course_id">
-                        <option value="" selected disabled hidden>
+                    <select
+                        onChange={handleCourseSelected}
+                        name="course_id"
+                        className="w-48"
+                    >
+                        {/* <option value="" selected disabled hidden>
                             Seleziona corso
-                        </option>
+                        </option> */}
                         {courses &&
                             courses.map((course) => (
-                                <option key={course.id} value={course.id}>
+                                <option
+                                    selected={
+                                        Number(
+                                            searchParams.get("course_id")
+                                        ) === course.id
+                                    }
+                                    key={course.id}
+                                    value={course.id}
+                                >
                                     {course.name}
                                 </option>
                             ))}
