@@ -27,6 +27,14 @@ export default function SearchStudentsPage() {
   ) as SearchStudentsParams;
   const [sortingCols, setSortingCols] = useState(initialSortingCols);
   const activeSort = params.sort ?? SortOption.BY_ID;
+  // vars
+  const [searchParams, setSearchParams] = useSearchParams();
+  const params = Object.fromEntries(
+    searchParams.entries()
+  ) as SearchStudentsParams;
+  const [sortingCols, setSortingCols] = useState(initialSortingCols);
+  const activeSort = params.sort ?? SortOption.BY_ID;
+  const activeDir = params.dir ?? "asc";
 
   // queries
   const {
@@ -104,7 +112,7 @@ export default function SearchStudentsPage() {
         <div className="text-lg sm:text-2xl flex flex-wrap items-center justify-center gap-2">
           <p>Corso selezionato:</p>
           <select
-            onChange={(e) => handleCourseSelected(e, searchParams)}
+            onChange={handleCourseSelected}
             name="course_id"
             className="no-default w-fit capitalize font-bold italic cursor-pointer"
           >
@@ -146,7 +154,7 @@ export default function SearchStudentsPage() {
               <div
                 key={i}
                 id={col.sort}
-                onClick={(e) => handleSortingColClick(e, searchParams)}
+                onClick={handleSortingColClick}
                 className={`${
                   col.sort === SortOption.BY_EMAIL && "max-md:hidden"
                 } cursor-pointer transition-colors hover:bg-zinc-950 active:[&>*]:scale-90 [&>*]:transition-transform flex items-center gap-1 px-2 py-2 lg:py-4 capitalize first:col-span-1 not-first:md:col-span-2 last:justify-center`}
@@ -154,9 +162,10 @@ export default function SearchStudentsPage() {
                 <span className="line-clamp-1">{col.label}</span>
                 {i < ar.length - 1 && (
                   <GoTriangleDown
-                    className={`${col.dir === "desc" && "rotate-180"} ${
-                      activeSort === col.sort && "!opacity-100"
-                    } opacity-0`}
+                    className={`${
+                      (col.dir === "desc" || activeDir === "desc") &&
+                      "rotate-180"
+                    } ${activeSort === col.sort && "!opacity-100"} opacity-0`}
                   />
                 )}
               </div>
