@@ -10,8 +10,6 @@ import Homepage from "./pages/Homepage";
 import SearchStudentsPage from "./pages/teacher/SearchStudentsPage";
 
 function App() {
-    console.log("render app");
-
     // collaterals effect
     useEffect(() => {
         const fetchCsrfCookie = async () => {

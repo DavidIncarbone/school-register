@@ -19,9 +19,7 @@ class CourseController extends Controller
 
         $teacher = Teacher::where("email", $email)->firstOrFail();
 
-        Log::info($teacher);
-
-        $courses = $teacher->courses;
+        $courses = $teacher->courses->loadCount('students');
 
         return response()->json([
             'success' => true,

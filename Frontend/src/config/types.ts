@@ -40,6 +40,7 @@ export type Course = {
     id: number;
     name: string;
     description: string;
+    students_count: number;
 };
 
 export type SearchStudentsParams = {
