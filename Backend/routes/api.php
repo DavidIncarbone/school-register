@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\CourseController as AdminCourseController;
 use App\Http\Controllers\Admin\SubjectController as AdminSubjectController;
 use App\Http\Controllers\Admin\PresenceController as AdminPresenceController;
 use App\Http\Controllers\Guest\CourseController;
+use App\Http\Controllers\Guest\PresenceController;
 use App\Http\Controllers\Guest\StudentController;
 use App\Http\Controllers\Guest\TeacherController;
 use App\Models\Student;
@@ -28,6 +29,8 @@ Route::middleware(["auth:sanctum"])->group(function () {
     Route::apiResource("/teachers", TeacherController::class);
     // courses
     Route::apiResource("/courses", CourseController::class);
+    // presences
+    Route::apiResource("/presences", PresenceController::class)->middleware(['teacher-access']);
 });
 
 // ***** AUTH ADMIN *****

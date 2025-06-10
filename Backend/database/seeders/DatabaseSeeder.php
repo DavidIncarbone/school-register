@@ -45,7 +45,7 @@ class DatabaseSeeder extends Seeder
             SubjectSeeder::class,
             TeacherSeeder::class,
             StudentSeeder::class,
-            PresenceSeeder::class,
+            // PresenceSeeder::class,
         ]);
 
         $subjectsCount = Subject::all()->count();

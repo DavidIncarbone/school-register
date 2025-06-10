@@ -15,6 +15,11 @@ class EnsureUserIsTeacher
      */
     public function handle(Request $request, Closure $next): Response
     {
+        $user = request()->user();
+        if (!$user || $user->type != "teacher") {
+
+            abort(403, "You are not teacher");
+        }
         return $next($request);
     }
 }
