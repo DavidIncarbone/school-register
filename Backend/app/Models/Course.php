@@ -20,6 +20,11 @@ class Course extends Model
         return $this->belongsToMany(Teacher::class)->withTimestamps();
     }
 
+    public function subjects()
+    {
+        return $this->belongsToMany(Subject::class)->withTimestamps();
+    }
+
     public function students()
     {
         return $this->hasMany(Student::class);

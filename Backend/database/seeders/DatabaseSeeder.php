@@ -30,12 +30,12 @@ class DatabaseSeeder extends Seeder
             'password' => 'ciaociao'
         ], [
             'name' => 'Danilo',
-            'email' => 'danilo@example.com',
+            'email' => 'mosca@example.com',
             'type' => 'teacher',
             'password' => 'ciaociao'
         ], [
             'name' => 'Luigi',
-            'email' => 'luigi@example.com',
+            'email' => 'raciti@example.com',
             'type' => 'student',
             'password' => 'ciaociao'
         ]],);

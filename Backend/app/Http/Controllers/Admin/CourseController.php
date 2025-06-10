@@ -130,6 +130,7 @@ class CourseController extends Controller
     public function destroy(Course $course)
     {
         $course->teachers()->detach();
+        $course->subjects()->detach();
         $course->deleteOrFail();
         return response()->json([], 204);
     }

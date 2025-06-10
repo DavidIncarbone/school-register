@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Course;
 use App\Models\Teacher;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class CourseController extends Controller
 {
@@ -17,6 +18,8 @@ class CourseController extends Controller
         $email = $request->user()->email;
 
         $teacher = Teacher::where("email", $email)->firstOrFail();
+
+        Log::info($teacher);
 
         $courses = $teacher->courses;
 
