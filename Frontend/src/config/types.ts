@@ -43,6 +43,13 @@ export type Course = {
     students_count: number;
 };
 
+export type Presence = {
+    id: number;
+    student_id: number;
+    is_present: boolean;
+    date: string;
+};
+
 export type SearchStudentsParams = {
     course_id?: number;
     first_name?: string;

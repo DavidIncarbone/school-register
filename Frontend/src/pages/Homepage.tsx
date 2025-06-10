@@ -13,6 +13,7 @@ import {
     CarouselPrevious,
 } from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
+import { Calendar } from "@/components/ui/calendar";
 import { useState } from "react";
 
 export function Example() {
@@ -32,6 +33,8 @@ export function Example() {
 export default function Homepage() {
     // global store
     const { authUser } = useGlobalStore((state) => state);
+
+    const [date, setDate] = useState<Date | undefined>(new Date());
 
     // views
     if (!authUser) return <Loader />;
@@ -101,7 +104,14 @@ export default function Homepage() {
                             </div>
                         </div>
                         <div className=" h-full grow flex flex-col gap-5">
-                            <div className="h-3/5 bg-green-800">1</div>
+                            <div className="h-3/5 bg-zinc-800 flex justify-center items-center">
+                                <Calendar
+                                    mode="single"
+                                    selected={date}
+                                    onSelect={setDate}
+                                    className="rounded-lg border bg-primary"
+                                />
+                            </div>
                             <div className="grow bg-green-300">1</div>
                         </div>
                     </div>
@@ -120,8 +130,6 @@ const Courses = () => {
     } = useQueryIndexCourse() as UseQueryResult<Course[], Error>;
 
     const [isHovered, setIsHovered] = useState(false);
-
-    console.log(courses);
 
     return (
         <>
@@ -144,23 +152,25 @@ const Courses = () => {
                                 key={course.id}
                                 className="rounded-sm p-4 w-24 basis-1/3 flex flex-col gap-2 cursor-pointer hover:opacity-85 active:opacity-90"
                             >
-                                <div className="flex items-center gap-4 justify-betFween">
-                                    <h4 className="font-semibold text-xl italic capitalize">
-                                        {course.name}
-                                    </h4>
-                                    <BookOpenText />
-                                </div>
-                                <div className="flex items-center gap-1">
-                                    <span>Total students: </span>
-                                    <span>{course.students_count}</span>
-                                    <PersonStanding />
-                                </div>
-                                <div className="flex items-center gap-1">
-                                    <span>
-                                        Attendance: {course.students_count}
-                                    </span>
-                                    <GraduationCap />
-                                </div>
+                                <Link to={`/course/${course.id}`}>
+                                    <div className="flex items-center gap-4 justify-betFween">
+                                        <h4 className="font-semibold text-xl italic capitalize">
+                                            {course.name}
+                                        </h4>
+                                        <BookOpenText />
+                                    </div>
+                                    <div className="flex items-center gap-1">
+                                        <span>Total students: </span>
+                                        <span>{course.students_count}</span>
+                                        <PersonStanding />
+                                    </div>
+                                    <div className="flex items-center gap-1">
+                                        <span>
+                                            Attendance: {course.students_count}
+                                        </span>
+                                        <GraduationCap />
+                                    </div>
+                                </Link>
                             </CarouselItem>
                         ))}
                     </CarouselContent>

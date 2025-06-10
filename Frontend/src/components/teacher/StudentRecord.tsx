@@ -1,6 +1,7 @@
 import { Info, Mail, Pencil, Phone, TableOfContents } from "lucide-react";
 import type { Student } from "../../config/types";
 import { useState } from "react";
+import { Link } from "react-router";
 
 export const StudentRecord = ({ student }: { student: Student }) => {
     const [openActions, toggleActions] = useState(false);
@@ -33,11 +34,11 @@ export const StudentRecord = ({ student }: { student: Student }) => {
                 >
                     <TableOfContents className=" cursor-pointer scale-90 transition-transform hover:scale-110" />
                 </div>
-                <Actions className="max-sm:hidden" />
+                <Actions id={student.id} className="max-sm:hidden" />
                 {/* mobile tooltip */}
                 {openActions && (
                     <div className="sm:hidden absolute z-10 right-0 p-4 rounded-lg bg-slate-900 flex gap-4 top-full border">
-                        <Actions />
+                        <Actions id={student.id} />
                     </div>
                 )}
             </div>
@@ -46,6 +47,7 @@ export const StudentRecord = ({ student }: { student: Student }) => {
 };
 
 type ActionsProps = {
+    id: number;
     className?: string;
     onInfoClick?: () => void;
     onModifyClick?: () => void;
@@ -54,6 +56,7 @@ type ActionsProps = {
 };
 
 const Actions = ({
+    id,
     className,
     onInfoClick,
     onModifyClick,
@@ -65,9 +68,14 @@ const Actions = ({
             <div onClick={onInfoClick} className={className} title="info">
                 <Info className="cursor-pointer scale-90 transition-transform hover:scale-110" />
             </div>
-            <div onClick={onModifyClick} className={className} title="modify">
+            <Link
+                to={`/student/${id}`}
+                onClick={onModifyClick}
+                className={className}
+                title="modify"
+            >
                 <Pencil className="cursor-pointer scale-90 transition-transform hover:scale-110" />
-            </div>
+            </Link>
             <div
                 onClick={onEmailClick}
                 className={className}

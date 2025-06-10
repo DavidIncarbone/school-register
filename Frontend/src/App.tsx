@@ -8,6 +8,8 @@ import RegistrationPage from "./pages/RegistrationPage";
 import PublicRoutes from "./layouts/PublicRoutes";
 import Homepage from "./pages/Homepage";
 import SearchStudentsPage from "./pages/teacher/SearchStudentsPage";
+import { CourseDetailPage } from "./pages/CourseDetailPage";
+import { StudentDetailPage } from "./pages/StudentDetailPage";
 
 function App() {
     // collaterals effect
@@ -32,6 +34,8 @@ function App() {
                         path="/teacher/search-students"
                         Component={SearchStudentsPage}
                     />
+                    <Route path="/course/:id" Component={CourseDetailPage} />
+                    <Route path="/student/:id" Component={StudentDetailPage} />
                 </Route>
 
                 {/* pagine senza auth */}
