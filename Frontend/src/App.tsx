@@ -10,6 +10,7 @@ import Homepage from "./pages/Homepage";
 import SearchStudentsPage from "./pages/teacher/SearchStudentsPage";
 import { CourseDetailPage } from "./pages/CourseDetailPage";
 import { StudentDetailPage } from "./pages/StudentDetailPage";
+import { AttendanceFormPage } from "./pages/teacher/AttendanceFormPage";
 
 function App() {
     // collaterals effect
@@ -36,6 +37,10 @@ function App() {
                     />
                     <Route path="/course/:id" Component={CourseDetailPage} />
                     <Route path="/student/:id" Component={StudentDetailPage} />
+                    <Route
+                        path="/attendance-form"
+                        Component={AttendanceFormPage}
+                    />
                 </Route>
 
                 {/* pagine senza auth */}

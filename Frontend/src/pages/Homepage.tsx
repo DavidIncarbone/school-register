@@ -68,7 +68,7 @@ export default function Homepage() {
                     </h1>
                     <div className="flex h-full p-5 pt-0 gap-5">
                         <div className="h-full w-3/5 flex flex-col gap-5">
-                            <div className="h-1/5 bg-blue-950">
+                            <div className="h-1/5 bg-zinc-800">
                                 <Link
                                     to="/teacher/search-students"
                                     role="button"
@@ -76,26 +76,8 @@ export default function Homepage() {
                                 >
                                     Cerca i tuoi pezzenti
                                 </Link>
-                                <Link
-                                    to="/teacher/search-students"
-                                    role="button"
-                                    className="btn"
-                                >
-                                    la tua scheda personale
-                                </Link>
-                                <Link
-                                    to="/teacher/search-students"
-                                    role="button"
-                                    className="btn"
-                                >
-                                    l'orario
-                                </Link>
-                                <Link
-                                    to="/teacher/search-students"
-                                    role="button"
-                                    className="btn"
-                                >
-                                    comunicazioni
+                                <Link to="/attendance-form" role="button" className="btn">
+                                    L'appello di oggi
                                 </Link>
                             </div>
 
