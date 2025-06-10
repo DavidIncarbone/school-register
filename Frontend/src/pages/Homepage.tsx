@@ -4,7 +4,7 @@ import { useGlobalStore } from "../store/useGlobalStore";
 import Loader from "../components/ui/Loader";
 import { useQueryIndexCourse } from "../hooks/coursesQueries";
 import type { UseQueryResult } from "@tanstack/react-query";
-import { BookOpenText, PersonStanding } from "lucide-react";
+import { BookOpenText, GraduationCap, PersonStanding } from "lucide-react";
 import {
     Carousel,
     CarouselContent,
@@ -154,6 +154,12 @@ const Courses = () => {
                                     <span>Total students: </span>
                                     <span>{course.students_count}</span>
                                     <PersonStanding />
+                                </div>
+                                <div className="flex items-center gap-1">
+                                    <span>
+                                        Attendance: {course.students_count}
+                                    </span>
+                                    <GraduationCap />
                                 </div>
                             </CarouselItem>
                         ))}
