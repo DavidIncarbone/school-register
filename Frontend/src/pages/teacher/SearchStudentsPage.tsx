@@ -27,6 +27,7 @@ export default function SearchStudentsPage() {
     ) as SearchStudentsParams;
     const [sortingCols, setSortingCols] = useState(initialSortingCols);
     const activeSort = params.sort ?? SortOption.BY_ID;
+    const activeDir = params.dir ?? "asc";
 
     // queries
     const {
@@ -164,7 +165,9 @@ export default function SearchStudentsPage() {
                                 {i < ar.length - 1 && (
                                     <GoTriangleDown
                                         className={`${
-                                            col.dir === "desc" && "rotate-180"
+                                            (col.dir === "desc" ||
+                                                activeDir === "desc") &&
+                                            "rotate-180"
                                         } ${
                                             activeSort === col.sort &&
                                             "!opacity-100"
