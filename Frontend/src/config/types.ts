@@ -4,6 +4,15 @@ export enum UserType {
     ADMIN = "admin",
 }
 
+export enum SortOption {
+    BY_ID = "by_id",
+    BY_FIRST_NAME = "by_first_name",
+    BY_LAST_NAME = "by_last_name",
+    BY_EMAIL = "by_email",
+    BY_CREATED_AT = "by_created_at",
+    BY_UPDATED_AT = "by_updated_at",
+}
+
 export type User = {
     id: number;
     name: string;
@@ -35,5 +44,8 @@ export type Course = {
 
 export type SearchStudentsParams = {
     course_id?: number;
-    name?: number;
+    first_name?: string;
+    last_name?: string;
+    sort?: string;
+    dir?: string;
 };

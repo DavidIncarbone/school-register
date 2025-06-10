@@ -23,13 +23,17 @@ body {
 }
 
 #root {
-    @apply flex min-h-dvh;
+    @apply flex h-dvh overflow-hidden;
 }
 
 @layer components {
     input,
     select {
-        @apply ring px-4 py-2 rounded-sm;
+        @apply ring px-2 lg:px-4 py-1 lg:py-2 rounded-sm;
+    }
+
+    select.no-default {
+        @apply ring-0;
     }
 
     .btn {
@@ -37,11 +41,11 @@ body {
     }
 
     option {
-        @apply bg-[#1e2125];
+        @apply bg-zinc-800;
     }
 
     .auth-form {
-        @apply px-20 py-12 bg-[#1e2125] flex flex-col gap-2 rounded-lg shadow-sm shadow-stone-950;
+        @apply px-20 py-12 bg-zinc-900 flex flex-col gap-2 rounded-lg shadow-lg shadow-zinc-800;
 
         & form {
             @apply flex flex-col gap-6 items-center rounded-lg mt-2 mb-4;
@@ -51,7 +55,36 @@ body {
         }
 
         & form > button[type="submit"] {
-            @apply px-4 py-2 rounded-sm border cursor-pointer bg-[#007498] w-full;
+            @apply px-4 py-2 rounded-sm border cursor-pointer bg-sky-700 hover:bg-sky-900 active:bg-sky-950 w-full;
+        }
+    }
+
+    /* HTML: <div class="loader"></div> */
+    .loader {
+        width: 50px;
+        aspect-ratio: 1;
+        display: grid;
+    }
+    .loader::before,
+    .loader::after {
+        content: "";
+        grid-area: 1/1;
+        --c: no-repeat radial-gradient(farthest-side, #25b09b 92%, #0000);
+        background: var(--c) 50% 0, var(--c) 50% 100%, var(--c) 100% 50%,
+            var(--c) 0 50%;
+        background-size: 12px 12px;
+        animation: l12 1s infinite;
+    }
+    .loader::before {
+        margin: 4px;
+        filter: hue-rotate(45deg);
+        background-size: 8px 8px;
+        animation-timing-function: linear;
+    }
+
+    @keyframes l12 {
+        100% {
+            transform: rotate(0.5turn);
         }
     }
 }

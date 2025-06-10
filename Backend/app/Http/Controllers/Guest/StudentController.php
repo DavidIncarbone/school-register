@@ -30,13 +30,11 @@ class StudentController extends Controller
                 'data' => Student::where('email', $userEmail)->first(),
             ], 200);
         } elseif ($userType == "teacher") {
-
-
             request()->validate([
                 "course_id" => "required|integer|min:1",
                 "name" => ["string", "max:100", "nullable"],
                 "email" => ["string", "max:100", "min:1", "lowercase"],
-                "sort" => ["string", "in:by_first_name,by_last_name,by_email,by_created_at,by_updated_at", "max:255"],
+                "sort" => ["string", "in:by_id,by_first_name,by_last_name,by_email,by_created_at,by_updated_at", "max:255"],
                 "dir" => ["string", "in:asc,desc"],
             ]);
 
@@ -53,6 +51,7 @@ class StudentController extends Controller
             if (request()->name) {
                 $name = request()->name;
 
+                // fare controllo name === typeof number (controllo per id/matricola)
                 $name = trim($name);
                 $nameArr = explode(" ", $name);
                 $first = $nameArr[0] ?? "";
@@ -73,7 +72,9 @@ class StudentController extends Controller
             if (request()->sort) {
                 $sort = request()->sort;
                 $dir = request()->dir ?? "asc";
-                if ($sort == "by_first_name") {
+                if ($sort == "by_id") {
+                    $query->orderBy("id", $dir);
+                } elseif ($sort == "by_first_name") {
                     $query->orderBy("first_name", $dir);
                 } elseif ($sort == "by_last_name") {
                     $query->orderBy("last_name", $dir);

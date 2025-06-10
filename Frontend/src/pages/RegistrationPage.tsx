@@ -69,8 +69,8 @@ export default function RegistrationPage() {
         !authUser && (
             <div className="h-full flex justify-center items-center">
                 <div className="auth-form">
-                    <h2 className="text-3xl text-center">
-                        <span className="capitalize">{tempUser?.type}</span>{" "}
+                    <h2 className="text-3xl text-center capitalize">
+                        <span>{tempUser?.type}</span>{" "}
                         <span>register</span>
                     </h2>
                     <form onSubmit={handleSubmit}>

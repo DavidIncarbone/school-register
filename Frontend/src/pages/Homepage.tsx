@@ -5,7 +5,7 @@ import { useGlobalStore } from "../store/useGlobalStore";
 export default function Homepage() {
     // console.log("render homepage");
     const { authUser } = useGlobalStore((state) => state);
-    console.log(authUser);
+    // console.log(authUser);
 
     // view
     if (!authUser) return <pre>auth user loading</pre>;
@@ -42,6 +42,27 @@ export default function Homepage() {
                                     className="btn"
                                 >
                                     Cerca i tuoi pezzenti
+                                </Link>
+                                <Link
+                                    to="/teacher/search-students"
+                                    role="button"
+                                    className="btn"
+                                >
+                                    la tua scheda personale
+                                </Link>
+                                <Link
+                                    to="/teacher/search-students"
+                                    role="button"
+                                    className="btn"
+                                >
+                                    l'orario
+                                </Link>
+                                <Link
+                                    to="/teacher/search-students"
+                                    role="button"
+                                    className="btn"
+                                >
+                                    comunicazioni
                                 </Link>
                             </div>
 

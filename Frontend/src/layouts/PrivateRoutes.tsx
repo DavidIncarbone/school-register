@@ -3,9 +3,10 @@ import { useGlobalStore } from "../store/useGlobalStore";
 import { useEffect } from "react";
 import type { User } from "../config/types";
 import { api } from "../services/api";
+import Loader from "../components/ui/Loader";
 
 export default function PrivateRoutes() {
-    console.log("render private routes");
+    // console.log("render private routes");
     const navigate = useNavigate();
     const { authUser, setAuthUser, setIsAuthLoading } = useGlobalStore(
         (state) => state
@@ -29,5 +30,5 @@ export default function PrivateRoutes() {
         }
     }, []);
 
-    return authUser ? <Outlet /> : <pre>loading private</pre>;
+    return authUser ? <Outlet /> : <Loader />;
 }

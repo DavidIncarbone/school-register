@@ -5,7 +5,7 @@ import { useNavigate } from "react-router";
 
 export default function Header() {
     const navigate = useNavigate();
-    const { setAuthUser } = useGlobalStore((state) => state);
+    const { authUser, setAuthUser } = useGlobalStore((state) => state);
 
     const handleLogout = async () => {
         setAuthUser(null);
@@ -18,24 +18,28 @@ export default function Header() {
     };
 
     return (
-        <header className="h-[7%] bg-fuchsia-500 flex">
-            <div className="flex items-center grow bg-red-700 px-4">
-                <input type="text" className="w-full xl:w-1/2" />
+        <header className="h-16 bg-[#1e2125] flex">
+            <div className="flex items-center grow px-4">
+                <input
+                    type="text"
+                    className="w-full xl:w-1/2"
+                    placeholder="Cosa stai cercando?"
+                />
             </div>
 
-            <div className="flex items-center gap-10 px-4 bg-sky-950">
+            <div className="flex items-center gap-10 px-4">
                 <FaAddressCard className="size-8" />
                 <FaAddressCard className="size-8" />
                 <FaAddressCard className="size-8" />
             </div>
 
-            <div className="flex items-center gap-2 px-4 bg-blue-300">
+            <div className="flex items-center gap-2 px-4">
                 <div
                     onClick={() => navigate("/")}
-                    className="w-16 aspect-square bg-green-300 rounded-full"
+                    className="w-12 aspect-square border rounded-full"
                 ></div>
                 <div className="flex items-center gap-2">
-                    <span>David Martini</span>
+                    <span>{authUser ? authUser.name : "Utente"}</span>
                     <FaArrowCircleDown
                         onClick={handleLogout}
                         className="cursor-pointer"

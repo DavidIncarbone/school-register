@@ -1,31 +1,38 @@
-import { type FormEvent } from "react";
+import { useState, type FormEvent } from "react";
 import { useGlobalStore } from "../store/useGlobalStore";
 import { api } from "../services/api";
 import { Link, useNavigate } from "react-router";
 import type { User } from "../config/types";
+import Loader from "../components/ui/Loader";
 
 export default function LoginPage() {
     const navigate = useNavigate();
-    // const authUser = useGlobalStore((state) => state.authUser);
-    const authUser = useGlobalStore((state) => state.authUser);
-    const setAuthUser = useGlobalStore((state) => state.setAuthUser);
+    const { authUser, setAuthUser } = useGlobalStore((state) => state);
+    const [isLoading, setIsLoading] = useState(false);
 
     const fetchAndSetUser = async () => {
-        const res = await api.get("/api/user");
-        setAuthUser(res.data as User);
-        navigate("/");
+        try {
+            const res = await api.get("/api/user");
+            setAuthUser(res.data as User);
+            navigate("/");
+        } catch (err) {
+            console.error(err);
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const formData = new FormData(e.currentTarget);
         const data = Object.fromEntries(formData.entries());
-
+        setIsLoading(true);
         try {
             await api.post("/login", data);
             fetchAndSetUser();
         } catch (err: unknown) {
             console.error(err);
+            setIsLoading(false);
         }
     };
 
@@ -57,7 +64,19 @@ export default function LoginPage() {
                                 required
                             />
                         </div>
-                        <button type="submit">Accedi</button>
+                        <button
+                            disabled={isLoading}
+                            type="submit"
+                            className={`${
+                                isLoading && "cursor-not-allowed"
+                            } capitalize`}
+                        >
+                            {isLoading ? (
+                                <Loader isContained={true} />
+                            ) : (
+                                "accedi"
+                            )}
+                        </button>
                     </form>
 
                     <div className="text-sm space-x-1">
@@ -69,12 +88,6 @@ export default function LoginPage() {
                             Sign up
                         </Link>
                     </div>
-                    {/* <Link to="" className="block hover:text-blue-400">
-                        <small>Sei un insegnante? Clicca qui</small>
-                    </Link>
-                    <Link to="" className="block hover:text-blue-400">
-                        <small>Sei un studente? Clicca qui</small>
-                    </Link> */}
                 </div>
             </div>
         )
