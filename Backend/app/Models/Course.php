@@ -13,6 +13,7 @@ class Course extends Model
     protected $fillable = [
         'name',
         'description',
+        'credits'
     ];
 
     public function teachers()

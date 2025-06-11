@@ -22,10 +22,10 @@ class PresenceController extends Controller
             "student_id" => ['integer', 'exists:students,id'],
             "course_id" => ["integer", "exists:courses,id"],
             "date" => ["date"],
-
         ]);
 
         $user = request()->user();
+        Log::info($user->email);
 
         $query = Presence::query();
 
@@ -36,19 +36,25 @@ class PresenceController extends Controller
             $student = Student::find(request()->student_id);
 
             if (!in_array($student->course_id, $coursesIds)) {
-                return response()->json([], 400);
+                return response()->json([
+                    "success" => false,
+                    "message" => "Studente non presente tra i corsi di questo teacher"
+                ], 400);
             }
 
             $query->where("student_id", request()->student_id);
 
-            $presences = $query->orderBy("date", "desc")->get();
+            $presences = $query->orderBy("date", "desc")->paginate(20);
 
             return response()->json(
                 $presences
             );
         } elseif (request()->course_id) {
             if (!in_array(request()->course_id, $coursesIds)) {
-                return response()->json([], 400);
+                return response()->json([
+                    "success" => false,
+                    "message" => "Questo teacher non insegna nel corso selezionato"
+                ], 400);
             }
 
             $studentsIds = Student::where("course_id", request()->course_id)->get()->pluck("id")->toArray();
@@ -56,12 +62,10 @@ class PresenceController extends Controller
             if (request()->date) {
                 $query->where("date", request()->date);
             }
-            $presences = $query->whereIn("student_id", $studentsIds)->orderBy("date", "desc")->get();
+            $presences = $query->whereIn("student_id", $studentsIds)->orderBy("date", "desc")->paginate(20);
 
             return response()->json([
-                'success' => true,
-                'message' => 'Richiesta effettuata con successo',
-                'data' => $presences,
+                $presences,
             ]);
         }
     }

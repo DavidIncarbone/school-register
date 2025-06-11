@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string("name");
             $table->longtext("description");
+            $table->integer("credits");
             $table->timestamps();
         });
     }

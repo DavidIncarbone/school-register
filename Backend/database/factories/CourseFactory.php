@@ -19,6 +19,7 @@ class CourseFactory extends Factory
         return [
             "name" => fake()->word(),
             "description" => fake()->sentence(15),
+            "credits" => rand(1, 100)
         ];
     }
 }
