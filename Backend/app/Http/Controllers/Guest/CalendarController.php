@@ -14,22 +14,29 @@ class CalendarController extends Controller
     public function index()
     {
 
-        // corso, materia, giorno(oggi)
+        request()->validate([
+            'show_week' => 'boolean',
+        ]);
+
+        $showWeek = request()->show_week ?? false;
 
         $user = request()->user();
         $teacher = Teacher::where("email", $user->email)->first();
         $coursesIds = $teacher->courses->pluck('id')->toArray();
+        $day = Carbon::now()->format("l");
+
         $subject = Subject::findOrFail($teacher->subject_id);
-        $subjectId = $subject->id;
-        $today = Carbon::now()->format("l");
-        Log::info($today);
 
-        $todaySchedule = $subject->calendar()
+        $calendar = $subject->calendar()
             ->wherePivotIn('course_id', $coursesIds)
-            ->wherePivot('subject_id', $subjectId)
-            ->wherePivot('day', 'like', strtolower($today))
-            ->get()->pluck('pivot');
+            ->wherePivot('subject_id', $subject->id);
 
-        return response()->json($todaySchedule);
+        if (!$showWeek) {
+            $calendar->wherePivot('day', 'like', strtolower($day));
+        }
+
+        $results = $calendar->get();
+
+        return response()->json($results);
     }
 }
