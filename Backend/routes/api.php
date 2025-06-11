@@ -30,10 +30,12 @@ Route::middleware(["auth:sanctum"])->group(function () {
     Route::apiResource("/teachers", TeacherController::class);
     // courses
     Route::apiResource("/courses", CourseController::class);
-    // presences
-    Route::apiResource("/presences", PresenceController::class)->middleware(['teacher-access']);
     // calendar
     Route::apiResource("/calendar", CalendarController::class);
+    // presences
+    Route::get("/presences", [PresenceController::class, 'index']);
+    Route::post("/presences", [PresenceController::class, 'store'])->middleware(['teacher-access']);
+    Route::patch("/presences/{id}", [PresenceController::class, 'update'])->middleware(['teacher-access']);
 });
 
 // ***** AUTH ADMIN *****

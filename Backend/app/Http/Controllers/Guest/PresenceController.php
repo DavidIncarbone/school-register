@@ -29,44 +29,56 @@ class PresenceController extends Controller
 
         $query = Presence::query();
 
-        $coursesIds = Teacher::where("email", $user->email)->first()->courses()->pluck("course_id")->toArray();
+        if ($user->type === 'teacher') {
 
-        if (request()->student_id) {
 
-            $student = Student::find(request()->student_id);
+            $coursesIds = Teacher::where("email", $user->email)->first()->courses()->pluck("course_id")->toArray();
 
-            if (!in_array($student->course_id, $coursesIds)) {
+            if (request()->student_id) {
+
+                $student = Student::find(request()->student_id);
+
+                if (!in_array($student->course_id, $coursesIds)) {
+                    return response()->json([
+                        "success" => false,
+                        "message" => "Studente non presente tra i corsi di questo teacher"
+                    ], 400);
+                }
+
+                $query->where("student_id", request()->student_id);
+
+                $presences = $query->orderBy("date", "desc")->paginate(20);
+
+                return response()->json(
+                    $presences
+                );
+            } elseif (request()->course_id) {
+                if (!in_array(request()->course_id, $coursesIds)) {
+                    return response()->json([
+                        "success" => false,
+                        "message" => "Questo teacher non insegna nel corso selezionato"
+                    ], 400);
+                }
+
+                $studentsIds = Student::where("course_id", request()->course_id)->get()->pluck("id")->toArray();
+
+                if (request()->date) {
+                    $query->where("date", request()->date);
+                }
+                $presences = $query->whereIn("student_id", $studentsIds)->orderBy("date", "desc")->paginate(20);
+
                 return response()->json([
-                    "success" => false,
-                    "message" => "Studente non presente tra i corsi di questo teacher"
-                ], 400);
+                    $presences,
+                ]);
             }
-
-            $query->where("student_id", request()->student_id);
-
-            $presences = $query->orderBy("date", "desc")->paginate(20);
-
-            return response()->json(
-                $presences
-            );
-        } elseif (request()->course_id) {
-            if (!in_array(request()->course_id, $coursesIds)) {
-                return response()->json([
-                    "success" => false,
-                    "message" => "Questo teacher non insegna nel corso selezionato"
-                ], 400);
-            }
-
-            $studentsIds = Student::where("course_id", request()->course_id)->get()->pluck("id")->toArray();
-
-            if (request()->date) {
-                $query->where("date", request()->date);
-            }
-            $presences = $query->whereIn("student_id", $studentsIds)->orderBy("date", "desc")->paginate(20);
-
+        } elseif ($user->type === "student") {
+            $student = Student::where("email", $user->email)->first();
+            $presences = Presence::where('student_id', $student->id)->get();
             return response()->json([
-                $presences,
-            ]);
+                'success' => true,
+                'message' => 'Richiesta effettuata con successo',
+                'data' => $presences, // ! da paginare
+            ], 201);
         }
     }
 
