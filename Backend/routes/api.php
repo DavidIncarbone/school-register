@@ -33,7 +33,7 @@ Route::middleware(["auth:sanctum"])->group(function () {
     // presences
     Route::apiResource("/presences", PresenceController::class)->middleware(['teacher-access']);
     // calendar
-    Route::apiResource("/calendar", CalendarController::class)->middleware(['teacher-access']);
+    Route::apiResource("/calendar", CalendarController::class);
 });
 
 // ***** AUTH ADMIN *****
