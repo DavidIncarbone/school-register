@@ -25,24 +25,24 @@ Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
 // ***** AUTH GUEST *****
 Route::middleware(["auth:sanctum"])->group(function () {
     // calendar
-    Route::apiResource("/calendar", CalendarController::class);
+    Route::get("/calendar", [CalendarController::class, 'index']);
 
     // courses
     Route::get("/courses", [CourseController::class, 'index']);
-    Route::get("/courses/{id}", [CourseController::class, 'show']);
+    Route::get("/courses/{course}", [CourseController::class, 'show']);
 
     // presences
     Route::get("/presences", [PresenceController::class, 'index']);
     Route::post("/presences", [PresenceController::class, 'store'])->middleware(['teacher-access']);
-    Route::patch("/presences/{id}", [PresenceController::class, 'update'])->middleware(['teacher-access']);
+    Route::patch("/presences/{presence}", [PresenceController::class, 'update'])->middleware(['teacher-access']);
 
     // students
     Route::get("/students", [StudentController::class, 'index']);
-    Route::get("/students/{id}", [StudentController::class, 'show']);
+    Route::get("/students/{student}", [StudentController::class, 'show']);
 
     // teachers
     Route::get("/teachers", [TeacherController::class, 'index']);
-    Route::get("/teachers/{id}", [TeacherController::class, 'show']);
+    Route::get("/teachers/{teacher}", [TeacherController::class, 'show']);
 });
 
 

@@ -35,10 +35,11 @@ class TeacherController extends Controller
         // user->type = teacher => aggiungere policy in cui il teacher in input corrisponde alla scheda del teacher dello user loggato
         // e mostra solo se stesso
 
-        // return response()->json([
-        //     'success' => true,
-        //     'message' => 'Richiesta effettuata con successo',
-        //     'data' => $teacher->load("courses"),
-        // ], 200);
+        // ! da rimuovere dopo aver ultimato la show
+        return response()->json([
+            'success' => true,
+            'message' => 'Richiesta effettuata con successo',
+            'data' => $teacher->load("courses"),
+        ], 200);
     }
 }

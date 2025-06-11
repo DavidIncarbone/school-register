@@ -35,10 +35,11 @@ class CourseController extends Controller
      */
     public function show(Course $course)
     {
+        // Log::info($course);
         return response()->json([
             'success' => true,
             'message' => 'Richiesta effettuata con successo',
-            'data' => $course->load(['students', 'teachers', 'subjects'])->loadCount(['students', 'teachers', 'subjects']),
+            'data' => $course,
         ], 200);
     }
 }
