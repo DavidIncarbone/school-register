@@ -15,9 +15,6 @@ class SubjectSeeder extends Seeder
      */
     public function run(): void
     {
-        $courseCount = Course::all()->count();
-        Subject::factory(20)->create()->each(function ($s) use ($courseCount) {
-            $s->courses()->attach(rand(1, $courseCount));
-        });
+        Subject::factory(20)->create();
     }
 }

@@ -26,5 +26,35 @@ class DatabaseSeeder extends Seeder
             StudentSeeder::class,
             PresenceSeeder::class,
         ]);
+
+        $coursesCount = Course::all()->count();
+
+        for ($i = 1; $i <= $coursesCount; $i++) {
+            $course = Course::find($i);
+
+            for ($j = 1; $j <= 4; $j++)
+                $course->subjects()->attach($j, [
+                "day" => "monday",
+                "lesson_time" => $j,
+            ]);
+            for ($j = 1; $j <= 4; $j++)
+                $course->subjects()->attach($j, [
+                "day" => "tuesday",
+                "lesson_time" => $j,
+            ]);
+            for ($j = 1; $j <= 4; $j++)
+                $course->subjects()->attach($j, [
+                "day" => "wednesday",
+                "lesson_time" => $j,
+            ]);
+            // $course->subjects()->attach(2, [
+            //     "day" => "tuesday",
+            //     "lesson_time" => "2",
+            // ]);
+            // $course->subjects()->attach(3, [
+            //     "day" => "wednesday",
+            //     "lesson_time" => "3",
+            // ]);
+        }
     }
 }
