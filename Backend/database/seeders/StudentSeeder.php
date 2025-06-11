@@ -14,8 +14,6 @@ class StudentSeeder extends Seeder
      */
     public function run(): void
     {
-        Student::factory(200)->create();
-
         $courseCount = Course::all()->count();
         Student::factory()->create([
             "course_id" => rand(1, $courseCount),
@@ -23,5 +21,6 @@ class StudentSeeder extends Seeder
             "last_name" => "Raciti",
             "email" => "raciti@example.com"
         ]);
+        Student::factory(200)->create();
     }
 }

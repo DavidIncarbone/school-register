@@ -15,21 +15,16 @@ class TeacherSeeder extends Seeder
      */
     public function run(): void
     {
-        $courseCount = Course::all()->count();
-        Teacher::factory(20)->create()->each(function ($t) use ($courseCount) {
-            $t->courses()->attach(rand(1, $courseCount));
-        });
-
         $subjectsCount = Subject::all()->count();
-        $courseCount = Course::all()->count();
-        $teacher = Teacher::factory()->create([
+        Teacher::factory()->create([
             "subject_id" => rand(1, $subjectsCount),
             "first_name" => "Luigi",
             "last_name" => "Mosca",
             "email" => "mosca@example.com"
         ]);
-        for ($i = 0; $i < rand(2, $courseCount); $i++) {
-            $teacher->courses()->attach($i + 1);
-        }
+
+        Teacher::factory(20)->create();/*->each(function ($t) use ($courseCount) {
+            $t->courses()->attach(rand(1, $courseCount));
+        });*/
     }
 }

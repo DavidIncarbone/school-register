@@ -7,6 +7,9 @@ use App\Models\Student;
 use App\Models\Subject;
 use App\Models\Teacher;
 use App\Models\User;
+use Database\Seeders\Pivot\CourseSubjectSeeder;
+use Database\Seeders\pivot\CourseTeacherSeeder;
+use Database\Seeders\pivot\StudentSubjectSeeder;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -20,41 +23,17 @@ class DatabaseSeeder extends Seeder
 
         $this->call([
             UserSeeder::class,
-            CourseSeeder::class,
             SubjectSeeder::class,
+            CourseSeeder::class,
             TeacherSeeder::class,
             StudentSeeder::class,
-            PresenceSeeder::class,
+            // PresenceSeeder::class,
+
+            // PIVOT
+
+            CourseSubjectSeeder::class,
+            CourseTeacherSeeder::class,
+            StudentSubjectSeeder::class,
         ]);
-
-        $coursesCount = Course::all()->count();
-
-        for ($i = 1; $i <= $coursesCount; $i++) {
-            $course = Course::find($i);
-
-            for ($j = 1; $j <= 4; $j++)
-                $course->subjects()->attach($j, [
-                "day" => "monday",
-                "lesson_time" => $j,
-            ]);
-            for ($j = 1; $j <= 4; $j++)
-                $course->subjects()->attach($j, [
-                "day" => "tuesday",
-                "lesson_time" => $j,
-            ]);
-            for ($j = 1; $j <= 4; $j++)
-                $course->subjects()->attach($j, [
-                "day" => "wednesday",
-                "lesson_time" => $j,
-            ]);
-            // $course->subjects()->attach(2, [
-            //     "day" => "tuesday",
-            //     "lesson_time" => "2",
-            // ]);
-            // $course->subjects()->attach(3, [
-            //     "day" => "wednesday",
-            //     "lesson_time" => "3",
-            // ]);
-        }
     }
 }
