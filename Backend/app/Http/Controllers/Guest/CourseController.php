@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Guest;
 
 use App\Http\Controllers\Controller;
 use App\Models\Course;
+use App\Models\Student;
+use App\Models\Subject;
 use App\Models\Teacher;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -15,18 +17,12 @@ class CourseController extends Controller
      */
     public function index(Request $request)
     {
+
         $email = $request->user()->email;
         $teacher = Teacher::where("email", $email)->firstOrFail();
-        // $courses = $teacher->courses->load("subjects")->loadCount("students");
 
-        $courses = $teacher->courses()->with('subjects')->withCount('students')->get();
+        $courses = $teacher->courses()->with('subjects')->withCount("students")->get();
 
-        // foreach ($courses as $course) {
-        //     $course->subjects = $course->subjects->unique('id');
-        // }
-
-        $uniqueSubjects = $courses->flatMap->subjects->unique('id');
-        // $courses->subjects = $uniqueSubjects;
         return response()->json([
             'success' => true,
             'message' => 'Richiesta effettuata con successo',

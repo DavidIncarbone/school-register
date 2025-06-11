@@ -22,17 +22,17 @@ class CourseSubjectSeeder extends Seeder
 
             for ($j = 1; $j <= 4; $j++)
                 $course->subjects()->attach(rand(1, $subjectsCount), [
-                    "day" => "monday",
+                    "day" => "Monday",
                     "lesson_time" => $j,
                 ]);
             for ($j = 1; $j <= 4; $j++)
                 $course->subjects()->attach($j, [
-                    "day" => "tuesday",
+                    "day" => "Tuesday",
                     "lesson_time" => $j,
                 ]);
             for ($j = 1; $j <= 4; $j++)
                 $course->subjects()->attach($j, [
-                    "day" => "wednesday",
+                    "day" => "Wednesday",
                     "lesson_time" => $j,
                 ]);
         }

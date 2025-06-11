@@ -29,4 +29,9 @@ class Subject extends Model
     {
         return $this->hasMany(Teacher::class);
     }
+
+    public function calendar()
+    {
+        return $this->belongsToMany(Course::class)->withPivot(['day', 'lesson_time'])->withTimestamps();
+    }
 }

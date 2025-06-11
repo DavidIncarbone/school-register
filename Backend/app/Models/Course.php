@@ -23,7 +23,12 @@ class Course extends Model
 
     public function subjects()
     {
-        return $this->belongsToMany(Subject::class)->withTimestamps();
+        return $this->belongsToMany(Subject::class)->distinct('subject_id')->withTimestamps();
+    }
+
+    public function calendar()
+    {
+        return $this->belongsToMany(Subject::class)->withPivot(['day', 'lesson_time'])->withTimestamps();
     }
 
     public function students()
