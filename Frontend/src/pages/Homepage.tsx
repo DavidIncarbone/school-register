@@ -43,7 +43,8 @@ export default function Homepage() {
                         <h1 className="title text-2xl font-bold px-5 pt-5">
                             Teacher Dashboard
                         </h1>
-                        <div className="info flex justify-center items-center">
+                        <div className="info flex flex-wrap gap-4 justify-center items-center">
+                            <h2 className="w-full">Benvenuto, {authUser.name}</h2>
                             <Link
                                 to="/teacher/search-students"
                                 role="button"
@@ -71,7 +72,16 @@ export default function Homepage() {
                                 className="rounded-lg border bg-primary sm:scale-80 lg:scale-100"
                             />
                         </div>
-                        <div className="others"></div>
+                        <div className="others">
+                            Lorem ipsum dolor sit amet consectetur adipisicing
+                            elit. Itaque exercitationem accusamus ratione rerum
+                            dolorum aliquam eum adipisci numquam. Ratione
+                            obcaecati asperiores pariatur ab odit impedit
+                            tenetur consequuntur, consectetur est rem commodi
+                            voluptatem optio adipisci at deserunt, expedita in.
+                            Fugit, cum. Eos temporibus commodi atque beatae est
+                            sequi, obcaecati perspiciatis nisi.
+                        </div>
                     </div>
                 </div>
             )}

@@ -32,11 +32,11 @@ export const CoursesList = () => {
             <Carousel
                 plugins={[Autoplay({ delay: 10000, active: !isHovered })]}
                 orientation="horizontal"
-                className="rounded-md overflow-hidden"
+                className="rounded-md  mx-6"
                 onMouseMove={() => setIsHovered(true)}
                 onMouseLeave={() => setIsHovered(false)}
             >
-                <CarouselContent className="space-x-4 -ml-4">
+                <CarouselContent className="space-x-4">
                     {isCoursesLoading
                         ? [1, 2, 3, 4].map((el) => (
                               <CarouselItem
@@ -52,14 +52,14 @@ export const CoursesList = () => {
                                       background: `hsl(${i * 90}, 50%, 50%)`,
                                   }}
                                   key={course.id}
-                                  className="rounded-md pl-4 basis-3/4 sm:basis-3/5 lg:basis-2/5 cursor-pointer hover:opacity-85 active:opacity-90"
+                                  className="rounded-md basis-3/4 sm:basis-3/5 lg:basis-2/5 cursor-pointer hover:opacity-85 active:opacity-90"
                               >
                                   <CourseCard course={course} />
                               </CarouselItem>
                           ))}
                 </CarouselContent>
-                <CarouselPrevious className="text-black scale-75 translate-x-12 opacity-50 hover:opacity-100 cursor-pointer" />
-                <CarouselNext className="text-black scale-75 -translate-x-12 opacity-50 hover:opacity-100 cursor-pointer" />
+                <CarouselPrevious className="text-black scale-75 translate-x-4 opacity-50 hover:opacity-100 cursor-pointer" />
+                <CarouselNext className="text-black scale-75 -translate-x-4 opacity-50 hover:opacity-100 cursor-pointer" />
             </Carousel>
         </>
     );

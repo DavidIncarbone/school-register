@@ -8,7 +8,7 @@ import { useSearchParams } from "react-router";
 export const AttendanceFormPage = () => {
     // vars
     const [searchParams, setSearchParams] = useSearchParams();
-    // const [selected, setSelected] = useState(null);
+    const [selected, setSelected] = useState([]);
     const params = Object.fromEntries(
         searchParams.entries()
     ) as SearchStudentsParams;
@@ -33,8 +33,6 @@ export const AttendanceFormPage = () => {
         console.log("fai chiamata api in post (mass store presences");
     };
 
-    console.log(students);
-
     return (
         <div>
             <div className="grid grid-cols-2 border-b-4 mb-2 text-xl font-semibold">
@@ -43,10 +41,10 @@ export const AttendanceFormPage = () => {
             </div>
             <div>
                 <button onClick={handleClick} className="btn">
-                    CLiccami
+                    Cliccami
                 </button>
             </div>
-            <div className="space-y-2">
+            <div className="space-y-2 overflow-auto h-[500px]">
                 {students &&
                     students.map((student) => (
                         <div className="grid grid-cols-2">
@@ -55,7 +53,14 @@ export const AttendanceFormPage = () => {
                                     {student.first_name} {student.last_name}
                                 </span>
                             </div>
-                            <input type="checkbox" name="" id="" />
+                            <div>
+                                <input
+                                    className="size-4"
+                                    type="checkbox"
+                                    name=""
+                                    id=""
+                                />
+                            </div>
                         </div>
                     ))}
             </div>
