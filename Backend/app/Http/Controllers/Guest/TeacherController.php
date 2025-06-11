@@ -16,49 +16,29 @@ class TeacherController extends Controller
      */
     public function index()
     {
-        // $fields = request()->validate([
-        //     "tax_code" => ["required", "string", "max:50"]
-        // ]);
 
-        // Log::info($fields);
+        // * user->type = student => vede i dettagli dei professori del corso che partecipano
+        // * user->type = teacher => vede solo la propria scheda
 
-        // return response()->json([
-        //     'success' => true,
-        //     'message' => 'Richiesta effettuata con successo',
-        //     'data' => Teacher::where("tax_code", $fields["tax_code"])->with("courses")->get(),
-        // ], 200);
+        // * filtri non servono ? perche al massimo un corso avra tot <~ 6 teachers
     }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request) {}
 
     /**
      * Display the specified resource.
      */
     public function show(Teacher $teacher)
     {
-        return response()->json([
-            'success' => true,
-            'message' => 'Richiesta effettuata con successo',
-            'data' => $teacher->load("courses"),
-        ], 200);
-    }
+        // ? valutare in seguito
+        // user->type = student => aggiungere policy in cui il teacher insegna ad un corso in cui partecipa uno studente
+        // e mostra il teacher
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Teacher $teacher)
-    {
-        //
-    }
+        // user->type = teacher => aggiungere policy in cui il teacher in input corrisponde alla scheda del teacher dello user loggato
+        // e mostra solo se stesso
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Teacher $teacher)
-    {
-        //
+        // return response()->json([
+        //     'success' => true,
+        //     'message' => 'Richiesta effettuata con successo',
+        //     'data' => $teacher->load("courses"),
+        // ], 200);
     }
 }

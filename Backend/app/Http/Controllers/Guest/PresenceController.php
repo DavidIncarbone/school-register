@@ -109,14 +109,6 @@ class PresenceController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      */
     public function update(Request $request, Presence $presence)
@@ -137,13 +129,5 @@ class PresenceController extends Controller
             "message" => "Presenza modificata con successo",
             "data" => $presence
         ]);
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
     }
 }

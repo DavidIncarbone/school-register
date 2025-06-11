@@ -31,14 +31,6 @@ class CourseController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
      * Display the specified resource.
      */
     public function show(Course $course)
@@ -48,21 +40,5 @@ class CourseController extends Controller
             'message' => 'Richiesta effettuata con successo',
             'data' => $course->load(['students', 'teachers', 'subjects'])->loadCount(['students', 'teachers', 'subjects']),
         ], 200);
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Course $course)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Course $course)
-    {
-        //
     }
 }

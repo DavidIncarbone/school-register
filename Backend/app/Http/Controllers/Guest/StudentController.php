@@ -24,6 +24,7 @@ class StudentController extends Controller
 
         // 2. interpolare la query degli student in base al tipo di utente (student, teacher, admin)
         if ($userType == "student") {
+
             return response()->json([
                 'success' => true,
                 'message' => 'Richiesta effettuata con successo',
@@ -97,40 +98,9 @@ class StudentController extends Controller
             return response()->json("lohacker", 400);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function show(Student $student)
     {
-
-        $data = $request->all();
-        $newUser = new User();
-        $newUser->type = $data["type"];
-        $newUser->name = $data["name"];
-        $newUser->email = $data["email"];
-        $newUser->password = $data["password"];
-        // $newUser->tax_code = $data["tax_code"];
-
-        $newUser->save();
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(Student $student) {}
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        // user->type = teacher => vede il dettaglio di uno studente partecipante ad uno dei suoi corsi
+        // ? valutare in seguito user->type = student => vede solo il proprio dettaglio (copia incolla della index nell primo if)
     }
 }

@@ -24,19 +24,27 @@ Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
 
 // ***** AUTH GUEST *****
 Route::middleware(["auth:sanctum"])->group(function () {
-    // students
-    Route::apiResource("/students", StudentController::class);
-    // teachers
-    Route::apiResource("/teachers", TeacherController::class);
-    // courses
-    Route::apiResource("/courses", CourseController::class);
     // calendar
     Route::apiResource("/calendar", CalendarController::class);
+
+    // courses
+    Route::get("/courses", [CourseController::class, 'index']);
+    Route::get("/courses/{id}", [CourseController::class, 'show']);
+
     // presences
     Route::get("/presences", [PresenceController::class, 'index']);
     Route::post("/presences", [PresenceController::class, 'store'])->middleware(['teacher-access']);
     Route::patch("/presences/{id}", [PresenceController::class, 'update'])->middleware(['teacher-access']);
+
+    // students
+    Route::get("/students", [StudentController::class, 'index']);
+    Route::get("/students/{id}", [StudentController::class, 'show']);
+
+    // teachers
+    Route::get("/teachers", [TeacherController::class, 'index']);
+    Route::get("/teachers/{id}", [TeacherController::class, 'show']);
 });
+
 
 // ***** AUTH ADMIN *****
 Route::middleware(['auth:sanctum', 'admin-access'])->prefix("/admin")->name('admin.')->group(function () {
