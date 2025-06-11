@@ -16,11 +16,17 @@ class CourseController extends Controller
     public function index(Request $request)
     {
         $email = $request->user()->email;
-
         $teacher = Teacher::where("email", $email)->firstOrFail();
+        // $courses = $teacher->courses->load("subjects")->loadCount("students");
 
-        $courses = $teacher->courses->loadCount('students');
+        $courses = $teacher->courses()->with('subjects')->withCount('students')->get();
 
+        // foreach ($courses as $course) {
+        //     $course->subjects = $course->subjects->unique('id');
+        // }
+
+        $uniqueSubjects = $courses->flatMap->subjects->unique('id');
+        // $courses->subjects = $uniqueSubjects;
         return response()->json([
             'success' => true,
             'message' => 'Richiesta effettuata con successo',
