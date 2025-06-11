@@ -58,7 +58,11 @@ class PresenceController extends Controller
             }
             $presences = $query->whereIn("student_id", $studentsIds)->orderBy("date", "desc")->get();
 
-            return response()->json($presences);
+            return response()->json([
+                'success' => true,
+                'message' => 'Richiesta effettuata con successo',
+                'data' => $presences,
+            ]);
         }
     }
 

@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import type { SearchStudentsParams } from "../config/types";
-import { api } from "../services/api";
+import { api, studentsEndpoint } from "../services/api";
 
 export const useQueryIndexStudent = (
     params: SearchStudentsParams,
@@ -9,7 +9,7 @@ export const useQueryIndexStudent = (
     return useQuery({
         queryKey: ["students", params],
         queryFn: async () => {
-            const res = await api.get(`/api/students`, { params });
+            const res = await api.get(studentsEndpoint, { params });
             return res.data.data;
         },
         staleTime: 60 * 60 * 1000, // ms

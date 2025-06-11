@@ -1,34 +1,10 @@
 import { Link } from "react-router";
-import { UserType, type Course } from "../config/types";
+import { UserType } from "../config/types";
 import { useGlobalStore } from "../store/useGlobalStore";
 import Loader from "../components/ui/Loader";
-import { useQueryIndexCourse } from "../hooks/coursesQueries";
-import type { UseQueryResult } from "@tanstack/react-query";
-import { BookOpenText, GraduationCap, PersonStanding } from "lucide-react";
-import {
-    Carousel,
-    CarouselContent,
-    CarouselItem,
-    CarouselNext,
-    CarouselPrevious,
-} from "@/components/ui/carousel";
-import Autoplay from "embla-carousel-autoplay";
 import { Calendar } from "@/components/ui/calendar";
 import { useState } from "react";
-
-export function Example() {
-    return (
-        <Carousel
-            plugins={[
-                Autoplay({
-                    delay: 2000,
-                }),
-            ]}
-        >
-            // ...
-        </Carousel>
-    );
-}
+import { CoursesList } from "@/components/teacher/CoursesList";
 
 export default function Homepage() {
     // global store
@@ -62,105 +38,43 @@ export default function Homepage() {
                     </div>
                 </div>
             ) : (
-                <div className="h-full flex flex-col">
-                    <h1 className="text-2xl font-bold px-5 py-5">
-                        Teacher Dashboard
-                    </h1>
-                    <div className="flex h-full p-5 pt-0 gap-5">
-                        <div className="h-full w-3/5 flex flex-col gap-5">
-                            <div className="h-1/5 bg-zinc-800">
-                                <Link
-                                    to="/teacher/search-students"
-                                    role="button"
-                                    className="btn"
-                                >
-                                    Cerca i tuoi pezzenti
-                                </Link>
-                                <Link to="/attendance-form" role="button" className="btn">
-                                    L'appello di oggi
-                                </Link>
-                            </div>
+                <div className="flex flex-col min-h-full sm:h-full">
+                    <div className="teacher-dashboard">
+                        <h1 className="title text-2xl font-bold px-5 pt-5">
+                            Teacher Dashboard
+                        </h1>
+                        <div className="info flex justify-center items-center">
+                            <Link
+                                to="/teacher/search-students"
+                                role="button"
+                                className="btn"
+                            >
+                                I tuoi studenti
+                            </Link>
+                            <Link
+                                to="/attendance-form"
+                                role="button"
+                                className="btn"
+                            >
+                                L'appello di oggi
+                            </Link>
+                        </div>
 
-                            <div className="grow p-2 rounded-md bg-zinc-800">
-                                <Courses />
-                            </div>
+                        <div className="big overflow-hidden">
+                            <CoursesList />
                         </div>
-                        <div className=" h-full grow flex flex-col gap-5">
-                            <div className="h-3/5 bg-zinc-800 flex justify-center items-center">
-                                <Calendar
-                                    mode="single"
-                                    selected={date}
-                                    onSelect={setDate}
-                                    className="rounded-lg border bg-primary"
-                                />
-                            </div>
-                            <div className="grow bg-green-300">1</div>
+                        <div className="calendar flex justify-center items-center">
+                            <Calendar
+                                mode="single"
+                                selected={date}
+                                onSelect={setDate}
+                                className="rounded-lg border bg-primary sm:scale-80 lg:scale-100"
+                            />
                         </div>
+                        <div className="others"></div>
                     </div>
                 </div>
             )}
         </>
     );
 }
-
-const Courses = () => {
-    // queries
-    const {
-        data: courses,
-        isLoading: isCoursesLoading,
-        isError: isCoursesError,
-    } = useQueryIndexCourse() as UseQueryResult<Course[], Error>;
-
-    const [isHovered, setIsHovered] = useState(false);
-
-    return (
-        <>
-            <h3 className="text-xl font-semibold">I tuoi corsi</h3>
-            {/* <div className="flex gap-4 overflow-x-auto scrollbar-hide"> */}
-            <div className="">
-                <Carousel
-                    plugins={[Autoplay({ delay: 10000, active: !isHovered })]}
-                    // opts={{ loop: true }}
-                    className="rounded-md overflow-hidden"
-                    onMouseMove={() => setIsHovered(true)}
-                    onMouseLeave={() => setIsHovered(false)}
-                >
-                    <CarouselContent className=" gap-4">
-                        {courses?.map((course, i) => (
-                            <CarouselItem
-                                style={{
-                                    background: `hsl(${i * 90}, 50%, 50%)`,
-                                }}
-                                key={course.id}
-                                className="rounded-sm p-4 w-24 basis-1/3 flex flex-col gap-2 cursor-pointer hover:opacity-85 active:opacity-90"
-                            >
-                                <Link to={`/course/${course.id}`}>
-                                    <div className="flex items-center gap-4 justify-betFween">
-                                        <h4 className="font-semibold text-xl italic capitalize">
-                                            {course.name}
-                                        </h4>
-                                        <BookOpenText />
-                                    </div>
-                                    <div className="flex items-center gap-1">
-                                        <span>Total students: </span>
-                                        <span>{course.students_count}</span>
-                                        <PersonStanding />
-                                    </div>
-                                    <div className="flex items-center gap-1">
-                                        <span>
-                                            Attendance: {course.students_count}
-                                        </span>
-                                        <GraduationCap />
-                                    </div>
-                                </Link>
-                            </CarouselItem>
-                        ))}
-                    </CarouselContent>
-                    <CarouselPrevious className="text-black scale-75 translate-x-12 opacity-50 hover:opacity-100 cursor-pointer" />
-                    <CarouselNext className="text-black scale-75 -translate-x-12 opacity-50 hover:opacity-100 cursor-pointer" />
-                </Carousel>
-            </div>
-            {/* </div> */}
-        </>
-    );
-};

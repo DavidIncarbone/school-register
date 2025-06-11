@@ -45,7 +45,7 @@ class DatabaseSeeder extends Seeder
             SubjectSeeder::class,
             TeacherSeeder::class,
             StudentSeeder::class,
-            // PresenceSeeder::class,
+            PresenceSeeder::class,
         ]);
 
         $subjectsCount = Subject::all()->count();
@@ -57,7 +57,6 @@ class DatabaseSeeder extends Seeder
             "email" => "mosca@example.com"
         ]);
 
-        // $nCourses = 
 
         for ($i = 0; $i < rand(2, $courseCount); $i++) {
             $teacher->courses()->attach($i + 1);

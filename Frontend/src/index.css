@@ -58,7 +58,7 @@ body {
 }
 
 #root {
-    @apply flex h-dvh;
+    @apply flex h-dvh lg:overflow-hidden;
 }
 
 @layer components {
@@ -134,6 +134,67 @@ body {
         -ms-overflow-style: none;
         scrollbar-width: none;
     }
+
+    .teacher-dashboard {
+        display: grid;
+        grid-template-areas:
+            "title title title title title"
+            "info info info calendar calendar"
+            "info info info calendar calendar"
+            "info info info calendar calendar"
+            "info info info calendar calendar"
+            "big big big calendar calendar "
+            "big big big calendar calendar "
+            "big big big others others"
+            "big big big others others"
+            "big big big others others"
+            "big big big others others";
+        grid-template-columns: repeat(5, 1fr);
+        grid-template-rows: repeat(11, 1fr);
+        @media screen and (max-width: 1024px) {
+            grid-template-areas:
+                "title title title title title"
+                "info info info calendar calendar"
+                "info info info calendar calendar"
+                "info info info calendar calendar"
+                "info info info calendar calendar"
+                "big big big big big"
+                "big big big big big"
+                "big big big big big"
+                "big big big big big"
+                "others others others others others"
+                "others others others others others";
+            grid-template-columns: repeat(5, 1fr);
+            grid-template-rows: repeat(11, 1fr);
+        }
+        @media screen and (max-width: 640px) {
+            grid-template-areas:
+                "title"
+                "info"
+                "calendar"
+                "big"
+                "others";
+            grid-template-columns: repeat(1, 1fr);
+            grid-template-rows: repeat(1, 1fr);
+        }
+        @apply p-5 pt-0 gap-5 h-full [&>*:not(.title)]:bg-zinc-800 [&>*:not(.title)]:rounded-md [&>*:not(.title)]:p-2;
+    }
+
+    .title {
+        grid-area: title;
+    }
+    .info {
+        grid-area: info;
+    }
+    .big {
+        grid-area: big;
+    }
+    .calendar {
+        grid-area: calendar;
+    }
+    .others {
+        grid-area: others;
+    }
 }
 
 @theme inline {
@@ -208,11 +269,11 @@ body {
     --sidebar-ring: oklch(0.552 0.016 285.938);
 }
 
-@layer base {
+/* @layer base {
     * {
         @apply border-border outline-ring/50;
     }
     body {
-        @apply bg-background text-secondary;
+        @apply bg-background ;
     }
-}
+} */

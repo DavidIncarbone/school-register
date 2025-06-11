@@ -36,7 +36,10 @@ export default function DefaultLayout() {
             <Sidebar />
             <div className="grow lg:ml-[14.3%] h-full">
                 <Header />
-                <main style={{ height: mainHeight }} className="bg-[#2a2d33]">
+                <main
+                    style={{ minHeight: mainHeight, height: mainHeight }}
+                    className="[&>*]:bg-[#2a2d33] bg-[#2a2d33]"
+                >
                     <Outlet />
                 </main>
             </div>

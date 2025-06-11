@@ -41,7 +41,11 @@ class CourseController extends Controller
      */
     public function show(Course $course)
     {
-        //
+        return response()->json([
+            'success' => true,
+            'message' => 'Richiesta effettuata con successo',
+            'data' => $course->load(['students', 'teachers', 'subjects'])->loadCount(['students', 'teachers', 'subjects']),
+        ], 200);
     }
 
     /**

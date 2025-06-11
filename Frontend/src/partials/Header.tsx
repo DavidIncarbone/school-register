@@ -18,8 +18,8 @@ export default function Header() {
     };
 
     return (
-        <header className="h-16 bg-[#1e2125] flex">
-            <div className="flex items-center grow px-4">
+        <header className="h-16 bg-[#1e2125] flex flex-wrap">
+            <div className="max-sm:hidden flex items-center grow px-4">
                 <input
                     type="text"
                     className="w-full xl:w-1/2"

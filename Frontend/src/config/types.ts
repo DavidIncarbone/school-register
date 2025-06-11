@@ -35,12 +35,22 @@ export type Student = {
     last_name: string;
     email: string;
 };
+export type Subject = {
+    id: number;
+    name: string;
+    description: string;
+};
 
 export type Course = {
     id: number;
     name: string;
     description: string;
     students_count: number;
+    teachers_count?: number;
+    subjects_count?: number;
+    students?: Student[];
+    teachers?: Teacher[];
+    subjects?: Subject[];
 };
 
 export type Presence = {
@@ -56,4 +66,10 @@ export type SearchStudentsParams = {
     last_name?: string;
     sort?: string;
     dir?: string;
+};
+
+export type SearchPresencesParams = {
+    student_id?: number;
+    course_id?: number;
+    date?: string;
 };

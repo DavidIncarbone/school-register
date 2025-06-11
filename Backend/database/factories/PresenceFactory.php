@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Presence;
+use App\Models\Student;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use PhpParser\Node\Expr\Cast\Bool_;
 
@@ -19,10 +20,12 @@ class PresenceFactory extends Factory
     public function definition(): array
     {
 
+        $studentsCount = Student::all()->count();
+
         return [
-            "student_id" => rand(1, 5),
+            "student_id" => rand(1, $studentsCount),
             "is_present" => (bool)rand(0, 1),
-            "date" => fake()->dateTimeBetween('-1 week', "now"),
+            "date" => fake()->dateTimeBetween('-1 year', "now"),
         ];
     }
 }

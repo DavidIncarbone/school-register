@@ -8,7 +8,7 @@ import { useSearchParams } from "react-router";
 export const AttendanceFormPage = () => {
     // vars
     const [searchParams, setSearchParams] = useSearchParams();
-    const [selected, setSelected] = useState(null);
+    // const [selected, setSelected] = useState(null);
     const params = Object.fromEntries(
         searchParams.entries()
     ) as SearchStudentsParams;

@@ -11,3 +11,14 @@ export const useQueryIndexCourse = () => {
         staleTime: Infinity,
     });
 };
+
+export const useQueryShowCourse = (id: number) => {
+    return useQuery({
+        queryKey: ["courses", id],
+        queryFn: async () => {
+            const res = await api.get(`${courseEndpoint}/${id}`);
+            return res.data.data;
+        },
+        staleTime: Infinity,
+    });
+};

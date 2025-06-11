@@ -1,39 +1,55 @@
-import type { Presence } from "@/config/types";
-import { api, presencesEndpoint } from "@/services/api";
-import { useEffect, useState } from "react";
-import { useParams } from "react-router";
+import type { Course, Presence, SearchPresencesParams } from "@/config/types";
+import { useQueryShowCourse } from "@/hooks/coursesQueries";
+import { useQueryIndexPresence } from "@/hooks/presencesQueries";
+import type { UseQueryResult } from "@tanstack/react-query";
+import { useLocation, useParams } from "react-router";
 
 export const CourseDetailPage = () => {
+    // vars
     const { id } = useParams();
+    const location = useLocation();
+    const cachedCourse: Course = location.state?.course;
+    const params: SearchPresencesParams = { course_id: Number(id) };
+    // queries
+    const {
+        data: course,
+        isLoading: isCourseLoading,
+        isError: isCourseError,
+    } = useQueryShowCourse(Number(id)) as UseQueryResult<Course, Error>;
 
-    const [presences, setPresences] = useState<Presence[] | null>(null);
-
-    const params = { course_id: id };
-
-    useEffect(() => {
-        const fetchPresences = async () => {
-            try {
-                const res = await api.get(`${presencesEndpoint}`, { params });
-                console.log(res.data);
-                setPresences(res.data);
-            } catch (err) {
-                console.error(err);
-            }
-        };
-
-        fetchPresences();
-    }, []);
+    const {
+        data: presences,
+        isLoading: isPresencesLoading,
+        isError: isPresencesError,
+    } = useQueryIndexPresence(params) as UseQueryResult<Presence[], Error>;
 
     return (
-        <div className="bg-zinc-900 overflow-auto h-full p-8">
-            {presences &&
-                presences.map((presence) => (
-                    <div key={presence.id} className="border p-4">
-                        <p>{presence.student_id}</p>
-                        <p>{presence.is_present}</p>
-                        <p>{presence.date.toISOString()}</p>
-                    </div>
-                ))}
+        <div className="p-8">
+            <h1 className="font-semibold italic text-4xl capitalize">
+                {cachedCourse?.name ?? course?.name ?? "Il tuo corso"}
+            </h1>
+            <h2>
+                Description: {cachedCourse?.description ?? course?.description}
+            </h2>
+            <ul>
+                <li>
+                    Total students:{" "}
+                    {cachedCourse?.students_count ?? course?.students_count}
+                </li>
+                <li>Total teachers: {course?.teachers_count}</li>
+                <li>Total subjects: {course?.subjects_count}</li>
+            </ul>
+            <h3 className="font-semibold text-xl">Presences</h3>
+            <div className="bg-zinc-900 overflow-auto h-[400px]">
+                {presences &&
+                    presences.map((presence) => (
+                        <div key={presence.id} className="border p-4">
+                            <p>{presence.student_id}</p>
+                            <p>{presence.is_present}</p>
+                            <p>{presence.date}</p>
+                        </div>
+                    ))}
+            </div>
         </div>
     );
 };

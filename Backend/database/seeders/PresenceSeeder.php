@@ -19,7 +19,6 @@ class PresenceSeeder extends Seeder
     public function run(): void
     {
         $studentsCount = Student::all()->count();
-        Log::info($studentsCount);
 
         for ($i = 0; $i < $studentsCount; $i++) {
 
