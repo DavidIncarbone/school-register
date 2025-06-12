@@ -19,25 +19,52 @@ class CourseController extends Controller
      */
     public function index(Request $request)
     {
-
         $user = $request->user();
+
+        // TEACHER
 
         if ($user->type == "teacher") {
             $teacher = Teacher::where("email", $user->email)->firstOrFail();
 
-            $courses = $teacher->courses()->with('subjects')->withCount(['subjects as subjects_count' => function ($query) {
+            $courses = $teacher->courses()->with(['subjects', 'students'])->withCount(['subjects as subjects_count' => function ($query) {
                 $query->select(DB::raw('count(distinct subject_id)'));
-            }, "students"])->get();
+            }, "students", "teachers"])->get();
+
+            foreach ($courses as $course) {
+
+                $studentsIds = $course->students()->pluck('id')->toArray();
+                $totalRecordsCount = Presence::whereIn("student_id", $studentsIds)->count();
+                $presenceCount = Presence::whereIn("student_id", $studentsIds)->where("is_present", 1)->count();
+                $presencesPercentage = $totalRecordsCount > 0 ? round(($presenceCount / $totalRecordsCount) * 100) : 0;
+
+                $course->total_presence = $presenceCount;
+                $course->presences_percentage = $presencesPercentage . '%';
+            }
 
             return response()->json([
                 'success' => true,
                 'message' => 'Richiesta effettuata con successo',
+                'total_count' => count($courses),
                 'data' => $courses,
             ], 200);
-        } else if ($user->type == "student") {
-            $student = Student::where("email", $user->email)->firstOrFail();
+        }
 
+        // STUDENT
+
+        else if ($user->type == "student") {
+
+            $student = Student::where("email", $user->email)->firstOrFail();
             $course = Course::where("id", $student->course_id)->firstOrFail();
+            $course->load(["subjects", "teachers"])->loadCount(["students", "subjects", "teachers"]);
+
+            $studentsIds = $course->students()->pluck('id')->toArray();
+            $totalRecordsCount = Presence::whereIn("student_id", $studentsIds)->count();
+            $presenceCount = Presence::whereIn("student_id", $studentsIds)->where("is_present", 1)->count();
+            $presencesPercentage = $totalRecordsCount > 0 ? round(($presenceCount / $totalRecordsCount) * 100) : 0;
+
+            $course->total_presence = $presenceCount;
+            $course->presences_percentage = $presencesPercentage;
+
             return response()->json([
                 'success' => true,
                 'message' => 'Richiesta effettuata con successo',
@@ -53,17 +80,17 @@ class CourseController extends Controller
     {
         $user = request()->user();
 
-        $studentsCounts = $course->students()->count();
-        $teachersCount = $course->teachers()->count();
-        $subjectsCount = $course->subjects()->count();
-
         $studentsIds = $course->students()->pluck('id')->toArray();
         $totalRecordsCount = Presence::whereIn("student_id", $studentsIds)->count();
         $presenceCount = Presence::whereIn("student_id", $studentsIds)->where("is_present", 1)->count();
         $presencesPercentage = $totalRecordsCount > 0 ? round(($presenceCount / $totalRecordsCount) * 100) : 0;
 
+        $course->total_presence = $presenceCount;
+        $course->presences_percentage = $presencesPercentage . '%';
+
         if ($user->type == "student") {
-            $course->load(["subjects", "teachers"]);
+
+            $course->load(["subjects", "teachers"])->loadCount(["subjects", "teachers", "students"]);
             $student = Student::where("email", $user->email)->firstOrFail();
             $currentCourse = Course::where("id", $student->course_id)->firstOrFail();
 
@@ -73,19 +100,15 @@ class CourseController extends Controller
                     'message' => 'Lo studente corrente non ha accesso a questo corso',
                 ], 400);
             }
+
             return response()->json([
                 'success' => true,
                 'message' => 'Richiesta effettuata con successo',
-                'total_students' => $studentsCounts,
-                'total_teachers' => $teachersCount,
-                'total_subjects' => $subjectsCount,
-                'toal_presences' => $presenceCount,
-                'presences_percentage' => $presencesPercentage . "%",
                 'data' => $course,
             ], 200);
         } else if ($user->type == "teacher") {
 
-            $course->load(["subjects", "students"]);
+            $course->load(["subjects", "students"])->loadCount(["subjects", "students", "teachers"]);
 
             $teacher = Teacher::where("email", $user->email)->firstOrFail();
             $coursesIds = $teacher->courses()->pluck('course_id')->toArray();
@@ -102,11 +125,6 @@ class CourseController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Richiesta effettuata con successo',
-                'total_students' => $studentsCounts,
-                'total_teachers' => $teachersCount,
-                'total_subjects' => $subjectsCount,
-                'toal_presences' => $presenceCount,
-                'presences_percentage' => $presencesPercentage . "%",
                 'data' => $course,
             ], 200);
         }
