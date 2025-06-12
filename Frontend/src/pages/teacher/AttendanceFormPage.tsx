@@ -1,4 +1,5 @@
 import type { Course, SearchStudentsParams, Student } from "@/config/types";
+import { useQueryIndexCalendar } from "@/hooks/calendarQueries";
 import { useQueryIndexCourse } from "@/hooks/coursesQueries";
 import { useQueryIndexStudent } from "@/hooks/studentsQueries";
 import type { UseQueryResult } from "@tanstack/react-query";
@@ -21,6 +22,10 @@ export const AttendanceFormPage = () => {
         params,
         "course_id" in params
     ) as UseQueryResult<Student[], Error>;
+
+    const { data: calendar } = useQueryIndexCalendar({});
+
+    console.log(calendar);
 
     // side effects
     useEffect(() => {

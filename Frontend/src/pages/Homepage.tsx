@@ -5,6 +5,14 @@ import Loader from "../components/ui/Loader";
 import { Calendar } from "@/components/ui/calendar";
 import { useState } from "react";
 import { CoursesList } from "@/components/teacher/CoursesList";
+import {
+    BarChart3,
+    CalendarDays,
+    ClipboardList,
+    LayoutList,
+    NotebookPen,
+    Settings,
+} from "lucide-react";
 
 export default function Homepage() {
     // global store
@@ -43,22 +51,8 @@ export default function Homepage() {
                         <h1 className="title text-2xl font-bold px-5 pt-5">
                             Teacher Dashboard
                         </h1>
-                        <div className="info flex flex-wrap gap-4 justify-center items-center">
-                            <h2 className="w-full">Benvenuto, {authUser.name}</h2>
-                            <Link
-                                to="/teacher/search-students"
-                                role="button"
-                                className="btn"
-                            >
-                                I tuoi studenti
-                            </Link>
-                            <Link
-                                to="/attendance-form"
-                                role="button"
-                                className="btn"
-                            >
-                                L'appello di oggi
-                            </Link>
+                        <div className="info grid grid-cols-3 sm:grid-cols-4 !px-4 gap-4 ">
+                            <QuickActions />
                         </div>
 
                         <div className="big overflow-hidden">
@@ -88,3 +82,74 @@ export default function Homepage() {
         </>
     );
 }
+
+/* <Link to="/attendance-form" role="button" className="btn">
+                L'appello di oggi
+            </Link> */
+const quickActions = [
+    // ! da gestire ancora
+    {
+        path: "/attendance-form",
+        icon: <ClipboardList />,
+        iconColor: "bg-blue-500",
+        label: "Today's Attendance",
+    },
+    {
+        path: "/",
+        icon: <CalendarDays />,
+        iconColor: "bg-green-500",
+        label: "Timetable",
+    },
+    {
+        path: "/teacher/search-students",
+        icon: <LayoutList />,
+        iconColor: "bg-red-500",
+        label: "Students",
+    },
+    {
+        path: "/",
+        icon: <BarChart3 />,
+        iconColor: "bg-teal-500",
+        label: "Exams",
+    },
+    {
+        path: "/",
+        icon: <NotebookPen />,
+        iconColor: "bg-amber-500",
+        label: "Homework",
+    },
+    {
+        path: "/",
+        icon: <Settings />,
+        iconColor: "bg-slate-500",
+        label: "Settings",
+    },
+];
+
+const QuickActions = () => {
+    // global store
+    // const { authUser } = useGlobalStore((state) => state);
+
+    return (
+        <>
+            {quickActions.map((action, i) => (
+                <Link
+                    key={i}
+                    to={action.path}
+                    className="rounded-md bg-zinc-900 hover:bg-zinc-950 active:bg-black p-2 max-sm:h-24 flex flex-col justify-center items-center text-center text-xs 3xl:text-lg gap-1"
+                >
+                    <div>
+                        <div
+                            className={`${action.iconColor} size-10 3xl:size-16 3xl:[&>*]:scale-150 flex justify-center items-center rounded-sm`}
+                        >
+                            {action.icon}
+                        </div>
+                    </div>
+                    <div className="grow flex items-center">
+                        <h3>{action.label}</h3>
+                    </div>
+                </Link>
+            ))}
+        </>
+    );
+};

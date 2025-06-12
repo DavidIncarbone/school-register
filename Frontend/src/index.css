@@ -50,6 +50,11 @@
     --sidebar-border: oklch(0.92 0.004 286.32);
     --sidebar-ring: oklch(0.705 0.015 286.067);
 }
+
+@theme {
+    --breakpoint-3xl: 1800px;
+}
+
 body {
     font-family: "Montserrat", sans-serif;
     font-optical-sizing: auto;
