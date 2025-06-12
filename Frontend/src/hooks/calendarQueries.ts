@@ -7,7 +7,7 @@ export const useQueryIndexCalendar = (params: IndexCalendarParams) => {
         queryKey: ["calendar", params],
         queryFn: async () => {
             const res = await api.get(calendarEndpoint, { params });
-            return res.data;
+            return res.data.data;
         },
         staleTime: Infinity,
     });
