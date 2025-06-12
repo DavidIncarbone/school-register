@@ -23,7 +23,7 @@ class TeacherController extends Controller
         $user = request()->user();
         if ($user->type == "teacher") {
 
-            $teacher = Teacher::where("email", $user->email)->first();
+            $teacher = Teacher::where("email", $user->email)->with("courses")->withCount("courses")->first();
 
             return response()->json([
                 "success" => true,

@@ -48,7 +48,7 @@ class CourseController extends Controller
             }
         }
 
-        $courses = $query->paginate(5);
+        $courses = $query->paginate(30);
 
         return response()->json([
             $courses

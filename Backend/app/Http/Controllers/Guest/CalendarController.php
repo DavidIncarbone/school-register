@@ -41,14 +41,22 @@ class CalendarController extends Controller
 
             $results = $calendar->get()->pluck('pivot');
 
-            return response()->json($results);
+            return response()->json([
+                "success" => true,
+                "message" => "Richiesta effettuata con successo",
+                "data" => $results
+            ]);
         } elseif ($user->type === "student") {
+
             $student = Student::where("email", $user->email)->first();
             $course = Course::findOrFail($student->course_id);
-
             $calendar = $course->calendar()->wherePivot("course_id", $course->id);
             $results = $calendar->get()->pluck('pivot');
-            return response()->json($results);
+            return response()->json([
+                "success" => true,
+                "message" => "Richiesta effettuata con successo",
+                "data" => $results
+            ]);
         }
     }
 }

@@ -65,7 +65,7 @@ class StudentController extends Controller
             }
         }
 
-        $students = $query->paginate(5)->load('presences');
+        $students = $query->paginate(30)->load('presences');
 
         return response()->json([
             $students

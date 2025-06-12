@@ -47,7 +47,7 @@ class PresenceController extends Controller
 
                 $query->where("student_id", request()->student_id);
 
-                $presences = $query->orderBy("date", "desc")->paginate(20);
+                $presences = $query->orderBy("date", "desc")->paginate(30);
 
                 return response()->json(
                     $presences
@@ -65,7 +65,7 @@ class PresenceController extends Controller
                 if (request()->date) {
                     $query->where("date", request()->date);
                 }
-                $presences = $query->whereIn("student_id", $studentsIds)->orderBy("date", "desc")->paginate(20);
+                $presences = $query->whereIn("student_id", $studentsIds)->orderBy("date", "desc")->paginate(30);
 
                 return response()->json([
                     $presences,

@@ -43,7 +43,10 @@ class StudentController extends Controller
 
 
             if (!in_array(request()->course_id, $coursesIds)) {
-                return response()->json([], 400);
+                return response()->json([
+                    "success" => false,
+                    "message" => "Il teacher corrente non insegna in questo corso",
+                ], 400);
             }
 
             $query = Student::query();
@@ -95,7 +98,7 @@ class StudentController extends Controller
                 'data' => $students,
             ], 200);
         } else
-            return response()->json("lohacker", 400);
+            return response()->json("Tipo di utente non riconosciuto", 400);
     }
 
     public function show(Student $student)
