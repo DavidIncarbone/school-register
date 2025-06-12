@@ -36,7 +36,7 @@ function App() {
                         path="/teacher/search-students"
                         Component={SearchStudentsPage}
                     />
-                    <Route path="/course/:id" Component={CourseDetailPage} />
+                    <Route path="/courses/:id" Component={CourseDetailPage} />
                     <Route path="/student/:id" Component={StudentDetailPage} />
                     <Route
                         path="/attendance-form"

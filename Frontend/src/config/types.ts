@@ -61,13 +61,12 @@ export type Presence = {
     date: string;
 };
 
-export type Period = Course & {
-    pivot: {
-        subject_id: number;
-        course_id: number;
-        day: "monday" | "tuesday" | "wednesday" | "thursday" | "friday";
-        lesson_time: number;
-    };
+export type Period = {
+    course_name: string;
+    subject_id: number;
+    course_id: number;
+    day: "monday" | "tuesday" | "wednesday" | "thursday" | "friday";
+    lesson_time: number;
 };
 
 export type IndexStudentParams = {

@@ -99,6 +99,10 @@ body {
         }
     }
 
+    .dashboard_h3 {
+        @apply text-xl font-semibold mb-2;
+    }
+
     /* HTML: <div class="loader"></div> */
     .loader {
         width: 50px;
@@ -144,12 +148,12 @@ body {
         display: grid;
         grid-template-areas:
             "title title title title title"
-            "info info info calendar calendar"
-            "info info info calendar calendar"
-            "info info info calendar calendar"
-            "info info info calendar calendar"
-            "big big big calendar calendar "
-            "big big big calendar calendar "
+            "info info info daily-schedule daily-schedule"
+            "info info info daily-schedule daily-schedule"
+            "info info info daily-schedule daily-schedule"
+            "info info info daily-schedule daily-schedule"
+            "big big big daily-schedule daily-schedule "
+            "big big big others others "
             "big big big others others"
             "big big big others others"
             "big big big others others"
@@ -159,10 +163,10 @@ body {
         @media screen and (max-width: 1024px) {
             grid-template-areas:
                 "title title title title title"
-                "info info info calendar calendar"
-                "info info info calendar calendar"
-                "info info info calendar calendar"
-                "info info info calendar calendar"
+                "info info info daily-schedule daily-schedule"
+                "info info info daily-schedule daily-schedule"
+                "info info info daily-schedule daily-schedule"
+                "info info info daily-schedule daily-schedule"
                 "big big big big big"
                 "big big big big big"
                 "big big big big big"
@@ -176,7 +180,7 @@ body {
             grid-template-areas:
                 "title"
                 "info"
-                "calendar"
+                "daily-schedule"
                 "big"
                 "others";
             grid-template-columns: repeat(1, 1fr);
@@ -194,8 +198,8 @@ body {
     .big {
         grid-area: big;
     }
-    .calendar {
-        grid-area: calendar;
+    .daily-schedule {
+        grid-area: daily-schedule;
     }
     .others {
         grid-area: others;

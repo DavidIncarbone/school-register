@@ -7,7 +7,8 @@ export const useQueryIndexPresence = (params: IndexPresenceParams) => {
         queryKey: ["presences", params],
         queryFn: async () => {
             const res = await api.get(presencesEndpoint, { params });
-            return res.data.data;
+            // console.log(res.data.data)
+            return res.data[0].data;
         },
         staleTime: 60 * 60 * 1000, // ms
         refetchInterval: 60 * 60 * 1000,

@@ -23,6 +23,8 @@ export const CourseDetailPage = () => {
         isError: isPresencesError,
     } = useQueryIndexPresence(params) as UseQueryResult<Presence[], Error>;
 
+    // console.log(presences);
+
     return (
         <div className="p-8">
             <h1 className="font-semibold italic text-4xl capitalize">

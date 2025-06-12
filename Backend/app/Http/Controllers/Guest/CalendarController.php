@@ -41,11 +41,14 @@ class CalendarController extends Controller
 
             $results = $calendar->get();
 
+            foreach($results as $result) {
+                $result->pivot->course_name = $result->name;
+            }
 
             return response()->json([
                 "success" => true,
                 "message" => "Richiesta effettuata con successo",
-                "data" => $results->sortBy('pivot.day')->values()
+                "data" => $results->pluck('pivot')->sortBy('pivot.day')->values()
             ]);
         } elseif ($user->type === "student") {
 

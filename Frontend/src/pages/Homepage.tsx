@@ -1,25 +1,14 @@
-import { Link } from "react-router";
 import { UserType } from "../config/types";
 import { useGlobalStore } from "../store/useGlobalStore";
 import Loader from "../components/ui/Loader";
-import { Calendar } from "@/components/ui/calendar";
-import { useState } from "react";
 import { CoursesList } from "@/components/teacher/CoursesList";
-import {
-    BarChart3,
-    CalendarDays,
-    ClipboardList,
-    LayoutList,
-    NotebookPen,
-    Settings,
-    User,
-} from "lucide-react";
+import { QuickActions } from "@/components/QuickActions";
+import { DailySchedule } from "@/components/DailySchedule";
+import { Search } from "lucide-react";
 
 export default function Homepage() {
     // global store
     const { authUser } = useGlobalStore((state) => state);
-
-    const [date, setDate] = useState<Date | undefined>(new Date());
 
     // views
     if (!authUser) return <Loader />;
@@ -52,30 +41,65 @@ export default function Homepage() {
                         <h1 className="title text-2xl font-bold px-5 pt-5">
                             Teacher Dashboard
                         </h1>
-                        <div className="info grid grid-cols-3 sm:grid-cols-4 !px-4 gap-4 ">
+                        <div className="info grid grid-cols-3 sm:grid-cols-4 !px-4 gap-4 !bg-slate-800">
                             <QuickActions />
                         </div>
 
-                        <div className="big overflow-hidden">
+                        <div className="big !bg-neutral-950/50 overflow-hidden">
                             <CoursesList />
+                            <div className="flex flex-col mt-4 pt-2 text-sm">
+                                <div className="flex justify-between gap-4 font-semibold text-base border-y-2 py-1">
+                                    <div>Course</div>
+                                    <div className="col-span-2 ">Notices</div>
+                                    <div>Action</div>
+                                </div>
+                                <div className="flex justify-between gap-4 line-clamp-3 border-b">
+                                    <div className="grow">lorem</div>
+                                    <div className="col-span-2 border-x p-2 basis-4/5">
+                                        Lorem ipsum dolor, sit amet consectetur
+                                        adipisicing elit. Nemo recusandae esse
+                                        debitis illo perferendis quibusdam
+                                        maiores ex molestiae aliquam aliquid!
+                                    </div>
+                                    <div className="flex justify-center items-center grow">
+                                        <Search />
+                                    </div>
+                                </div>
+                                <div className="flex justify-between gap-4 line-clamp-3 border-b">
+                                    <div className="grow">lorem</div>
+                                    <div className="col-span-2 border-x p-2 basis-4/5">
+                                        Lorem ipsum dolor, sit amet consectetur
+                                        adipisicing elit. Nemo recusandae esse
+                                        debitis illo perferendis quibusdam
+                                        maiores ex molestiae aliquam aliquid!
+                                    </div>
+                                    <div className="flex justify-center items-center grow">
+                                        <Search />
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div className="calendar flex justify-center items-center">
-                            <Calendar
-                                mode="single"
-                                selected={date}
-                                onSelect={setDate}
-                                className="rounded-lg border bg-primary sm:scale-80 lg:scale-100"
-                            />
+                        <div className="daily-schedule flex flex-col !bg-yellow-700/50">
+                            <DailySchedule />
                         </div>
-                        <div className="others">
-                            Lorem ipsum dolor sit amet consectetur adipisicing
-                            elit. Itaque exercitationem accusamus ratione rerum
-                            dolorum aliquam eum adipisci numquam. Ratione
-                            obcaecati asperiores pariatur ab odit impedit
-                            tenetur consequuntur, consectetur est rem commodi
-                            voluptatem optio adipisci at deserunt, expedita in.
-                            Fugit, cum. Eos temporibus commodi atque beatae est
-                            sequi, obcaecati perspiciatis nisi.
+                        <div className="others !bg-teal-700/50">
+                            <h3 className="dashboard_h3">
+                                General announcements
+                            </h3>
+                            <div className="flex flex-col border rounded-sm overflow-hidden text-sm bg-teal-700">
+                                <div className="flex justify-between border p-2">
+                                    <div>lorem</div>
+                                    <div>Lorem ipsum dolor sit amet.</div>
+                                </div>
+                                <div className="flex justify-between border p-2">
+                                    <div>lorem</div>
+                                    <div>Lorem ipsum dolor sit amet.</div>
+                                </div>
+                                <div className="flex justify-between border p-2">
+                                    <div>lorem</div>
+                                    <div>Lorem ipsum dolor sit amet.</div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -83,80 +107,3 @@ export default function Homepage() {
         </>
     );
 }
-
-/* <Link to="/attendance-form" role="button" className="btn">
-                L'appello di oggi
-            </Link> */
-const quickActions = [
-    // ! da gestire ancora
-    {
-        path: "/",
-        icon: <User />,
-        iconColor: "bg-lime-500",
-        label: "Profile",
-    },
-    {
-        path: "/attendance-form",
-        icon: <ClipboardList />,
-        iconColor: "bg-blue-500",
-        label: "Today's Attendance",
-    },
-    {
-        path: "/weekly-schedule",
-        icon: <CalendarDays />,
-        iconColor: "bg-green-500",
-        label: "Weekly schedule",
-    },
-    {
-        path: "/teacher/search-students",
-        icon: <LayoutList />,
-        iconColor: "bg-red-500",
-        label: "Students",
-    },
-    {
-        path: "/",
-        icon: <BarChart3 />,
-        iconColor: "bg-teal-500",
-        label: "Exams",
-    },
-    {
-        path: "/",
-        icon: <NotebookPen />,
-        iconColor: "bg-amber-500",
-        label: "Homework",
-    },
-    {
-        path: "/",
-        icon: <Settings />,
-        iconColor: "bg-slate-500",
-        label: "Settings",
-    },
-];
-
-const QuickActions = () => {
-    // global store
-    // const { authUser } = useGlobalStore((state) => state);
-
-    return (
-        <>
-            {quickActions.map((action, i) => (
-                <Link
-                    key={i}
-                    to={action.path}
-                    className="rounded-md bg-zinc-900 hover:bg-zinc-950 active:bg-black p-2 max-sm:h-24 flex flex-col justify-center items-center text-center text-xs 3xl:text-lg gap-1"
-                >
-                    <div>
-                        <div
-                            className={`${action.iconColor} size-10 3xl:size-16 3xl:[&>*]:scale-150 flex justify-center items-center rounded-sm`}
-                        >
-                            {action.icon}
-                        </div>
-                    </div>
-                    <div className="grow flex items-center">
-                        <h3>{action.label}</h3>
-                    </div>
-                </Link>
-            ))}
-        </>
-    );
-};

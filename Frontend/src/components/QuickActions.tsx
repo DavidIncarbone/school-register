@@ -1,0 +1,91 @@
+import { useGlobalStore } from "@/store/useGlobalStore";
+import {
+    BarChart3,
+    CalendarDays,
+    ClipboardList,
+    LayoutList,
+    NotebookPen,
+    Settings,
+    User,
+} from "lucide-react";
+import { Link } from "react-router";
+
+export const QuickActions = () => {
+    // global store
+    const { authUser } = useGlobalStore((state) => state);
+
+    return (
+        <>
+            {authUser?.type === "teacher" ? (
+                <>
+                    {quickActions.map((action, i) => (
+                        <Link
+                            key={i}
+                            to={action.path}
+                            className="rounded-md bg-slate-900 hover:bg-slate-950 active:bg-black p-2 max-sm:h-24 flex flex-col justify-center items-center text-center text-xs 3xl:text-lg gap-1"
+                        >
+                            <div>
+                                <div
+                                    className={`${action.iconColor} size-10 3xl:size-16 3xl:[&>*]:scale-150 flex justify-center items-center rounded-sm`}
+                                >
+                                    {action.icon}
+                                </div>
+                            </div>
+                            <div className="grow flex items-center">
+                                <h3>{action.label}</h3>
+                            </div>
+                        </Link>
+                    ))}
+                </>
+            ) : (
+                <div>quick actions students</div>
+            )}
+        </>
+    );
+};
+
+const quickActions = [
+    // ! da gestire ancora
+    {
+        path: "/",
+        icon: <User />,
+        iconColor: "bg-lime-500",
+        label: "Profile",
+    },
+    {
+        path: "/attendance-form",
+        icon: <ClipboardList />,
+        iconColor: "bg-blue-500",
+        label: "Today's Attendance",
+    },
+    {
+        path: "/weekly-schedule",
+        icon: <CalendarDays />,
+        iconColor: "bg-green-500",
+        label: "Weekly schedule",
+    },
+    {
+        path: "/teacher/search-students",
+        icon: <LayoutList />,
+        iconColor: "bg-red-500",
+        label: "Students",
+    },
+    {
+        path: "/",
+        icon: <BarChart3 />,
+        iconColor: "bg-teal-500",
+        label: "Exams",
+    },
+    {
+        path: "/",
+        icon: <NotebookPen />,
+        iconColor: "bg-amber-500",
+        label: "Homework",
+    },
+    {
+        path: "/",
+        icon: <Settings />,
+        iconColor: "bg-slate-500",
+        label: "Preferences",
+    },
+];

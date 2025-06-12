@@ -28,15 +28,15 @@ export const CoursesList = () => {
     if (isCoursesError) return <pre>courses error - da gestire</pre>;
     return (
         <>
-            <h3 className="text-xl font-semibold mb-2">I tuoi corsi</h3>
+            <h3 className="dashboard_h3">Your courses</h3>
             <Carousel
                 plugins={[Autoplay({ delay: 10000, active: !isHovered })]}
                 orientation="horizontal"
-                className="rounded-md  mx-6"
+                className="rounded-md mx-6"
                 onMouseMove={() => setIsHovered(true)}
                 onMouseLeave={() => setIsHovered(false)}
             >
-                <CarouselContent className="space-x-4">
+                <CarouselContent className="space-x-4 mx-2">
                     {isCoursesLoading
                         ? [1, 2, 3, 4].map((el) => (
                               <CarouselItem
@@ -68,7 +68,7 @@ export const CoursesList = () => {
 const CourseCard = ({ course }: { course: Course }) => {
     return (
         <Link
-            to={`/course/${course.id}`}
+            to={`/courses/${course.id}`}
             state={{ course }}
             className="inline-block w-full h-full p-4"
         >
