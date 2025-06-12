@@ -60,7 +60,7 @@ class TeacherController extends Controller
             }
         }
 
-        $teachers = $query->paginate(5);
+        $teachers = $query->paginate(30);
 
         return response()->json(
             $teachers
@@ -107,7 +107,11 @@ class TeacherController extends Controller
             $newTeacher->courses()->attach(request()->course_id);
         }
 
-        return response()->json($newTeacher);
+        return response()->json([
+            "success" => true,
+            "message" => "Insegnante aggiunto con successo",
+            "data" => $newTeacher
+        ]);
     }
 
     /**
@@ -150,7 +154,11 @@ class TeacherController extends Controller
             $teacher->courses()->sync($data["course_id"]);
         }
 
-        return response()->json($teacher);
+        return response()->json([
+            "success" => true,
+            "message" => "Insegnante modificato con successo",
+            "data" => $teacher
+        ]);
     }
 
     /**

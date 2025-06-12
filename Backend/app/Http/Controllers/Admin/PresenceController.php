@@ -25,7 +25,7 @@ class PresenceController extends Controller
             $query->where("date", request()->date)->get();
         }
 
-        $presences = $query->paginate(20);
+        $presences = $query->paginate(30);
 
         return response()->json([
             $presences

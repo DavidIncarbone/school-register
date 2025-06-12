@@ -26,7 +26,6 @@ class Course extends Model
         return $this->belongsToMany(Subject::class)->distinct('subject_id')->withTimestamps();
     }
 
-
     public function students()
     {
         return $this->hasMany(Student::class);
