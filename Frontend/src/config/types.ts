@@ -45,7 +45,8 @@ export type Course = {
     id: number;
     name: string;
     description: string;
-    students_count: number;
+    credits: number;
+    students_count?: number;
     teachers_count?: number;
     subjects_count?: number;
     students?: Student[];
@@ -60,7 +61,16 @@ export type Presence = {
     date: string;
 };
 
-export type SearchStudentsParams = {
+export type Period = Course & {
+    pivot: {
+        subject_id: number;
+        course_id: number;
+        day: "monday" | "tuesday" | "wednesday" | "thursday" | "friday";
+        lesson_time: number;
+    };
+};
+
+export type IndexStudentParams = {
     course_id?: number;
     first_name?: string;
     last_name?: string;
@@ -68,8 +78,12 @@ export type SearchStudentsParams = {
     dir?: string;
 };
 
-export type SearchPresencesParams = {
+export type IndexPresenceParams = {
     student_id?: number;
     course_id?: number;
     date?: string;
+};
+
+export type IndexCalendarParams = {
+    show_week?: number;
 };

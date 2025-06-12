@@ -8,7 +8,7 @@ import {
 import {
     SortOption,
     type Course,
-    type SearchStudentsParams,
+    type IndexStudentParams,
 } from "../../config/types";
 import { useSearchParams } from "react-router";
 import { debounce } from "lodash";
@@ -24,7 +24,7 @@ export default function SearchStudentsPage() {
     const [searchParams, setSearchParams] = useSearchParams();
     const params = Object.fromEntries(
         searchParams.entries()
-    ) as SearchStudentsParams;
+    ) as IndexStudentParams;
     const [sortingCols, setSortingCols] = useState(initialSortingCols);
     const activeSort = params.sort ?? SortOption.BY_ID;
     const activeDir = params.dir ?? "asc";

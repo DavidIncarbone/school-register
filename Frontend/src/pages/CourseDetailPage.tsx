@@ -1,4 +1,4 @@
-import type { Course, Presence, SearchPresencesParams } from "@/config/types";
+import type { Course, Presence, IndexPresenceParams } from "@/config/types";
 import { useQueryShowCourse } from "@/hooks/coursesQueries";
 import { useQueryIndexPresence } from "@/hooks/presencesQueries";
 import type { UseQueryResult } from "@tanstack/react-query";
@@ -9,7 +9,7 @@ export const CourseDetailPage = () => {
     const { id } = useParams();
     const location = useLocation();
     const cachedCourse: Course = location.state?.course;
-    const params: SearchPresencesParams = { course_id: Number(id) };
+    const params: IndexPresenceParams = { course_id: Number(id) };
     // queries
     const {
         data: course,

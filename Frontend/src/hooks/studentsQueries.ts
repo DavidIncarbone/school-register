@@ -1,9 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
-import type { SearchStudentsParams } from "../config/types";
+import type { IndexStudentParams } from "../config/types";
 import { api, studentsEndpoint } from "../services/api";
 
 export const useQueryIndexStudent = (
-    params: SearchStudentsParams,
+    params: IndexStudentParams,
     enabled: boolean
 ) => {
     return useQuery({

@@ -39,9 +39,10 @@ class CalendarController extends Controller
                 $calendar->wherePivot('day', 'like', strtolower($day));
             }
 
-            $results = $calendar->get()->pluck('pivot');
+            $results = $calendar->get();
 
-            return response()->json($results);
+
+            return response()->json($results->sortBy('pivot.day')->values());
         } elseif ($user->type === "student") {
             $student = Student::where("email", $user->email)->first();
             $course = Course::findOrFail($student->course_id);

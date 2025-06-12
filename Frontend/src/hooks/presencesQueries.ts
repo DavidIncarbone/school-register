@@ -1,8 +1,8 @@
-import type { SearchPresencesParams } from "@/config/types";
+import type { IndexPresenceParams } from "@/config/types";
 import { api, presencesEndpoint } from "@/services/api";
 import { useQuery } from "@tanstack/react-query";
 
-export const useQueryIndexPresence = (params: SearchPresencesParams) => {
+export const useQueryIndexPresence = (params: IndexPresenceParams) => {
     return useQuery({
         queryKey: ["presences", params],
         queryFn: async () => {

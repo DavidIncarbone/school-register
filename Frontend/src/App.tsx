@@ -11,6 +11,7 @@ import SearchStudentsPage from "./pages/teacher/SearchStudentsPage";
 import { CourseDetailPage } from "./pages/CourseDetailPage";
 import { StudentDetailPage } from "./pages/StudentDetailPage";
 import { AttendanceFormPage } from "./pages/teacher/AttendanceFormPage";
+import { WeeklySchedulePage } from "./pages/WeeklySchedulePage";
 
 function App() {
     // collaterals effect
@@ -41,6 +42,7 @@ function App() {
                         path="/attendance-form"
                         Component={AttendanceFormPage}
                     />
+                    <Route path="/weekly-schedule" Component={WeeklySchedulePage} />
                 </Route>
 
                 {/* pagine senza auth */}

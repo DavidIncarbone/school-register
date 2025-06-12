@@ -1,10 +1,10 @@
-import type { SearchStudentsParams, Student } from "../../config/types";
+import type { IndexStudentParams, Student } from "../../config/types";
 import type { UseQueryResult } from "@tanstack/react-query";
 import { useQueryIndexStudent } from "../../hooks/studentsQueries";
 import { SkeleStudentRecord } from "../ui/SkeleStudentRecord";
 import { StudentRecord } from "./StudentRecord";
 
-export const StudentsList = ({ params }: { params: SearchStudentsParams }) => {
+export const StudentsList = ({ params }: { params: IndexStudentParams }) => {
     // queries
     const {
         data: students,

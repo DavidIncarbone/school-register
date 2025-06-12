@@ -63,7 +63,7 @@ body {
 }
 
 #root {
-    @apply flex h-dvh lg:overflow-hidden;
+    @apply flex h-dvh lg:overflow-hidden overflow-x-hidden;
 }
 
 @layer components {

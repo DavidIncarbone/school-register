@@ -12,6 +12,7 @@ import {
     LayoutList,
     NotebookPen,
     Settings,
+    User,
 } from "lucide-react";
 
 export default function Homepage() {
@@ -89,16 +90,22 @@ export default function Homepage() {
 const quickActions = [
     // ! da gestire ancora
     {
+        path: "/",
+        icon: <User />,
+        iconColor: "bg-lime-500",
+        label: "Profile",
+    },
+    {
         path: "/attendance-form",
         icon: <ClipboardList />,
         iconColor: "bg-blue-500",
         label: "Today's Attendance",
     },
     {
-        path: "/",
+        path: "/weekly-schedule",
         icon: <CalendarDays />,
         iconColor: "bg-green-500",
-        label: "Timetable",
+        label: "Weekly schedule",
     },
     {
         path: "/teacher/search-students",
