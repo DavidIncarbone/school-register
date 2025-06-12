@@ -30,8 +30,6 @@ class PresenceController extends Controller
         $query = Presence::query();
 
         if ($user->type === 'teacher') {
-
-
             $coursesIds = Teacher::where("email", $user->email)->first()->courses()->pluck("course_id")->toArray();
 
             if (request()->student_id) {
@@ -49,6 +47,14 @@ class PresenceController extends Controller
 
                 $presences = $query->orderBy("date", "desc")->paginate(30);
 
+                foreach ($presences as $presence) {
+
+                    $student = Student::where("id", $presence->student_id)->firstOrFail();
+
+                    $presence->student_first_name = $student->first_name;
+                    $presence->student_last_name = $student->last_name;
+                    $presence->student_email = $student->email;
+                };
                 return response()->json(
                     $presences
                 );
@@ -66,6 +72,16 @@ class PresenceController extends Controller
                     $query->where("date", request()->date);
                 }
                 $presences = $query->whereIn("student_id", $studentsIds)->orderBy("date", "desc")->paginate(30);
+
+                foreach ($presences as $presence) {
+
+                    $student = Student::where("id", $presence->student_id)->firstOrFail();
+
+                    $presence->student_first_name = $student->first_name;
+                    $presence->student_last_name = $student->last_name;
+                    $presence->student_email = $student->email;
+                };
+
 
                 return response()->json([
                     $presences,
