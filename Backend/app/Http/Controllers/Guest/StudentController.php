@@ -100,7 +100,42 @@ class StudentController extends Controller
 
     public function show(Student $student)
     {
-        // user->type = teacher => vede il dettaglio di uno studente partecipante ad uno dei suoi corsi
-        // ? valutare in seguito user->type = student => vede solo il proprio dettaglio (copia incolla della index nell primo if)
+
+        $user = request()->user();
+
+        if ($user->type == "teacher") {
+
+            $teacher = Teacher::where("email", $user->email)->first();
+
+            $coursesIds = $teacher->courses()->pluck("course_id")->toArray();
+
+            if (!in_array($student->course_id, $coursesIds)) {
+                return response()->json([
+                    "success" => false,
+                    "message" => "Studente non presente nei corsi di questo teacher"
+                ]);
+            }
+
+            return response()->json([
+                "success" => true,
+                "message" => "Richiesta effettuata con successo",
+                "data" => $student
+            ]);
+        } else if ($user->type == "student") {
+
+            $currentStudent = Student::where("email", $user->email)->first();
+
+            if ($student->email != $currentStudent->email) {
+                return response()->json([
+                    "success" => false,
+                    "message" => "Questo studente non può accedere ai dettagli degli altri studenti",
+                ]);
+            }
+            return response()->json([
+                "success" => true,
+                "message" => "Richiesta effettuata con successo",
+                "data" => $currentStudent
+            ]);
+        }
     }
 }

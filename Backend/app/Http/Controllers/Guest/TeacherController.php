@@ -3,8 +3,11 @@
 namespace App\Http\Controllers\Guest;
 
 use App\Http\Controllers\Controller;
+use App\Models\Course;
+use App\Models\Student;
 use App\Models\Teacher;
 use App\Models\User;
+use Illuminate\Container\Attributes\Log as AttributesLog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
@@ -17,10 +20,28 @@ class TeacherController extends Controller
     public function index()
     {
 
-        // * user->type = student => vede i dettagli dei professori del corso che partecipano
-        // * user->type = teacher => vede solo la propria scheda
+        $user = request()->user();
+        if ($user->type == "teacher") {
 
-        // * filtri non servono ? perche al massimo un corso avra tot <~ 6 teachers
+            $teacher = Teacher::where("email", $user->email)->first();
+
+            return response()->json([
+                "success" => true,
+                "message" => "Richiesta effettuata con successo",
+                "data" => $teacher,
+            ]);
+        } else if ($user->type == "student") {
+            $student = Student::where("email", $user->email)->firstOrFail();
+            $teachers = Course::where("id", $student->course_id)->firstOrFail()->teachers;
+
+            return response()->json([
+                "success" => true,
+                "message" => "Richiesta effettuata con successo",
+                "data" => $teachers,
+            ]);
+
+            Log::info($teachers);
+        }
     }
 
     /**
@@ -32,14 +53,42 @@ class TeacherController extends Controller
         // user->type = student => aggiungere policy in cui il teacher insegna ad un corso in cui partecipa uno studente
         // e mostra il teacher
 
-        // user->type = teacher => aggiungere policy in cui il teacher in input corrisponde alla scheda del teacher dello user loggato
-        // e mostra solo se stesso
+        $user = request()->user();
 
-        // ! da rimuovere dopo aver ultimato la show
-        return response()->json([
-            'success' => true,
-            'message' => 'Richiesta effettuata con successo',
-            'data' => $teacher->load("courses"),
-        ], 200);
+        if ($user->type == "teacher") {
+
+            $currentTeacher = Teacher::where("email", $user->email)->first();
+
+            if ($currentTeacher->email != $teacher->email) {
+                return response()->json([
+                    "success" => false,
+                    "message" => "Questo insegnante non può accedere ai dettagli degli altri insegnanti",
+                ]);
+            }
+
+            return response()->json([
+                "success" => true,
+                "message" => "Richiesta effettuata con successo",
+                "data" => $currentTeacher
+            ]);
+        } else if ($user->type == "student") {
+
+            $student = Student::where("email", $user->email)->first();
+
+            $coursesIds = $teacher->courses->pluck("id")->toArray();
+
+            if (!in_array($student->course_id, $coursesIds)) {
+                return response()->json([
+                    "success" => false,
+                    "message" => "Lo studente corrente non può visualizzare i dettagli di questo insegnante",
+                ]);
+            }
+
+            return response()->json([
+                "success" => true,
+                "message" => "Richiesta effettuata con successo",
+                "data" => $teacher
+            ]);
+        };
     }
 }
