@@ -1,3 +1,4 @@
+import { SkeleWeeklyScheduleTable } from "@/components/ui/SkeleWeeklyScheduleTable";
 import { periods } from "@/config/lessonHours";
 import type { Period } from "@/config/types";
 import { useQueryIndexCalendar } from "@/hooks/calendarQueries";
@@ -17,7 +18,6 @@ export const WeeklySchedulePage = () => {
     >;
 
     // views
-    if (isLoading) return <pre>calendar loading</pre>;
     if (isError) return <pre>calendar error</pre>;
 
     return (
@@ -33,51 +33,54 @@ export const WeeklySchedulePage = () => {
                         {day}
                     </div>
                 ))}
-                {calendar && (
+                {isLoading ? (
+                    <SkeleWeeklyScheduleTable />
+                ) : (
                     <>
-                        {periods.map((lessonTime) => (
-                            <Fragment key={lessonTime.period}>
-                                <div className="col-span-1 text-sm flex items-center">
-                                    {lessonTime.timeFrame}
-                                </div>
-                                {courseListByPeriod(
-                                    calendar,
-                                    lessonTime.period
-                                ).map((course, i) => (
-                                    <div
-                                        className="col-span-2 flex justify-center items-center"
-                                        key={i}
-                                    >
-                                        <div className="size-full mx-2">
-                                            {course && (
-                                                <Link
-                                                    to={`/courses/${course.course_id}`}
-                                                    style={{
-                                                        background: `hsl(${
-                                                            i * 45
-                                                        }, 50%, 50%, 90%)`,
-                                                    }}
-                                                    className="hover:opacity-80 hover:[&>*]:scale-110 [&>*]:transition-all
-                                                     size-full rounded-md px-2 flex items-center gap-2"
-                                                >
-                                                    <div
+                        {calendar &&
+                            periods.map((lessonTime) => (
+                                <Fragment key={lessonTime.period}>
+                                    <div className="col-span-1 text-sm flex items-center">
+                                        {lessonTime.timeFrame}
+                                    </div>
+                                    {courseListByPeriod(
+                                        calendar,
+                                        lessonTime.period
+                                    ).map((course, i) => (
+                                        <div
+                                            className="col-span-2 flex justify-center items-center"
+                                            key={i}
+                                        >
+                                            <div className="size-full mx-2">
+                                                {course && (
+                                                    <Link
+                                                        to={`/courses/${course.course_id}`}
                                                         style={{
                                                             background: `hsl(${
                                                                 i * 45
-                                                            }, 100%, 25%)`,
+                                                            }, 50%, 50%, 90%)`,
                                                         }}
-                                                        className="w-2 rounded-full z-20 h-3/5 left-2"
-                                                    ></div>
-                                                    <span className="font-semibold">
-                                                        {course.course_name}
-                                                    </span>
-                                                </Link>
-                                            )}
+                                                        className="hover:opacity-80 hover:[&>*]:scale-110 [&>*]:transition-all
+                                                     size-full rounded-md px-2 flex items-center gap-2"
+                                                    >
+                                                        <div
+                                                            style={{
+                                                                background: `hsl(${
+                                                                    i * 45
+                                                                }, 100%, 25%)`,
+                                                            }}
+                                                            className="w-2 rounded-full z-20 h-3/5 left-2"
+                                                        ></div>
+                                                        <span className="font-semibold">
+                                                            {course.course_name}
+                                                        </span>
+                                                    </Link>
+                                                )}
+                                            </div>
                                         </div>
-                                    </div>
-                                ))}
-                            </Fragment>
-                        ))}
+                                    ))}
+                                </Fragment>
+                            ))}
                     </>
                 )}
             </div>

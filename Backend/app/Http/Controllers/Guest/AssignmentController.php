@@ -16,6 +16,9 @@ class AssignmentController extends Controller
      */
     public function index()
     {
+
+        // todo: filtri
+
         request()->validate([
             "course_id" => ["integer", "min:1"],
             "subject_id" => ["integer", "min:1"],
@@ -86,7 +89,7 @@ class AssignmentController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Richiesta effettuata con successo',
+            'message' => 'Assignment creato con successo',
             'data' => $newAssignment,
         ], 201);
     }

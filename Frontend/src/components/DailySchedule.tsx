@@ -4,17 +4,17 @@ import { useQueryIndexCalendar } from "@/hooks/calendarQueries";
 import type { UseQueryResult } from "@tanstack/react-query";
 import { Link } from "react-router";
 import { Fragment } from "react/jsx-runtime";
+import { SkeleDailyScheduleTable } from "./ui/SkeleDailyScheduleTable";
 
 export const DailySchedule = () => {
     // queries
     const {
-        data: rawSchedule,
+        data: dailySchedule,
         isLoading,
         isError,
     } = useQueryIndexCalendar() as UseQueryResult<Period[], Error>;
 
     // views
-    if (isLoading) return <pre>calendar loading</pre>;
     if (isError) return <pre>calendar error</pre>;
     return (
         <>
@@ -26,26 +26,31 @@ export const DailySchedule = () => {
             </div>
             <div>
                 <div className="grow grid grid-cols-3 rounded-b-md border  overflow-hidden capitalize [&>div]:border [&>div]:flex [&>div]:items-center [&>div]:p-2 bg-teal-700 text-sm">
-                    {rawSchedule?.map((schedule, i) => (
-                        <Fragment key={i}>
-                            <div className="">{schedule.lesson_time}°</div>
-                            <div className="">
-                                {
-                                    periods.find(
-                                        (p) => schedule.lesson_time == p.period
-                                    )?.timeFrame
-                                }
-                            </div>
-                            <div className="">
-                                <Link
-                                    to={`/course/${schedule.course_id}`}
-                                    className="underline underline-offset-2 hover:italic"
-                                >
-                                    {schedule.course_name}
-                                </Link>
-                            </div>
-                        </Fragment>
-                    ))}
+                    {isLoading ? (
+                        <SkeleDailyScheduleTable />
+                    ) : (
+                        dailySchedule?.map((schedule, i) => (
+                            <Fragment key={i}>
+                                <div className="">{schedule.lesson_time}°</div>
+                                <div className="">
+                                    {
+                                        periods.find(
+                                            (p) =>
+                                                schedule.lesson_time == p.period
+                                        )?.timeFrame
+                                    }
+                                </div>
+                                <div className="">
+                                    <Link
+                                        to={`/course/${schedule.course_id}`}
+                                        className="underline underline-offset-2 hover:italic"
+                                    >
+                                        {schedule.course_name}
+                                    </Link>
+                                </div>
+                            </Fragment>
+                        ))
+                    )}
                 </div>
             </div>
         </>

@@ -87,7 +87,7 @@ const quickActions = [
         path: "/teacher/search-students",
         icon: <LayoutList />,
         iconColor: "bg-blue-500",
-        label: "Students",
+        label: "Students list",
     },
     {
         path: "/",
