@@ -63,7 +63,14 @@ body {
 }
 
 #root {
-    @apply flex h-dvh lg:overflow-hidden overflow-x-hidden;
+    @apply flex h-dvh overflow-x-hidden;
+    @media screen and (min-width: 1280px) {
+        &::-webkit-scrollbar {
+            display: none;
+        }
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
 }
 
 @layer components {
@@ -147,44 +154,37 @@ body {
     .teacher-dashboard {
         display: grid;
         grid-template-areas:
-            "title title title title title"
             "info info info daily-schedule daily-schedule"
             "info info info daily-schedule daily-schedule"
             "info info info daily-schedule daily-schedule"
             "info info info daily-schedule daily-schedule"
             "big big big daily-schedule daily-schedule "
-            "big big big others others "
-            "big big big others others"
+            "big big big daily-schedule daily-schedule "
+            "big big big daily-schedule daily-schedule"
             "big big big others others"
             "big big big others others"
             "big big big others others";
         grid-template-columns: repeat(5, 1fr);
-        grid-template-rows: repeat(11, 1fr);
         @media screen and (max-width: 1024px) {
             grid-template-areas:
-                "title title title title title"
-                "info info info daily-schedule daily-schedule"
-                "info info info daily-schedule daily-schedule"
-                "info info info daily-schedule daily-schedule"
-                "info info info daily-schedule daily-schedule"
-                "big big big big big"
-                "big big big big big"
-                "big big big big big"
-                "big big big big big"
-                "others others others others others"
-                "others others others others others";
-            grid-template-columns: repeat(5, 1fr);
-            grid-template-rows: repeat(11, 1fr);
+                "info daily-schedule"
+                "info daily-schedule"
+                "info daily-schedule"
+                "big big "
+                "big big"
+                "big big"
+                "big big"
+                "others others"
+                "others others";
+            grid-template-columns: repeat(2, 1fr);
         }
         @media screen and (max-width: 640px) {
             grid-template-areas:
-                "title"
                 "info"
                 "daily-schedule"
                 "big"
                 "others";
             grid-template-columns: repeat(1, 1fr);
-            grid-template-rows: repeat(1, 1fr);
         }
         @apply p-5 pt-0 gap-5 h-full [&>*:not(.title)]:bg-zinc-800 [&>*:not(.title)]:rounded-md [&>*:not(.title)]:p-2;
     }

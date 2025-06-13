@@ -27,6 +27,7 @@ class CalendarController extends Controller
         if ($user->type === "teacher") {
             $teacher = Teacher::where("email", $user->email)->first();
             $coursesIds = $teacher->courses->pluck('id')->toArray();
+
             $day = Carbon::now()->format("l");
 
             $subject = Subject::findOrFail($teacher->subject_id);
@@ -41,14 +42,14 @@ class CalendarController extends Controller
 
             $results = $calendar->get();
 
-            foreach($results as $result) {
+            foreach ($results as $result) {
                 $result->pivot->course_name = $result->name;
             }
 
             return response()->json([
                 "success" => true,
                 "message" => "Richiesta effettuata con successo",
-                "data" => $results->pluck('pivot')->sortBy('pivot.day')->values()
+                "data" => $results->pluck('pivot')->sortBy('lesson_time')->values()
             ]);
         } elseif ($user->type === "student") {
 

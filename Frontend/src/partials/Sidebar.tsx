@@ -1,5 +1,5 @@
 import { Calendar } from "@/components/ui/calendar";
-import { useState } from "react";
+import { Bot } from "lucide-react";
 import { Link, NavLink } from "react-router";
 
 export default function Sidebar() {
@@ -24,15 +24,16 @@ export default function Sidebar() {
 
     return (
         <>
-            <nav className="bg-[#25282d] max-lg:hidden lg:w-1/6 fixed h-screen top-0 left-0">
+            <nav className="bg-[#25282d] max-lg:hidden lg:w-1/6 sticky h-screen top-0 left-0">
                 <Link to="/" className="h-16 flex justify-center items-center">
-                    logo
+                    <div className="h-11/12 aspect-square">
+                        <Bot className="size-full" />
+                    </div>
+                    {/* <img src="/logo.png" alt="logo" className="h-full object-contain"/> */}
                 </Link>
                 <div className="flex justify-center items-center">
                     <Calendar
                         mode="single"
-                        // selected={date}
-                        // onSelect={setDate}
                         className="rounded-lg border bg-primary scale-70 2xl:scale-80"
                     />
                 </div>
@@ -40,7 +41,7 @@ export default function Sidebar() {
                     {navLinks.map((link, i) => (
                         <NavLink
                             key={i}
-                            className="border p-2 rounded-md"
+                            className="border-b p-2 mx-4"
                             to={link.path}
                         >
                             {link.label}

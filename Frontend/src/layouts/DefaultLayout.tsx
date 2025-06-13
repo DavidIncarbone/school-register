@@ -34,7 +34,7 @@ export default function DefaultLayout() {
     return (
         <>
             <Sidebar />
-            <div className="grow lg:ml-[16.667%] h-full">
+            <div className="grow h-full">
                 <Header />
                 <main
                     style={{ minHeight: mainHeight, height: mainHeight }}

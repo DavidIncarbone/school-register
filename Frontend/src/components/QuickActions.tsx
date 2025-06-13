@@ -10,7 +10,11 @@ import {
 } from "lucide-react";
 import { Link } from "react-router";
 
-export const QuickActions = () => {
+export const QuickActions = ({
+    takeAttendance,
+}: {
+    takeAttendance: boolean;
+}) => {
     // global store
     const { authUser } = useGlobalStore((state) => state);
 
@@ -19,22 +23,41 @@ export const QuickActions = () => {
             {authUser?.type === "teacher" ? (
                 <>
                     {quickActions.map((action, i) => (
-                        <Link
-                            key={i}
-                            to={action.path}
-                            className="rounded-md bg-slate-900 hover:bg-slate-950 active:bg-black p-2 max-sm:h-24 flex flex-col justify-center items-center text-center text-xs 3xl:text-lg gap-1"
-                        >
-                            <div>
-                                <div
-                                    className={`${action.iconColor} size-10 3xl:size-16 3xl:[&>*]:scale-150 flex justify-center items-center rounded-sm`}
-                                >
-                                    {action.icon}
+                        <>
+                            <Link
+                                key={i}
+                                to={action.path}
+                                className={`${
+                                    action.label === "Today's Attendance" &&
+                                    takeAttendance
+                                        ? "!bg-red-950"
+                                        : action.label ===
+                                              "Today's Attendance" &&
+                                          !takeAttendance &&
+                                          "hidden"
+                                } max-md:aspect-square max-md:h-24 rounded-md bg-slate-900 hover:bg-slate-950 active:bg-black p-2 flex flex-col justify-center items-center text-center text-xs 3xl:text-lg gap-1`}
+                            >
+                                <div>
+                                    <div
+                                        className={`${action.iconColor} size-10 3xl:size-16 3xl:[&>*]:scale-150 flex justify-center items-center rounded-sm`}
+                                    >
+                                        {action.icon}
+                                    </div>
                                 </div>
-                            </div>
-                            <div className="grow flex items-center">
-                                <h3>{action.label}</h3>
-                            </div>
-                        </Link>
+                                <div className="grow flex items-center">
+                                    <span
+                                        className={`${
+                                            action.label ===
+                                                "Today's Attendance" &&
+                                            takeAttendance &&
+                                            "!text-red-500"
+                                        }`}
+                                    >
+                                        {action.label}
+                                    </span>
+                                </div>
+                            </Link>
+                        </>
                     ))}
                 </>
             ) : (
@@ -47,16 +70,16 @@ export const QuickActions = () => {
 const quickActions = [
     // ! da gestire ancora
     {
+        path: "/attendance-form",
+        icon: <ClipboardList />,
+        iconColor: "bg-red-700",
+        label: "Today's Attendance",
+    },
+    {
         path: "/",
         icon: <User />,
         iconColor: "bg-lime-500",
         label: "Profile",
-    },
-    {
-        path: "/attendance-form",
-        icon: <ClipboardList />,
-        iconColor: "bg-blue-500",
-        label: "Today's Attendance",
     },
     {
         path: "/weekly-schedule",
@@ -67,7 +90,7 @@ const quickActions = [
     {
         path: "/teacher/search-students",
         icon: <LayoutList />,
-        iconColor: "bg-red-500",
+        iconColor: "bg-blue-500",
         label: "Students",
     },
     {

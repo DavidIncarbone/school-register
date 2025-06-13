@@ -1,14 +1,33 @@
-import { UserType } from "../config/types";
+import { UserType, type Period, type Presence } from "../config/types";
 import { useGlobalStore } from "../store/useGlobalStore";
 import Loader from "../components/ui/Loader";
 import { CoursesList } from "@/components/teacher/CoursesList";
 import { QuickActions } from "@/components/QuickActions";
 import { DailySchedule } from "@/components/DailySchedule";
 import { Search } from "lucide-react";
+import { useQueryIndexCalendar } from "@/hooks/calendarQueries";
+import type { UseQueryResult } from "@tanstack/react-query";
+import { useQueryIndexPresence } from "@/hooks/presencesQueries";
 
 export default function Homepage() {
     // global store
     const { authUser } = useGlobalStore((state) => state);
+    // queries
+    const { data: calendar, isLoading: isCalendarLoading } =
+        useQueryIndexCalendar() as UseQueryResult<Period[], Error>;
+
+    const firstCourseId =
+        calendar?.find((period) => period.lesson_time == 1)?.course_id ?? 0;
+    const { data: presences } = useQueryIndexPresence(
+        {
+            course_id: firstCourseId,
+            date: new Date().toISOString().split("T")[0],
+        },
+        Boolean(firstCourseId)
+    ) as UseQueryResult<{ data: Presence[]; total: number }[], Error>;
+
+    const takeAttendance =
+        presences && presences[0]?.total === 0 ? true : false;
 
     // views
     if (!authUser) return <Loader />;
@@ -36,26 +55,28 @@ export default function Homepage() {
                     </div>
                 </div>
             ) : (
-                <div className="flex flex-col min-h-full sm:h-full">
+                <div className="flex flex-col min-h-full">
+                    <h1 className="title text-2xl font-bold px-5 py-3">
+                        Teacher Dashboard
+                    </h1>
                     <div className="teacher-dashboard">
-                        <h1 className="title text-2xl font-bold px-5 pt-5">
-                            Teacher Dashboard
-                        </h1>
-                        <div className="info grid grid-cols-3 sm:grid-cols-4 !px-4 gap-4 !bg-slate-800">
-                            <QuickActions />
+                        <div className="info max-md:overflow-auto max-md:flex md:grid md:grid-cols-3 lg:grid-cols-4  !px-4 gap-4 !bg-slate-800 max-lg:h-fit">
+                            <QuickActions takeAttendance={takeAttendance} />
                         </div>
 
                         <div className="big !bg-neutral-950/50 overflow-hidden">
                             <CoursesList />
-                            <div className="flex flex-col mt-4 pt-2 text-sm">
-                                <div className="flex justify-between gap-4 font-semibold text-base border-y-2 py-1">
-                                    <div>Course</div>
-                                    <div className="col-span-2 ">Notices</div>
-                                    <div>Action</div>
+                            <div className="flex flex-col mt-6 text-sm">
+                                <div className="flex font-semibold text-base border-y-2 [&>div]:p-1">
+                                    <div className="w-1/3">Course</div>
+                                    <div className="w-1/2 border-x">
+                                        Notices
+                                    </div>
+                                    <div className="grow">Action</div>
                                 </div>
-                                <div className="flex justify-between gap-4 line-clamp-3 border-b">
-                                    <div className="grow">lorem</div>
-                                    <div className="col-span-2 border-x p-2 basis-4/5">
+                                <div className="flex line-clamp-3 border-b [&>div]:p-1">
+                                    <div className="w-1/3">lorem</div>
+                                    <div className="border-x w-1/2 line-clamp-3">
                                         Lorem ipsum dolor, sit amet consectetur
                                         adipisicing elit. Nemo recusandae esse
                                         debitis illo perferendis quibusdam
@@ -65,9 +86,9 @@ export default function Homepage() {
                                         <Search />
                                     </div>
                                 </div>
-                                <div className="flex justify-between gap-4 line-clamp-3 border-b">
-                                    <div className="grow">lorem</div>
-                                    <div className="col-span-2 border-x p-2 basis-4/5">
+                                <div className="flex line-clamp-3 border-b [&>div]:p-1">
+                                    <div className="w-1/3">lorem</div>
+                                    <div className="border-x w-1/2 line-clamp-3">
                                         Lorem ipsum dolor, sit amet consectetur
                                         adipisicing elit. Nemo recusandae esse
                                         debitis illo perferendis quibusdam
@@ -79,14 +100,14 @@ export default function Homepage() {
                                 </div>
                             </div>
                         </div>
-                        <div className="daily-schedule flex flex-col !bg-yellow-700/50">
+                        <div className="daily-schedule flex flex-col !bg-teal-700/50 h-fit">
                             <DailySchedule />
                         </div>
-                        <div className="others !bg-teal-700/50">
+                        <div className="others !bg-yellow-700/50 h-fit">
                             <h3 className="dashboard_h3">
                                 General announcements
                             </h3>
-                            <div className="flex flex-col border rounded-sm overflow-hidden text-sm bg-teal-700">
+                            <div className="flex flex-col border rounded-sm overflow-hidden text-sm bg-yellow-700">
                                 <div className="flex justify-between border p-2">
                                     <div>lorem</div>
                                     <div>Lorem ipsum dolor sit amet.</div>

@@ -59,6 +59,9 @@ export type Presence = {
     student_id: number;
     is_present: boolean;
     date: string;
+    student_first_name: string;
+    student_last_name: string;
+    student_email: string;
 };
 
 export type Period = {

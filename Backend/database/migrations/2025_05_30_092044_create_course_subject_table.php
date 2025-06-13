@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreignId("subject_id")->constrained();
 
             $table->enum('day', ['monday', 'tuesday', 'wednesday', 'thursday', 'friday']);
-            $table->enum('lesson_time', [1, 2, 3, 4]);
+            $table->enum('lesson_time', [1, 2, 3, 4, 5, 6, 7, 8]);
 
             // i vari unique... unique('subid', 'coursid', 'day','lesstime')
 
