@@ -1,33 +1,17 @@
-import { UserType, type Period, type Presence } from "../config/types";
+import { UserType } from "../config/types";
 import { useGlobalStore } from "../store/useGlobalStore";
 import Loader from "../components/ui/Loader";
 import { CoursesList } from "@/components/teacher/CoursesList";
 import { QuickActions } from "@/components/QuickActions";
 import { DailySchedule } from "@/components/DailySchedule";
 import { Search } from "lucide-react";
-import { useQueryIndexCalendar } from "@/hooks/calendarQueries";
-import type { UseQueryResult } from "@tanstack/react-query";
-import { useQueryIndexPresence } from "@/hooks/presencesQueries";
+import { useTakeAttendance } from "@/hooks/useTakeAttendance";
 
 export default function Homepage() {
     // global store
     const { authUser } = useGlobalStore((state) => state);
-    // queries
-    const { data: calendar, isLoading: isCalendarLoading } =
-        useQueryIndexCalendar() as UseQueryResult<Period[], Error>;
 
-    const firstCourseId =
-        calendar?.find((period) => period.lesson_time == 1)?.course_id ?? 0;
-    const { data: presences } = useQueryIndexPresence(
-        {
-            course_id: firstCourseId,
-            date: new Date().toISOString().split("T")[0],
-        },
-        Boolean(firstCourseId)
-    ) as UseQueryResult<{ data: Presence[]; total: number }[], Error>;
-
-    const takeAttendance =
-        presences && presences[0]?.total === 0 ? true : false;
+    const { takeAttendance } = useTakeAttendance();
 
     // views
     if (!authUser) return <Loader />;

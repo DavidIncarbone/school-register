@@ -1,38 +1,16 @@
-import type {
-    Course,
-    IndexStudentParams,
-    Period,
-    Presence,
-    Student,
-} from "@/config/types";
-import { useQueryIndexCalendar } from "@/hooks/calendarQueries";
-import { useQueryIndexCourse } from "@/hooks/coursesQueries";
-import { useQueryIndexPresence } from "@/hooks/presencesQueries";
+import type { Student } from "@/config/types";
 import { useQueryIndexStudent } from "@/hooks/studentsQueries";
+import { useTakeAttendance } from "@/hooks/useTakeAttendance";
 import { api } from "@/services/api";
 import type { UseQueryResult } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
-import { useSearchParams } from "react-router";
 
 export const AttendanceFormPage = () => {
     // vars
     const [selected, setSelected] = useState<boolean[]>();
     // queries
-    const { data: calendar, isLoading: isCalendarLoading } =
-        useQueryIndexCalendar() as UseQueryResult<Period[], Error>;
+    const { firstCourseId, takeAttendance, presences } = useTakeAttendance();
 
-    const firstCourseId =
-        calendar?.find((period) => period.lesson_time == 1)?.course_id ?? 0;
-    const { data: presences } = useQueryIndexPresence(
-        {
-            course_id: firstCourseId,
-            date: new Date().toISOString().split("T")[0],
-        },
-        Boolean(firstCourseId)
-    ) as UseQueryResult<{ data: Presence[]; total: number }[], Error>;
-
-    const takeAttendance =
-        presences && presences[0]?.total === 0 ? true : false;
     const { data: students } = useQueryIndexStudent(
         { course_id: firstCourseId },
         takeAttendance
@@ -43,6 +21,14 @@ export const AttendanceFormPage = () => {
             setSelected(students.map(() => false));
         }
     }, [students]);
+
+    // useCallback => cacha la funzione in se
+    // useMemo => cacha il return della funzione
+    // memo => higher order component => wrappa un componente e 'cacha' il componente
+
+    // react 19 => memo X
+
+    // sono l'ultima spiaggia
 
     const handleClick = async () => {
         await api.post("/api/presences", {
@@ -72,7 +58,7 @@ export const AttendanceFormPage = () => {
             {students ? (
                 <div className="space-y-2 overflow-auto h-[500px]">
                     {students &&
-                        students.map((student, i) => (
+                        students.map((student, studentIndex) => (
                             <div className="grid grid-cols-2">
                                 <div key={student.id}>
                                     <span>
@@ -83,8 +69,10 @@ export const AttendanceFormPage = () => {
                                     <input
                                         onChange={() =>
                                             setSelected((prev) =>
-                                                prev?.map((bool, index) =>
-                                                    index === i ? !bool : bool
+                                                prev?.map((checked, i) =>
+                                                    i === studentIndex
+                                                        ? !checked
+                                                        : checked
                                                 )
                                             )
                                         }

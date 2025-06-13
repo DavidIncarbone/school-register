@@ -42,7 +42,10 @@ function App() {
                         path="/attendance-form"
                         Component={AttendanceFormPage}
                     />
-                    <Route path="/weekly-schedule" Component={WeeklySchedulePage} />
+                    <Route
+                        path="/weekly-schedule"
+                        Component={WeeklySchedulePage}
+                    />
                 </Route>
 
                 {/* pagine senza auth */}
