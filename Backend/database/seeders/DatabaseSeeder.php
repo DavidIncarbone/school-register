@@ -31,9 +31,20 @@ class DatabaseSeeder extends Seeder
 
             // PIVOT
 
-            CourseSubjectSeeder::class,
+            // CourseSubjectSeeder::class,
             CourseTeacherSeeder::class,
             StudentSubjectSeeder::class,
         ]);
+
+        $teacherExample = Teacher::find(1);
+        $subjectsCount = Subject::all()->count();
+        $teacherExample->courses()->each(function ($course) use ($subjectsCount, $teacherExample) {
+            for ($i = 1; $i <= rand(1, $subjectsCount); $i++) {
+                $course->subjects()->attach($teacherExample->subject_id, [
+                    "day" => rand(1, 5),
+                    "lesson_time" => rand(1, 8),
+                ]);
+            }
+        });
     }
 }

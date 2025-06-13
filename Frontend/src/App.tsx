@@ -12,6 +12,7 @@ import { CourseDetailPage } from "./pages/CourseDetailPage";
 import { StudentDetailPage } from "./pages/StudentDetailPage";
 import { AttendanceFormPage } from "./pages/teacher/AttendanceFormPage";
 import { WeeklySchedulePage } from "./pages/WeeklySchedulePage";
+import { Debug } from "./components/Debug";
 
 function App() {
     // collaterals effect
@@ -25,6 +26,8 @@ function App() {
         };
         fetchCsrfCookie();
     }, []);
+
+    // return <Debug />;
 
     return (
         <Routes>

@@ -63,7 +63,6 @@ class AssignmentController extends Controller
 
         $request->validate([
             'course_id' => ['required', 'integer', 'min:1'],
-            'subject_id' => ['required', 'integer', 'min:1'],
             'body' => ['required', 'string', 'min:1', 'max:255'],
             'assignment_date' => ['required', 'date'],
             'deadline' => ['required', 'date'],
@@ -73,14 +72,12 @@ class AssignmentController extends Controller
 
         $teacher = Teacher::where("email", $user->email)->firstOrFail();
 
-        Log::info($teacher);
-
-        $courseId = $teacher->courses()->findOrFail($request->course_id);
+        $course = $teacher->courses()->findOrFail($request->course_id);
 
         $newAssignment = new Assignment();
 
-        $newAssignment->course_id = $courseId;
-        $newAssignment->subject_id = $request->subject_id;
+        $newAssignment->course_id = $course->id;
+        $newAssignment->subject_id = $teacher->subject_id;
         $newAssignment->body = $request->body;
         $newAssignment->assignment_date = $request->assignment_date;
         $newAssignment->deadline = $request->deadline;

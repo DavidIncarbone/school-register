@@ -28,7 +28,6 @@ class CalendarController extends Controller
             $teacher = Teacher::where("email", $user->email)->first();
             $coursesIds = $teacher->courses->pluck('id')->toArray();
 
-            $day = Carbon::now()->format("l");
 
             $subject = Subject::findOrFail($teacher->subject_id);
 
@@ -37,6 +36,7 @@ class CalendarController extends Controller
                 ->wherePivot('subject_id', $subject->id);
 
             if (!$showWeek) {
+                $day = Carbon::now()->format("l");
                 $calendar->wherePivot('day', 'like', strtolower($day));
             }
 
