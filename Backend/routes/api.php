@@ -1,10 +1,12 @@
 <?php
 
+use App\Http\Controllers\Admin\AssignmentController as AdminAssignmentController;
 use App\Http\Controllers\Admin\StudentController as AdminStudentController;
 use App\Http\Controllers\Admin\TeacherController as AdminTeacherController;
 use App\Http\Controllers\Admin\CourseController as AdminCourseController;
 use App\Http\Controllers\Admin\SubjectController as AdminSubjectController;
 use App\Http\Controllers\Admin\PresenceController as AdminPresenceController;
+use App\Http\Controllers\Guest\AssignmentController;
 use App\Http\Controllers\Guest\CalendarController;
 use App\Http\Controllers\Guest\CourseController;
 use App\Http\Controllers\Guest\PresenceController;
@@ -36,6 +38,10 @@ Route::middleware(["auth:sanctum"])->group(function () {
     Route::post("/presences", [PresenceController::class, 'store'])->middleware(['teacher-access']);
     Route::patch("/presences/{presence}", [PresenceController::class, 'update'])->middleware(['teacher-access']);
 
+    // asignments
+    Route::get("/assignments", [AssignmentController::class, "index"]);
+    Route::post("/assignments", [AssignmentController::class, "store"])->middleware(['teacher-access']);
+
     // students
     Route::get("/students", [StudentController::class, 'index']);
     Route::get("/students/{student}", [StudentController::class, 'show']);
@@ -53,6 +59,7 @@ Route::middleware(['auth:sanctum', 'admin-access'])->prefix("/admin")->name('adm
     Route::apiResource("/courses", AdminCourseController::class);
     Route::apiResource("/subjects", AdminSubjectController::class);
     Route::apiResource("/presences", AdminPresenceController::class);
+    Route::apiResource("/assignments", AdminAssignmentController::class);
 });
 
 // rotta custom per recupero dati necessari all'abilitazione dell'acc

@@ -25,6 +25,11 @@ class Subject extends Model
         return $this->belongsToMany(Course::class)->withTimestamps();
     }
 
+    public function assignments()
+    {
+        return $this->belongsToMany(Course::class, "assignments")->using(Assignment::class)->withPivot(["body", "assignment_date", "deadline"])->withtimestamps();
+    }
+
     public function teachers()
     {
         return $this->hasMany(Teacher::class);

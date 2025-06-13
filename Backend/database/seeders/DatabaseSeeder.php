@@ -27,7 +27,7 @@ class DatabaseSeeder extends Seeder
             CourseSeeder::class,
             TeacherSeeder::class,
             StudentSeeder::class,
-            PresenceSeeder::class,
+            // PresenceSeeder::class,
 
             // PIVOT
 

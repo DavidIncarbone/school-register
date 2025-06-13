@@ -19,7 +19,6 @@ class StudentSubjectSeeder extends Seeder
     {
         $studentsCount = Student::all()->count();
 
-        $subjects = Subject::all();
         for ($i = 1; $i < $studentsCount; $i++) {
             $student = Student::find($i);
             $courseId = $student->course_id;
@@ -27,7 +26,7 @@ class StudentSubjectSeeder extends Seeder
             $subjectsIds = $course->subjects->pluck("id")->unique()->toArray();
             foreach ($subjectsIds as $id) {
                 $student->subjects()->attach($id, [
-                    "vote" => rand(1, 10),
+                    "grade" => rand(1, 10),
                     "date" => Carbon::now(),
                 ]);
             }

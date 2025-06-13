@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId("student_id")->constrained();
             $table->foreignId("subject_id")->constrained();
-            $table->integer("vote");
+            $table->integer("grade");
             $table->date("date");
             $table->timestamps();
         });
