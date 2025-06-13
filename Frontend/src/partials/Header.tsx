@@ -18,7 +18,7 @@ export default function Header() {
     };
 
     return (
-        <header className="h-16 sticky top-0 bg-[#1e2125] flex flex-wrap">
+        <header className="h-16 sticky top-0 bg-[#1e2125] flex flex-wrap z-50">
             <div className="max-sm:hidden flex items-center grow px-4">
                 <input
                     type="text"
