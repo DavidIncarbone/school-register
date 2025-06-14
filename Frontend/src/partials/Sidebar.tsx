@@ -20,8 +20,15 @@ export default function Sidebar() {
                         sidebarHidden && "!translate-x-20"
                     } h-16 gap-4 flex justify-center items-center !opacity-100 !pointer-events-auto  relative z-50`}
                 >
-                    <Link to="/" className="h-11/12 aspect-square grow">
-                        <Bot className="size-full" />
+                    <Link
+                        to="/"
+                        className="h-11/12 aspect-square flex justify-end grow"
+                    >
+                        <Bot
+                            className={`${
+                                sidebarHidden && "!pl-0"
+                            } h-full w-full pl-12`}
+                        />
                     </Link>
                     <div className="flex justify-end items-end grow pr-4">
                         <ChevronLeft
