@@ -1,15 +1,15 @@
 import type { UseQueryResult } from "@tanstack/react-query";
-import { useQueryIndexCalendar } from "./calendarQueries";
 import type { Period, Presence } from "@/config/types";
 import { useQueryIndexPresence } from "./presencesQueries";
+import { useQueryIndexLessonSchedule } from "./lessonScheduleQueries";
 
 export const useTakeAttendance = () => {
     // queries
-    const { data: calendar, isLoading: isCalendarLoading } =
-        useQueryIndexCalendar() as UseQueryResult<Period[], Error>;
+    const { data: lessonSchedule, isLoading: isLessonScheduleLoading } =
+        useQueryIndexLessonSchedule() as UseQueryResult<Period[], Error>;
 
     const firstCourseId =
-        calendar?.find((period) => period.lesson_time == 1)?.course_id ?? 0;
+        lessonSchedule?.find((period) => period.lesson_time == 1)?.course_id ?? 0;
     const { data: presences } = useQueryIndexPresence(
         {
             course_id: firstCourseId,

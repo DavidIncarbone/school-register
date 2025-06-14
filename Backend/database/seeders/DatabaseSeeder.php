@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Course;
+use App\Models\LessonSchedule;
 use App\Models\Student;
 use App\Models\Subject;
 use App\Models\Teacher;
@@ -31,7 +32,7 @@ class DatabaseSeeder extends Seeder
 
             // PIVOT
 
-            // CourseSubjectSeeder::class,
+            CourseSubjectSeeder::class,
             CourseTeacherSeeder::class,
             StudentSubjectSeeder::class,
         ]);
@@ -40,7 +41,12 @@ class DatabaseSeeder extends Seeder
         $subjectsCount = Subject::all()->count();
         $teacherExample->courses()->each(function ($course) use ($subjectsCount, $teacherExample) {
             for ($i = 1; $i <= rand(1, $subjectsCount); $i++) {
-                $course->subjects()->attach($teacherExample->subject_id, [
+
+                LessonSchedule::create([
+                    'course_id' => $course->id,
+                    'subject_id' => $teacherExample->subject_id,
+                    'course_name' => $course->name,
+                    'subject_name' => Subject::find($teacherExample->subject_id)->name,
                     "day" => rand(1, 5),
                     "lesson_time" => rand(1, 8),
                 ]);

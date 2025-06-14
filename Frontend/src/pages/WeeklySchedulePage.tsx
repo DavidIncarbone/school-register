@@ -1,7 +1,7 @@
 import { SkeleWeeklyScheduleTable } from "@/components/ui/SkeleWeeklyScheduleTable";
 import { periods } from "@/config/lessonHours";
 import type { Period } from "@/config/types";
-import { useQueryIndexCalendar } from "@/hooks/calendarQueries";
+import { useQueryIndexLessonSchedule } from "@/hooks/lessonScheduleQueries";
 import type { UseQueryResult } from "@tanstack/react-query";
 import { Link } from "react-router";
 import { Fragment } from "react/jsx-runtime";
@@ -9,16 +9,15 @@ import { Fragment } from "react/jsx-runtime";
 export const WeeklySchedulePage = () => {
     // queries
     const {
-        data: calendar,
+        data: lessonSchedule,
         isLoading,
         isError,
-    } = useQueryIndexCalendar({ show_week: Number(true) }) as UseQueryResult<
-        Period[],
-        Error
-    >;
+    } = useQueryIndexLessonSchedule({
+        show_week: Number(true),
+    }) as UseQueryResult<Period[], Error>;
 
     // views
-    if (isError) return <pre>calendar error</pre>;
+    if (isError) return <pre>lessonSchedule error</pre>;
 
     return (
         <section className="p-4">
@@ -38,14 +37,14 @@ export const WeeklySchedulePage = () => {
                         <SkeleWeeklyScheduleTable />
                     ) : (
                         <>
-                            {calendar &&
+                            {lessonSchedule &&
                                 periods.map((lessonTime) => (
                                     <Fragment key={lessonTime.period}>
                                         <div className="col-span-1 text-sm flex items-center">
                                             {lessonTime.timeFrame}
                                         </div>
                                         {courseListByPeriod(
-                                            calendar,
+                                            lessonSchedule,
                                             lessonTime.period
                                         ).map((course, i) => (
                                             <div

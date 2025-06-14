@@ -88,6 +88,6 @@ export type IndexPresenceParams = {
     date?: string;
 };
 
-export type IndexCalendarParams = {
+export type IndexLessonScheduleParams = {
     show_week?: number;
 };

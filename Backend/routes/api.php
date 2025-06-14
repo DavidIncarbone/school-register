@@ -7,8 +7,8 @@ use App\Http\Controllers\Admin\CourseController as AdminCourseController;
 use App\Http\Controllers\Admin\SubjectController as AdminSubjectController;
 use App\Http\Controllers\Admin\PresenceController as AdminPresenceController;
 use App\Http\Controllers\Guest\AssignmentController;
-use App\Http\Controllers\Guest\CalendarController;
 use App\Http\Controllers\Guest\CourseController;
+use App\Http\Controllers\Guest\LessonScheduleController;
 use App\Http\Controllers\Guest\PresenceController;
 use App\Http\Controllers\Guest\StudentController;
 use App\Http\Controllers\Guest\TeacherController;
@@ -26,8 +26,8 @@ Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
 
 // ***** AUTH GUEST *****
 Route::middleware(["auth:sanctum"])->group(function () {
-    // calendar
-    Route::get("/calendar", [CalendarController::class, 'index']);
+    // lesson schedules
+    Route::get("/lesson_schedules", [LessonScheduleController::class, 'index']);
 
     // courses
     Route::get("/courses", [CourseController::class, 'index']);

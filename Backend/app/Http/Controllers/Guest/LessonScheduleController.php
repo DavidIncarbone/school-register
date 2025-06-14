@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Guest;
 
 use App\Http\Controllers\Controller;
 use App\Models\Course;
+use App\Models\LessonSchedule;
 use App\Models\Student;
 use App\Models\Subject;
 use App\Models\Teacher;
@@ -11,11 +12,12 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Log;
 
-class CalendarController extends Controller
+class LessonScheduleController extends Controller
 {
     public function index()
     {
 
+        // fixme: non utilizzare attach ma direttamente il modello LessonSchedule
         request()->validate([
             'show_week' => 'boolean',
         ]);
@@ -31,32 +33,26 @@ class CalendarController extends Controller
 
             $subject = Subject::findOrFail($teacher->subject_id);
 
-            $calendar = $subject->calendar()
-                ->wherePivotIn('course_id', $coursesIds)
-                ->wherePivot('subject_id', $subject->id);
+            $lessonSchedules = LessonSchedule::whereIn('course_id', $coursesIds)->where('subject_id', $subject->id);
 
             if (!$showWeek) {
                 $day = Carbon::now()->format("l");
-                $calendar->wherePivot('day', 'like', strtolower($day));
+                $lessonSchedules->where('day', 'like', strtolower($day));
             }
 
-            $results = $calendar->get();
-
-            foreach ($results as $result) {
-                $result->pivot->course_name = $result->name;
-            }
+            $results = $lessonSchedules->get();
 
             return response()->json([
                 "success" => true,
                 "message" => "Richiesta effettuata con successo",
-                "data" => $results->pluck('pivot')->sortBy('lesson_time')->values()
+                "data" => $results
             ]);
         } elseif ($user->type === "student") {
 
             $student = Student::where("email", $user->email)->first();
             $course = Course::findOrFail($student->course_id);
-            $calendar = $course->calendar()->wherePivot("course_id", $course->id);
-            $results = $calendar->get()->pluck('pivot');
+            $lessonSchedules = LessonSchedule::where("course_id", $course->id);
+            $results = $lessonSchedules->get();
             return response()->json([
                 "success" => true,
                 "message" => "Richiesta effettuata con successo",

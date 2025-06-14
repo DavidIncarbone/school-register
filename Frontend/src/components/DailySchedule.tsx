@@ -1,10 +1,10 @@
 import { periods } from "@/config/lessonHours";
 import type { Period } from "@/config/types";
-import { useQueryIndexCalendar } from "@/hooks/calendarQueries";
 import type { UseQueryResult } from "@tanstack/react-query";
 import { Link } from "react-router";
 import { Fragment } from "react/jsx-runtime";
 import { SkeleDailyScheduleTable } from "./ui/SkeleDailyScheduleTable";
+import { useQueryIndexLessonSchedule } from "@/hooks/lessonScheduleQueries";
 
 export const DailySchedule = () => {
     // queries
@@ -12,10 +12,10 @@ export const DailySchedule = () => {
         data: dailySchedule,
         isLoading,
         isError,
-    } = useQueryIndexCalendar() as UseQueryResult<Period[], Error>;
+    } = useQueryIndexLessonSchedule() as UseQueryResult<Period[], Error>;
 
     // views
-    if (isError) return <pre>calendar error</pre>;
+    if (isError) return <pre>lessonSchedule error</pre>;
     return (
         <>
             <h3 className="dashboard_h3">Schedule for today</h3>

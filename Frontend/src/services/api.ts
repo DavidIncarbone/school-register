@@ -9,4 +9,4 @@ export const api = axios.create({
 export const courseEndpoint = "/api/courses";
 export const studentsEndpoint = "/api/students";
 export const presencesEndpoint = "/api/presences";
-export const calendarEndpoint = "/api/calendar";
+export const lessonScheduleEndpoint = "/api/lesson_schedules";

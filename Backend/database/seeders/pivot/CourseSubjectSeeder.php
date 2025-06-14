@@ -19,22 +19,8 @@ class CourseSubjectSeeder extends Seeder
 
         for ($i = 1; $i <= $coursesCount; $i++) {
             $course = Course::find($i);
-
-            for ($j = 1; $j <= 4; $j++)
-                $course->subjects()->attach(rand(1, $subjectsCount), [
-                    "day" => "Monday",
-                    "lesson_time" => $j,
-                ]);
-            for ($j = 1; $j <= 4; $j++)
-                $course->subjects()->attach($j, [
-                    "day" => "Tuesday",
-                    "lesson_time" => $j,
-                ]);
-            for ($j = 1; $j <= 4; $j++)
-                $course->subjects()->attach($j, [
-                    "day" => "Wednesday",
-                    "lesson_time" => $j,
-                ]);
+            for ($j = 1; $j <= rand(1, $subjectsCount); $j++)
+                $course->subjects()->attach($j);
         }
     }
 }

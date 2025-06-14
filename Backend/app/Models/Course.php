@@ -23,7 +23,7 @@ class Course extends Model
 
     public function subjects()
     {
-        return $this->belongsToMany(Subject::class)->distinct('subject_id')->withTimestamps();
+        return $this->belongsToMany(Subject::class)->withTimestamps();
     }
 
     public function assignments()
@@ -36,8 +36,8 @@ class Course extends Model
         return $this->hasMany(Student::class);
     }
 
-    public function calendar()
+    public function lessonSchedules()
     {
-        return $this->belongsToMany(Subject::class)->withPivot(['day', 'lesson_time'])->withTimestamps();
+        return $this->belongsToMany(Subject::class, 'lesson_schedules')->using(LessonSchedule::class)->withPivot(['day', 'lesson_time'])->withTimestamps();
     }
 }

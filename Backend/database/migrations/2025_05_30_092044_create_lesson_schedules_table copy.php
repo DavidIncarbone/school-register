@@ -11,10 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('course_subject', function (Blueprint $table) {
+        Schema::create('lesson_schedules', function (Blueprint $table) {
             $table->id();
-            $table->foreignId("course_id")->constrained();
-            $table->foreignId("subject_id")->constrained();
+
+            $table->unsignedBigInteger('course_id');
+            $table->unsignedBigInteger('subject_id');
+
+            $table->foreign("course_id")->references('id')->on('courses')->cascadeOnDelete();
+            $table->foreign("subject_id")->references('id')->on('subjects')->cascadeOnDelete();
+
+            $table->string('course_name');
+            $table->string('subject_name');
 
             $table->enum('day', ['monday', 'tuesday', 'wednesday', 'thursday', 'friday']);
             $table->enum('lesson_time', [1, 2, 3, 4, 5, 6, 7, 8]);
@@ -30,6 +37,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('course_subject');
+        Schema::dropIfExists('lesson_schedules');
     }
 };
