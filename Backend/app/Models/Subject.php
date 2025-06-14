@@ -15,16 +15,14 @@ class Subject extends Model
         'description',
     ];
 
-    public function students()
-    {
-        return $this->belongsToMany(Student::class)->withTimestamps();;
-    }
-
     public function courses()
     {
         return $this->belongsToMany(Course::class)->withTimestamps();
     }
-
+    public function lessonSchedules()
+    {
+        return $this->belongsToMany(Subject::class, 'lesson_schedules')->using(LessonSchedule::class)->withPivot(['day', 'lesson_time'])->withTimestamps();
+    }
     public function assignments()
     {
         return $this->belongsToMany(Course::class, "assignments")->using(Assignment::class)->withPivot(["body", "assignment_date", "deadline"])->withtimestamps();
@@ -34,9 +32,10 @@ class Subject extends Model
     {
         return $this->hasMany(Teacher::class);
     }
-
-    public function lessonSchedules()
+    
+    public function grades()
     {
-        return $this->belongsToMany(Subject::class, 'lesson_schedules')->using(LessonSchedule::class)->withPivot(['day', 'lesson_time'])->withTimestamps();
+        return $this->belongsToMany(Student::class, 'grades')->using(Grade::class)->withPivot(['grade', 'date']);
     }
+
 }

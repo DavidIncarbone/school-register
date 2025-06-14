@@ -20,7 +20,8 @@ class TeacherFactory extends Factory
     {
         $subjectsCount = Subject::all()->count();
         return [
-            "subject_id" => rand(1, $subjectsCount),
+            // "subject_id" => rand(1, $subjectsCount),
+            "subject_id" => 1,
             "first_name" => fake()->firstName(),
             "last_name" => fake()->lastName(),
             "email" => fake()->unique()->email(),

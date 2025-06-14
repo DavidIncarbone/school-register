@@ -19,7 +19,7 @@ class Teacher extends Model
 
     public function courses()
     {
-        return $this->belongsToMany(Course::class);
+        return $this->belongsToMany(Course::class)->withTimestamps();
     }
 
     public function subject()

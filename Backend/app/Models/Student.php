@@ -12,7 +12,6 @@ class Student extends Model
 
     protected $fillable = [
         'course_id',
-        // 'tax_code',
         'first_name',
         'last_name',
         'email',
@@ -21,5 +20,10 @@ class Student extends Model
     public function presences()
     {
         return $this->hasMany(Presence::class);
+    }
+
+    public function grades()
+    {
+        return $this->belongsToMany(Subject::class, 'grades')->using(Grade::class)->withPivot(['grade', 'date']);
     }
 }

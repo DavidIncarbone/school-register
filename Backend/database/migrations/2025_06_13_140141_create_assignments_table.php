@@ -19,7 +19,7 @@ return new class extends Migration
             $table->unsignedBigInteger("subject_id");
             $table->foreign("course_id")->references("id")->on("courses")->onDelete("CASCADE");
             $table->foreign("subject_id")->references("id")->on("subjects")->onDelete("CASCADE");
-            $table->string("body");
+            $table->text("body");
             $table->date("assignment_date");
             $table->date("deadline");
             $table->timestamps();
