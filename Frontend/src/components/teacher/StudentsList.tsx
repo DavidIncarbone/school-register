@@ -1,31 +1,29 @@
-import type { IndexStudentParams, Student } from "../../config/types";
-import type { UseQueryResult } from "@tanstack/react-query";
-import { useQueryIndexStudent } from "../../hooks/studentsQueries";
+import type { Student } from "../../config/types";
 import { SkeleStudentRecord } from "../ui/SkeleStudentRecord";
 import { StudentRecord } from "./StudentRecord";
 
-export const StudentsList = ({ params }: { params: IndexStudentParams }) => {
-    // queries
-    const {
-        data: students,
-        isLoading: isStudentsLoading,
-        isError: isStudentsError,
-    } = useQueryIndexStudent(params, "course_id" in params) as UseQueryResult<
-        Student[],
-        Error
-    >;
+type StudentsListProps = {
+    students: { total_students: number; data: Student[] } | undefined;
+    isLoading: boolean;
+    isError: boolean;
+};
 
+export const StudentsList = ({
+    students,
+    isLoading,
+    isError,
+}: StudentsListProps) => {
     // views
-    if (isStudentsError) return <pre>students error - da gestire</pre>;
+    if (isError) return <pre>students error - da gestire</pre>;
     return (
         <>
-            {isStudentsLoading ? (
+            {isLoading ? (
                 Array.from({ length: 20 }).map((_, i) => (
                     <SkeleStudentRecord key={i} />
                 ))
             ) : (
                 <>
-                    {students?.map((student) => (
+                    {students?.data?.map((student) => (
                         <StudentRecord key={student.id} student={student} />
                     ))}
                 </>

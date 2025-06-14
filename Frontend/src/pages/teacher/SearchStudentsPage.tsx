@@ -9,6 +9,7 @@ import {
     SortOption,
     type Course,
     type IndexStudentParams,
+    type Student,
 } from "../../config/types";
 import { useSearchParams } from "react-router";
 import { debounce } from "lodash";
@@ -18,6 +19,7 @@ import { Search } from "lucide-react";
 import { StudentsList } from "../../components/teacher/StudentsList";
 import { GoTriangleDown } from "react-icons/go";
 import Loader from "../../components/ui/Loader";
+import { useQueryIndexStudent } from "@/hooks/studentsQueries";
 
 export default function SearchStudentsPage() {
     // vars
@@ -35,6 +37,16 @@ export default function SearchStudentsPage() {
         isLoading: isCoursesLoading,
         isError: isCoursesError,
     } = useQueryIndexCourse() as UseQueryResult<Course[], Error>;
+
+    // queries
+    const {
+        data: students,
+        isLoading: isStudentsLoading,
+        isError: isStudentsError,
+    } = useQueryIndexStudent(params, "course_id" in params) as UseQueryResult<
+        { total_students: number; data: Student[] },
+        Error
+    >;
 
     // side effects
     useEffect(() => {
@@ -107,34 +119,33 @@ export default function SearchStudentsPage() {
     return (
         <div className="h-full p-5 text-sm flex flex-col">
             {/* ricerca e filtro */}
-            <div className="flex flex-wrap gap-2 justify-evenly items-center pb-2 mb-2 border-b">
-                <div className="text-lg sm:text-2xl flex flex-wrap items-center justify-center gap-2">
-                    <p>Corso selezionato:</p>
-                    <select
-                        onChange={(e) => handleCourseSelected(e, searchParams)}
-                        name="course_id"
-                        className="no-default w-fit capitalize font-bold italic cursor-pointer"
-                    >
-                        <option selected disabled hidden>
-                            Seleziona corso
-                        </option>
-                        {courses &&
-                            courses.map((course) => (
-                                <option
-                                    selected={
-                                        Number(
-                                            searchParams.get("course_id")
-                                        ) === course.id
-                                    }
-                                    key={course.id}
-                                    value={course.id}
-                                    className="text-base not-italic"
-                                >
-                                    {course.name}
-                                </option>
-                            ))}
-                    </select>
-                </div>
+            <div className="text-lg sm:text-2xl flex flex-wrap justify-center items-center gap-2 mb-2 font-bold">
+                <p>Corso selezionato:</p>
+                <select
+                    onChange={(e) => handleCourseSelected(e, searchParams)}
+                    name="course_id"
+                    className="no-default w-fit capitalize italic cursor-pointer"
+                >
+                    <option selected disabled hidden>
+                        Seleziona corso
+                    </option>
+                    {courses &&
+                        courses.map((course) => (
+                            <option
+                                selected={
+                                    Number(searchParams.get("course_id")) ===
+                                    course.id
+                                }
+                                key={course.id}
+                                value={course.id}
+                                className="text-base not-italic"
+                            >
+                                {course.name}
+                            </option>
+                        ))}
+                </select>
+            </div>
+            <div className="flex flex-wrap gap-4 items-end pb-4 mb-4 border-b">
                 {/* //! fare controllo per id/matricola in backend */}
                 <div className="relative w-full sm:max-w-96">
                     <input
@@ -143,10 +154,18 @@ export default function SearchStudentsPage() {
                         }
                         type="text"
                         name="name"
-                        placeholder="Cerca studente / n. matricola"
+                        placeholder="Search student / ID number"
                         className="w-full"
                     />
                     <Search className="absolute h-full top-0 right-2" />
+                </div>
+                <div className="space-x-1">
+                    <span>Total students:</span>
+                    {isStudentsLoading ? (
+                        <div className="inline-block w-5 dots-loader"></div>
+                    ) : (
+                        <span>{students?.total_students}</span>
+                    )}
                 </div>
             </div>
             {isCoursesLoading ? (
@@ -154,7 +173,7 @@ export default function SearchStudentsPage() {
             ) : (
                 <>
                     {/* tabella studenti */}
-                    <div className="grid grid-cols-4 md:grid-cols-9 border-b-2 bg-zinc-900 rounded-t-sm">
+                    <div className="grid grid-cols-4 md:grid-cols-9 border-b-2">
                         {sortingCols.map((col, i, ar) => (
                             <div
                                 key={i}
@@ -165,7 +184,7 @@ export default function SearchStudentsPage() {
                                 className={`${
                                     col.sort === SortOption.BY_EMAIL &&
                                     "max-md:hidden"
-                                } cursor-pointer transition-colors hover:bg-zinc-950 active:[&>*]:scale-90 [&>*]:transition-transform flex items-center gap-1 px-2 py-2 lg:py-4 capitalize first:col-span-1 not-first:md:col-span-2 last:justify-center`}
+                                } cursor-pointer transition-colors bg-zinc-900 hover:bg-zinc-950 active:[&>*]:scale-90 [&>*]:transition-transform flex items-center gap-1 px-2 py-2 lg:py-4 capitalize first:col-span-1 not-first:md:col-span-2 last:justify-center first:rounded-tl-sm last:rounded-tr-sm`}
                             >
                                 <span className="line-clamp-1">
                                     {col.label}
@@ -185,8 +204,12 @@ export default function SearchStudentsPage() {
                             </div>
                         ))}
                     </div>
-                    <div className="overflow-auto grow">
-                        <StudentsList params={params} />
+                    <div className="overflow-auto grow ">
+                        <StudentsList
+                            students={students}
+                            isLoading={isStudentsLoading}
+                            isError={isStudentsError}
+                        />
                     </div>
                 </>
             )}

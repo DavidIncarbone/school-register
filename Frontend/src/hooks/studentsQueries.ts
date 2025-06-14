@@ -10,7 +10,7 @@ export const useQueryIndexStudent = (
         queryKey: ["students", params],
         queryFn: async () => {
             const res = await api.get(studentsEndpoint, { params });
-            return res.data.data;
+            return res.data;
         },
         staleTime: 60 * 60 * 1000, // ms
         refetchInterval: 60 * 60 * 1000,

@@ -95,6 +95,7 @@ class StudentController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Richiesta effettuata con successo',
+                'total_students' => count($students),
                 'data' => $students,
             ], 200);
         } else
