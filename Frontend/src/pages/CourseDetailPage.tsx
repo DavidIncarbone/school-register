@@ -1,9 +1,10 @@
 import type { Course, Presence, IndexPresenceParams } from "@/config/types";
 import { useQueryShowCourse } from "@/hooks/coursesQueries";
 import { useQueryIndexPresence } from "@/hooks/presencesQueries";
+import { formatDateToDDMMYYYY } from "@/utilities/utils";
 import type { UseQueryResult } from "@tanstack/react-query";
-import { BadgeCheck, CircleX } from "lucide-react";
-import { useLocation, useParams } from "react-router";
+import { BadgeCheck, CircleX, Info, Pencil } from "lucide-react";
+import { Link, useLocation, useParams } from "react-router";
 
 export const CourseDetailPage = () => {
     // vars
@@ -22,13 +23,19 @@ export const CourseDetailPage = () => {
     } = useQueryShowCourse(Number(id)) as UseQueryResult<Course, Error>;
 
     return (
-        <div className="p-8 md:h-full flex flex-col gap-8">
-            <div className="flex max-md:flex-col max-md:items-center gap-8 justify-around">
+        <div className="p-8 md:h-full flex flex-col gap-8 lg:gap-6">
+            <div className="flex max-md:flex-col md:h-1/3  lg:h-auto max-lg:items-center gap-8 justify-around">
                 <CourseInfo cachedCourse={cachedCourse} course={course} />
                 <CourseStats cachedCourse={cachedCourse} course={course} />
             </div>
-            <div className="grow overflow-hidden flex flex-row-reverse">
-                <Attendance params={params} />
+            <div className="md:h-2/3 lg:h-auto lg:grow overflow-hidden flex max-md:flex-col">
+                <div className="md:w-1/2 lg:w-7/12">
+                    <p>la tua materia</p>
+                    <p></p>
+                </div>
+                <div className="grow">
+                    <Attendance params={params} />
+                </div>
             </div>
         </div>
     );
@@ -122,7 +129,7 @@ const StatCard = ({
             <span className="text-3xl lg:text-4xl font-semibold">
                 {isLoading ? "0" : value}
             </span>
-            <span className="text-xs whitespace- text-center">{label}</span>
+            <span className="text-xs text-center">{label}</span>
         </div>
     );
 };
@@ -138,46 +145,61 @@ const Attendance = ({ params }: { params: IndexPresenceParams }) => {
     >;
     return (
         <>
-            <div className="w-full md:w-1/2 lg:w-5/12">
-                <h3 className="font-semibold text-xl mb-2">
-                    Today's attendance
-                </h3>
-                <div className="flex flex-col h-full overflow-auto rounded-md">
-                    {isPresencesLoading ? (
-                        <div className="grid grid-cols-2 p-2 animate-pulse bg-zinc-800 h-full">
-                            <div className="w-64 3xl:w-72"></div>
-                            <div></div>
-                        </div>
-                    ) : (
-                        todayPresences &&
-                        todayPresences?.data.map((presence) => (
-                            <div
-                                key={presence.id}
-                                className="grid grid-cols-2 p-2 bg-zinc-800"
-                            >
-                                <span className="inline-block ">
-                                    {presence.student_last_name}{" "}
-                                    {presence.student_first_name}
-                                </span>
-                                <div className="text-center">
-                                    {presence.is_present ? (
-                                        <div className="flex items-center gap-2 ">
-                                            <span className="w-24">
-                                                present
-                                            </span>
-                                            <BadgeCheck className="text-green-600" />
-                                        </div>
-                                    ) : (
-                                        <div className="flex items-center gap-2">
-                                            <span className="w-24">absent</span>
-                                            <CircleX className="text-red-600" />
-                                        </div>
-                                    )}
+            <h3 className="font-semibold text-xl">
+                Today's attendance -{" "}
+                {formatDateToDDMMYYYY(new Date().toISOString().split("T")[0])}
+            </h3>
+            <div className="grid grid-cols-2 px-2 py-1 capitalize font-semibold">
+                <div>student</div>
+                <div className="grid grid-cols-3">
+                    <span className="col-span-2">status</span>
+                    <span>actions</span>
+                </div>
+            </div>
+            <div className="flex flex-col h-full overflow-auto rounded-md">
+                {isPresencesLoading ? (
+                    <div className="grid grid-cols-2 p-2 animate-pulse bg-zinc-800 h-full">
+                        <div className="w-64 3xl:w-72"></div>
+                        <div></div>
+                    </div>
+                ) : (
+                    todayPresences &&
+                    todayPresences?.data.map((presence) => (
+                        <div
+                            key={presence.id}
+                            className="grid grid-cols-2 p-2 bg-zinc-800"
+                        >
+                            <span className="inline-block ">
+                                {presence.student_last_name}{" "}
+                                {presence.student_first_name}
+                            </span>
+                            <div className="grid grid-cols-3">
+                                {presence.is_present ? (
+                                    <div className="col-span-2 flex items-center gap-2 ">
+                                        <span className="w-16">present</span>
+                                        <BadgeCheck className="text-green-600" />
+                                    </div>
+                                ) : (
+                                    <div className="col-span-2 flex items-center gap-2">
+                                        <span className="w-16">absent</span>
+                                        <CircleX className="text-red-600" />
+                                    </div>
+                                )}
+                                <div className="flex items-center gap-3">
+                                    <div title="info">
+                                        <Info className="cursor-pointer scale-90 transition-transform hover:scale-110" />
+                                    </div>
+                                    <Link
+                                        to={`/students/${presence.student_id}`}
+                                        title="modify"
+                                    >
+                                        <Pencil className="cursor-pointer scale-90 transition-transform hover:scale-110" />
+                                    </Link>
                                 </div>
                             </div>
-                        ))
-                    )}
-                </div>
+                        </div>
+                    ))
+                )}
             </div>
         </>
     );
