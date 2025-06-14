@@ -19,7 +19,6 @@ class TeacherFactory extends Factory
     public function definition(): array
     {
         $subjectsCount = Subject::all()->count();
-        // Log::info($subjectsCount);
         return [
             "subject_id" => rand(1, $subjectsCount),
             "first_name" => fake()->firstName(),

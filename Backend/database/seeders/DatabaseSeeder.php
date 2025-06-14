@@ -34,7 +34,6 @@ class DatabaseSeeder extends Seeder
 
             CourseSubjectSeeder::class,
             CourseTeacherSeeder::class,
-            StudentSubjectSeeder::class,
         ]);
 
         $teacherExample = Teacher::find(1);

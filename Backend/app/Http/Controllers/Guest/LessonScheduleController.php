@@ -17,7 +17,6 @@ class LessonScheduleController extends Controller
     public function index()
     {
 
-        // fixme: non utilizzare attach ma direttamente il modello LessonSchedule
         request()->validate([
             'show_week' => 'boolean',
         ]);

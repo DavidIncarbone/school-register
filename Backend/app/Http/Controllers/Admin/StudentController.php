@@ -161,7 +161,6 @@ class StudentController extends Controller
      */
     public function destroy(Student $student)
     {
-        $student->subjects()->detach();
         $student->deleteOrFail();
         return response()->json([], 204);
     }

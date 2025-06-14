@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Guest;
 
 use App\Http\Controllers\Controller;
 use App\Models\Assignment;
+use App\Models\Course;
 use App\Models\Student;
 use App\Models\Teacher;
 use Illuminate\Http\Request;
@@ -46,7 +47,8 @@ class AssignmentController extends Controller
             $student = Student::where('email', $user->email)->firstOrFail();
             $courseId = $student->course_id;
             $subjectId = request()->subject_id;
-            $student->subjects()->findOrFail($subjectId);
+
+            Course::find($student->course_id)->subjects()->findOrFail($subjectId);
 
             $assignments = Assignment::where("course_id", $courseId)->where("subject_id", $subjectId)->get();
 

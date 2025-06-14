@@ -18,13 +18,6 @@ class Student extends Model
         'email',
     ];
 
-
-
-    public function subjects()
-    {
-        return $this->belongsToMany(Subject::class);
-    }
-
     public function presences()
     {
         return $this->hasMany(Presence::class);
