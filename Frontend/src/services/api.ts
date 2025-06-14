@@ -10,3 +10,4 @@ export const courseEndpoint = "/api/courses";
 export const studentsEndpoint = "/api/students";
 export const presencesEndpoint = "/api/presences";
 export const lessonScheduleEndpoint = "/api/lesson_schedules";
+export const assignmentEndpoint = "/api/assignments";

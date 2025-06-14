@@ -96,10 +96,10 @@ const quickActions = [
         label: "Exams",
     },
     {
-        path: "/",
+        path: "/teacher-assignments",
         icon: <NotebookPen />,
         iconColor: "bg-amber-500",
-        label: "Homework",
+        label: "Assignments",
     },
     {
         path: "/",

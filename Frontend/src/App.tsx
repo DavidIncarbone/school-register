@@ -13,6 +13,7 @@ import { StudentDetailPage } from "./pages/StudentDetailPage";
 import { AttendanceFormPage } from "./pages/teacher/AttendanceFormPage";
 import { WeeklySchedulePage } from "./pages/WeeklySchedulePage";
 import { Debug } from "./components/Debug";
+import { TeacherAssignmentsPage } from "./pages/teacher/TeacherAssignmentsPage";
 
 function App() {
     // collaterals effect
@@ -48,6 +49,10 @@ function App() {
                     <Route
                         path="/weekly-schedule"
                         Component={WeeklySchedulePage}
+                    />
+                    <Route
+                        path="/teacher-assignments"
+                        Component={TeacherAssignmentsPage}
                     />
                 </Route>
 

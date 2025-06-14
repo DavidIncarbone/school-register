@@ -91,3 +91,14 @@ export type IndexPresenceParams = {
 export type IndexLessonScheduleParams = {
     show_week?: number;
 };
+export type IndexLessonAssignmentsParams =
+    | {
+          course_id?: number;
+          sort?: "by_assignment_date" | "by_deadline";
+          dir?: "asc" | "desc";
+      }
+    | {
+          subject_id?: number;
+          sort?: "by_assignment_date" | "by_deadline";
+          dir?: "asc" | "desc";
+      };

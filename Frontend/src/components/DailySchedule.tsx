@@ -5,6 +5,7 @@ import { Link } from "react-router";
 import { Fragment } from "react/jsx-runtime";
 import { SkeleDailyScheduleTable } from "./ui/SkeleDailyScheduleTable";
 import { useQueryIndexLessonSchedule } from "@/hooks/lessonScheduleQueries";
+import { formatDateToDDMMYYYY } from "@/utilities/utils";
 
 export const DailySchedule = () => {
     // queries
@@ -21,7 +22,9 @@ export const DailySchedule = () => {
     if (isError) return <pre>lessonSchedule error</pre>;
     return (
         <>
-            <h3 className="dashboard_h3">Schedule for today</h3>
+            <h3 className="dashboard_h3">
+                Schedule for today - {formatDateToDDMMYYYY(new Date().toISOString().split("T")[0])}
+            </h3>
             <div className="shrink-0 grid grid-cols-3 rounded-t-md border-t border-x [&>div]:border [&>div]:border-b-0 overflow-hidden capitalize [&>div]:flex [&>div]:items-center [&>div]:p-2 bg-teal-700">
                 <div className="font-semibold">Period</div>
                 <div className="font-semibold">Timeframe</div>
