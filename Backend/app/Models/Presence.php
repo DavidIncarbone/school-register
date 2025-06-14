@@ -15,4 +15,9 @@ class Presence extends Model
         "is_present",
         "date",
     ];
+
+    public function student()
+    {
+        return $this->belongsTo(Student::class);
+    }
 }

@@ -15,10 +15,10 @@ export const StudentRecord = ({ student }: { student: Student }) => {
                 {student.id}
             </div>
             <div className="px-2 py-1 md:col-span-2 flex items-center">
-                {student.first_name}
+                {student.last_name}
             </div>
             <div className="px-2 py-1 md:col-span-2 flex items-center">
-                {student.last_name}
+                {student.first_name}
             </div>
             <div
                 title={student.email}

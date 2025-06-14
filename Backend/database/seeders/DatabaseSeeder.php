@@ -54,7 +54,7 @@ class DatabaseSeeder extends Seeder
                         ]);
                     }
 
-                    // - crea max 5 degli assignments
+                    // - crea max 5 assignments
                     if (rand(0, 1)) {
                         Assignment::factory()->create([
                             'course_id' => $courseId,

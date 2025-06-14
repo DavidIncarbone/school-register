@@ -68,20 +68,21 @@ class PresenceController extends Controller
 
                 $studentsIds = Student::where("course_id", request()->course_id)->get()->pluck("id")->toArray();
 
+                // ! rendere required date qui
                 if (request()->date) {
                     $query->where("date", request()->date);
                 }
                 $presences = $query
-                    ->whereIn("student_id", $studentsIds)
-                    ->orderBy("date", "desc")
+                    ->join('students', 'presences.student_id', '=', 'students.id')
+                    ->whereIn('student_id', $studentsIds)
+                    ->orderBy('students.last_name', 'asc') // oppure "desc"
+                    ->select('presences.*') // necessario per non rompere la paginazione
                     ->paginate(30)
                     ->through(function ($presence) {
                         $student = Student::findOrFail($presence->student_id);
-
                         $presence->student_first_name = $student->first_name;
                         $presence->student_last_name = $student->last_name;
                         $presence->student_email = $student->email;
-
                         return $presence;
                     });
 
@@ -102,11 +103,11 @@ class PresenceController extends Controller
             }
         } elseif ($user->type === "student") {
             $student = Student::where("email", $user->email)->first();
-            $presences = Presence::where('student_id', $student->id)->get();
+            $presences = Presence::where('student_id', $student->id)->orderBy('date', 'desc')->paginate(30);
             return response()->json([
                 'success' => true,
                 'message' => 'Richiesta effettuata con successo',
-                'data' => $presences, // ! da paginare
+                'data' => $presences,
             ], 201);
         }
     }

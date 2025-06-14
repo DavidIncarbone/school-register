@@ -184,7 +184,7 @@ export default function SearchStudentsPage() {
                                 className={`${
                                     col.sort === SortOption.BY_EMAIL &&
                                     "max-md:hidden"
-                                } cursor-pointer transition-colors bg-zinc-900 hover:bg-zinc-950 active:[&>*]:scale-90 [&>*]:transition-transform flex items-center gap-1 px-2 py-2 lg:py-4 capitalize first:col-span-1 not-first:md:col-span-2 last:justify-center first:rounded-tl-sm last:rounded-tr-sm`}
+                                } cursor-pointer transition-colors bg-zinc-900 hover:bg-zinc-950 active:[&>*]:scale-90 [&>*]:transition-transform flex items-center gap-1 px-2 py-2 lg:py-4 first:col-span-1 not-first:md:col-span-2 last:justify-center first:rounded-tl-sm last:rounded-tr-sm`}
                             >
                                 <span className="line-clamp-1">
                                     {col.label}
@@ -218,9 +218,9 @@ export default function SearchStudentsPage() {
 }
 
 const initialSortingCols = [
-    { label: "matricola", sort: SortOption.BY_ID, dir: "asc" },
-    { label: "nome", sort: SortOption.BY_FIRST_NAME, dir: "asc" },
-    { label: "cognome", sort: SortOption.BY_LAST_NAME, dir: "asc" },
-    { label: "email", sort: SortOption.BY_EMAIL, dir: "asc" },
-    { label: "azione", sort: SortOption.BY_ID, dir: "asc" },
+    { label: "ID number", sort: SortOption.BY_ID, dir: "asc" },
+    { label: "Last name", sort: SortOption.BY_LAST_NAME, dir: "asc" },
+    { label: "First name", sort: SortOption.BY_FIRST_NAME, dir: "asc" },
+    { label: "Email", sort: SortOption.BY_EMAIL, dir: "asc" },
+    { label: "Actions", sort: SortOption.BY_ID, dir: "asc" },
 ];
