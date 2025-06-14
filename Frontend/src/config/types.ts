@@ -66,7 +66,7 @@ export type Presence = {
     student_email: string;
 };
 
-export type Period = {
+export type LessonSchedule = {
     course_name: string;
     subject_id: number;
     course_id: number;

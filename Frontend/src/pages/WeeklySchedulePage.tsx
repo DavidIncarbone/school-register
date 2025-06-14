@@ -1,6 +1,6 @@
 import { SkeleWeeklyScheduleTable } from "@/components/ui/SkeleWeeklyScheduleTable";
 import { periods } from "@/config/lessonHours";
-import type { Period } from "@/config/types";
+import type { LessonSchedule } from "@/config/types";
 import { useQueryIndexLessonSchedule } from "@/hooks/lessonScheduleQueries";
 import type { UseQueryResult } from "@tanstack/react-query";
 import { Link } from "react-router";
@@ -14,7 +14,7 @@ export const WeeklySchedulePage = () => {
         isError,
     } = useQueryIndexLessonSchedule({
         show_week: Number(true),
-    }) as UseQueryResult<Period[], Error>;
+    }) as UseQueryResult<LessonSchedule[], Error>;
 
     // views
     if (isError) return <pre>lessonSchedule error</pre>;
@@ -113,9 +113,9 @@ const days = [
 ];
 
 const courseListByPeriod = (
-    courses: Period[],
+    courses: LessonSchedule[],
     lesson_time: number
-): (Period | undefined)[] => {
+): (LessonSchedule | undefined)[] => {
     const periodList = courses.filter(
         (course) => Number(course.lesson_time) === lesson_time
     );

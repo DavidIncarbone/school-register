@@ -1,5 +1,5 @@
 import { periods } from "@/config/lessonHours";
-import type { Period } from "@/config/types";
+import type { LessonSchedule } from "@/config/types";
 import type { UseQueryResult } from "@tanstack/react-query";
 import { Link } from "react-router";
 import { Fragment } from "react/jsx-runtime";
@@ -12,7 +12,10 @@ export const DailySchedule = () => {
         data: dailySchedule,
         isLoading,
         isError,
-    } = useQueryIndexLessonSchedule() as UseQueryResult<Period[], Error>;
+    } = useQueryIndexLessonSchedule() as UseQueryResult<
+        LessonSchedule[],
+        Error
+    >;
 
     // views
     if (isError) return <pre>lessonSchedule error</pre>;
@@ -28,24 +31,21 @@ export const DailySchedule = () => {
                 <div className="grow grid grid-cols-3 rounded-b-md border  overflow-hidden capitalize [&>div]:border [&>div]:flex [&>div]:items-center [&>div]:p-2 bg-teal-700 text-sm">
                     {isLoading ? (
                         <SkeleDailyScheduleTable />
+                    ) : !dailySchedule?.length ? (
+                        <span className="text-center col-span-full my-4 first-letter:capitalize lowercase">
+                            No corsi per oggi
+                        </span>
                     ) : (
-                        dailySchedule?.map((schedule, i) => (
+                        dailyScheduleList(dailySchedule)?.map((schedule, i) => (
                             <Fragment key={i}>
-                                <div className="">{schedule.lesson_time}°</div>
-                                <div className="">
-                                    {
-                                        periods.find(
-                                            (p) =>
-                                                schedule.lesson_time == p.period
-                                        )?.timeFrame
-                                    }
-                                </div>
+                                <div className="">{periods[i].period}°</div>
+                                <div className="">{periods[i].timeFrame}</div>
                                 <div className="">
                                     <Link
-                                        to={`/course/${schedule.course_id}`}
+                                        to={`/course/${schedule?.course_id}`}
                                         className="underline underline-offset-2 hover:italic"
                                     >
-                                        {schedule.course_name}
+                                        {schedule?.course_name}
                                     </Link>
                                 </div>
                             </Fragment>
@@ -54,5 +54,13 @@ export const DailySchedule = () => {
                 </div>
             </div>
         </>
+    );
+};
+
+const dailyScheduleList = (
+    schedule: LessonSchedule[]
+): (LessonSchedule | undefined)[] => {
+    return periods.map((p) =>
+        schedule.find((lesson) => lesson.lesson_time == p.period)
     );
 };

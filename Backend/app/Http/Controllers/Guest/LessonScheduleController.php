@@ -35,11 +35,12 @@ class LessonScheduleController extends Controller
             $lessonSchedules = LessonSchedule::whereIn('course_id', $coursesIds)->where('subject_id', $subject->id);
 
             if (!$showWeek) {
-                $day = Carbon::now()->format("l");
+                // ? subDay per testing
+                $day = Carbon::now()->subDay(3)->format("l");
                 $lessonSchedules->where('day', 'like', strtolower($day));
             }
 
-            $results = $lessonSchedules->get();
+            $results = $lessonSchedules->orderBy('day')->orderBy('lesson_time')->get();
 
             return response()->json([
                 "success" => true,
@@ -51,7 +52,7 @@ class LessonScheduleController extends Controller
             $student = Student::where("email", $user->email)->first();
             $course = Course::findOrFail($student->course_id);
             $lessonSchedules = LessonSchedule::where("course_id", $course->id);
-            $results = $lessonSchedules->get();
+            $results = $lessonSchedules->orderBy('day')->orderBy('lesson_time')->get();
             return response()->json([
                 "success" => true,
                 "message" => "Richiesta effettuata con successo",

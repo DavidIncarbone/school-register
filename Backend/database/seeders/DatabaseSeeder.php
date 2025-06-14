@@ -10,15 +10,9 @@ use App\Models\Presence;
 use App\Models\Student;
 use App\Models\Subject;
 use App\Models\Teacher;
-use App\Models\User;
-use Database\Factories\PresenceFactory;
-use Database\Seeders\Pivot\CourseSubjectSeeder;
-use Database\Seeders\pivot\CourseTeacherSeeder;
-use Database\Seeders\pivot\StudentSubjectSeeder;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Carbon;
-use PhpParser\Node\Expr\AssignRef;
 
 class DatabaseSeeder extends Seeder
 {
