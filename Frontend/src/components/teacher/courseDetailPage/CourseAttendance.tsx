@@ -25,7 +25,7 @@ export const CourseAttendance = ({
                 Today's attendance -{" "}
                 {formatDateToDDMMYYYY(new Date().toISOString().split("T")[0])}
             </h3>
-            <div className="grid grid-cols-2 px-2 py-1 capitalize font-semibold">
+            <div className="grid grid-cols-2 px-2 py-1 capitalize font-semibold pr-4">
                 <div>student</div>
                 <div className="grid grid-cols-3">
                     <span className="col-span-2">status</span>

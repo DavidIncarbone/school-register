@@ -40,7 +40,7 @@ export default function Homepage() {
                 </div>
             ) : (
                 <div className="flex flex-col min-h-full">
-                    <h1 className="title text-2xl font-bold px-5 py-3">
+                    <h1 className="title text-2xl font-bold px-5 py-2">
                         Teacher Dashboard
                     </h1>
                     <div className="teacher-dashboard">

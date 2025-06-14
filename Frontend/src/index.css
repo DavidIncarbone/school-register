@@ -210,12 +210,9 @@ body {
                 "others";
             grid-template-columns: repeat(1, 1fr);
         }
-        @apply p-5 pt-0 gap-5 h-full [&>*:not(.title)]:bg-zinc-800 [&>*:not(.title)]:rounded-md [&>*:not(.title)]:p-2;
+        @apply px-5 gap-4 h-full [&>*]:bg-zinc-800 [&>*]:rounded-md [&>*]:p-2;
     }
 
-    .title {
-        grid-area: title;
-    }
     .info {
         grid-area: info;
     }

@@ -12,31 +12,31 @@ export const CourseStats = ({
         <div className="grid grid-cols-3 h-fit gap-4 lg:gap-8 [&>div]:rounded-md">
             <StatCard
                 value={course?.subjects_count}
-                label="Total subjects"
+                label="Subjects"
                 color="bg-blue-700"
             />
 
             <StatCard
                 value={course?.teachers_count}
-                label="Total teachers"
+                label="Teachers"
                 color="bg-emerald-700"
             />
 
             <StatCard
                 value={cachedCourse?.students_count ?? course?.students_count}
-                label="Total students"
+                label="Students"
                 color="bg-amber-700"
             />
 
             <StatCard
                 value={course?.total_presence}
-                label="Total attendance"
+                label="Attendance"
                 color="bg-slate-700"
             />
 
             <StatCard
                 value={course?.presences_percentage}
-                label="Attendance Rate"
+                label="Att. Rate"
                 color="bg-fuchsia-700"
             />
         </div>
