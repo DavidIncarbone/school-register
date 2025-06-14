@@ -71,21 +71,34 @@ class PresenceController extends Controller
                 if (request()->date) {
                     $query->where("date", request()->date);
                 }
-                $presences = $query->whereIn("student_id", $studentsIds)->orderBy("date", "desc")->paginate(30);
+                $presences = $query
+                    ->whereIn("student_id", $studentsIds)
+                    ->orderBy("date", "desc")
+                    ->paginate(30)
+                    ->through(function ($presence) {
+                        $student = Student::findOrFail($presence->student_id);
 
-                foreach ($presences as $presence) {
+                        $presence->student_first_name = $student->first_name;
+                        $presence->student_last_name = $student->last_name;
+                        $presence->student_email = $student->email;
 
-                    $student = Student::where("id", $presence->student_id)->firstOrFail();
+                        return $presence;
+                    });
 
-                    $presence->student_first_name = $student->first_name;
-                    $presence->student_last_name = $student->last_name;
-                    $presence->student_email = $student->email;
-                };
+                return response()->json($presences);
+                // $presences = $query->whereIn("student_id", $studentsIds)->orderBy("date", "desc")->paginate(30);
 
+                // foreach ($presences as $presence) {
 
-                return response()->json([
-                    $presences,
-                ]);
+                //     $student = Student::where("id", $presence->student_id)->firstOrFail();
+
+                //     $presence->student_first_name = $student->first_name;
+                //     $presence->student_last_name = $student->last_name;
+                //     $presence->student_email = $student->email;
+                // };
+                // return response()->json(
+                //     $presences->sortBy("student_last_name")->values(),
+                // );
             }
         } elseif ($user->type === "student") {
             $student = Student::where("email", $user->email)->first();

@@ -46,6 +46,8 @@ export type Course = {
     name: string;
     description: string;
     credits: number;
+    total_presence: number;
+    presences_percentage: string;
     students_count?: number;
     teachers_count?: number;
     subjects_count?: number;

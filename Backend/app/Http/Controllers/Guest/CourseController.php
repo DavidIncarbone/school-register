@@ -108,7 +108,7 @@ class CourseController extends Controller
             ], 200);
         } else if ($user->type == "teacher") {
 
-            $course->load(["subjects", "students"])->loadCount(["subjects", "students", "teachers"]);
+            $course->load(["subjects", "students", "teachers"])->loadCount(["subjects", "students", "teachers"]);
 
             $teacher = Teacher::where("email", $user->email)->firstOrFail();
             $coursesIds = $teacher->courses()->pluck('course_id')->toArray();
