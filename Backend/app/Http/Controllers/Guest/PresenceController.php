@@ -25,7 +25,6 @@ class PresenceController extends Controller
         ]);
 
         $user = request()->user();
-        Log::info($user->email);
 
         $query = Presence::query();
 
@@ -124,9 +123,19 @@ class PresenceController extends Controller
             ]
         );
         $i = 0;
+        Log::info(Carbon::now()->locale('en')->dayName);
+        $day = Carbon::now()->locale('en')->dayName;
+        if (!in_array(strtolower($day), ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'])) {
+            return response()->json([
+                "success" => false,
+                "message" => "Non è possibile aggiungere presenze di " . $day,
+            ], 400);
+        };
         foreach (request()->students_ids as $studentId) {
             $newPresence = new Presence;
             $newPresence->student_id = $studentId;
+            // ! testing
+            // $newPresence->date = Carbon::today()->addDay(1);
             $newPresence->date = Carbon::today();
             $newPresence->is_present = request()->are_presents[$i];
             $i++;

@@ -39,8 +39,8 @@ export default function Homepage() {
                     </div>
                 </div>
             ) : (
-                <div className="flex flex-col min-h-full">
-                    <h1 className="title text-2xl font-bold px-5 py-2">
+                <div className="flex flex-col min-h-full lg:h-full py-2">
+                    <h1 className="title text-2xl font-bold px-5 py-1">
                         Teacher Dashboard
                     </h1>
                     <div className="teacher-dashboard">

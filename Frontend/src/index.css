@@ -84,7 +84,7 @@ body {
     }
 
     .btn {
-        @apply px-4 py-2 border rounded-md cursor-pointer;
+        @apply px-4 py-2 border rounded-md cursor-pointer scale-95 hover:scale-100 transition-transform;
     }
 
     option {
@@ -210,7 +210,7 @@ body {
                 "others";
             grid-template-columns: repeat(1, 1fr);
         }
-        @apply px-5 gap-4 h-full [&>*]:bg-zinc-800 [&>*]:rounded-md [&>*]:p-2;
+        @apply px-5 gap-4 3xl:gap-6 h-full [&>*]:bg-zinc-800 [&>*]:rounded-md [&>*]:p-2;
     }
 
     .info {

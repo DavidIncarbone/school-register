@@ -4,35 +4,35 @@ import { useTakeAttendance } from "@/hooks/useTakeAttendance";
 import { api } from "@/services/api";
 import type { UseQueryResult } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
+import { useLocation } from "react-router";
 
 export const AttendanceFormPage = () => {
     // vars
     const [selected, setSelected] = useState<boolean[]>();
+    const location = useLocation().state;
+    const forcedCourseId = location?.forcedCourseId;
+    const forcedTakeAttendance = location?.forcedTakeAttendance;
+
     // queries
-    const { firstCourseId, takeAttendance, presences } = useTakeAttendance();
+    const { courseId, takeAttendance, presences } = useTakeAttendance(
+        forcedCourseId,
+        forcedTakeAttendance
+    );
 
     const { data: students } = useQueryIndexStudent(
-        { course_id: firstCourseId },
+        { course_id: courseId },
         takeAttendance
-    ) as UseQueryResult<Student[], Error>;
+    ) as UseQueryResult<{ data: Student[]; total_students: number }, Error>;
 
     useEffect(() => {
-        if (students) {
-            setSelected(students.map(() => false));
+        if (students && students.total_students) {
+            setSelected(students.data.map(() => false));
         }
     }, [students]);
 
-    // useCallback => cacha la funzione in se
-    // useMemo => cacha il return della funzione
-    // memo => higher order component => wrappa un componente e 'cacha' il componente
-
-    // react 19 => memo X
-
-    // sono l'ultima spiaggia
-
     const handleClick = async () => {
         await api.post("/api/presences", {
-            students_ids: students?.map((student) => student.id),
+            students_ids: students?.data.map((student) => student.id),
             are_presents: selected,
         });
     };
@@ -58,7 +58,7 @@ export const AttendanceFormPage = () => {
             {students ? (
                 <div className="space-y-2 overflow-auto h-[500px]">
                     {students &&
-                        students.map((student, studentIndex) => (
+                        students.data.map((student, studentIndex) => (
                             <div className="grid grid-cols-2">
                                 <div key={student.id}>
                                     <span>
@@ -90,7 +90,7 @@ export const AttendanceFormPage = () => {
                     {/* attendance already taken */}
                     <div className="h-[500px] overflow-auto">
                         {presences &&
-                            presences[0].data.map((student) => (
+                            presences.data.map((student) => (
                                 <div
                                     className="flex
                             "

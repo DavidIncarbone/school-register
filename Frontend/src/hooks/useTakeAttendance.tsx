@@ -2,29 +2,42 @@ import type { UseQueryResult } from "@tanstack/react-query";
 import type { LessonSchedule, Presence } from "@/config/types";
 import { useQueryIndexPresence } from "./presencesQueries";
 import { useQueryIndexLessonSchedule } from "./lessonScheduleQueries";
+import { DateTime } from "luxon";
 
-export const useTakeAttendance = () => {
+export const useTakeAttendance = (
+    forcedCourseId?: number,
+    forcedTakeAttendance = false
+) => {
+    // vars
+    const localDate = DateTime.local();
     // queries
-    const { data: lessonSchedule, isLoading: isLessonScheduleLoading } =
-        useQueryIndexLessonSchedule() as UseQueryResult<
-            LessonSchedule[],
-            Error
-        >;
+    const { data: lessonSchedule } = useQueryIndexLessonSchedule(
+        {},
+        !forcedCourseId
+    ) as UseQueryResult<LessonSchedule[], Error>;
 
     const firstCourseId =
         lessonSchedule?.find((period) => period.lesson_time == 1)?.course_id ??
         0;
     const { data: presences } = useQueryIndexPresence(
         {
-            course_id: firstCourseId,
-            date: new Date().toISOString().split("T")[0],
+            course_id: forcedCourseId ? forcedCourseId : firstCourseId,
+            date: localDate.toISODate(),
+            // date: "2025-06-16", // ! testing
         },
-        Boolean(firstCourseId)
-    ) as UseQueryResult<{ data: Presence[]; total: number }[], Error>;
+        Boolean(forcedCourseId ?? firstCourseId)
+    ) as UseQueryResult<{ data: Presence[]; total: number }, Error>;
 
     // fai appello
-    const takeAttendance =
-        presences && presences[0]?.total === 0 ? true : false;
+    const takeAttendance = forcedTakeAttendance
+        ? forcedTakeAttendance
+        : presences && presences?.total === 0
+        ? true
+        : false;
 
-    return { firstCourseId, takeAttendance, presences };
+    return {
+        courseId: forcedCourseId ? forcedCourseId : firstCourseId,
+        takeAttendance,
+        presences,
+    };
 };

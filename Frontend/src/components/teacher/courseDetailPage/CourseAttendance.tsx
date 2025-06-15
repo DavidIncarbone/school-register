@@ -1,7 +1,6 @@
 import { BadgeCheck, CircleX, Info, Pencil } from "lucide-react";
 import type { IndexPresenceParams, Presence } from "@/config/types";
 import { useQueryIndexPresence } from "@/hooks/presencesQueries";
-import { formatDateToDDMMYYYY } from "@/utilities/utils";
 import type { UseQueryResult } from "@tanstack/react-query";
 import { Link } from "react-router";
 
@@ -22,8 +21,8 @@ export const CourseAttendance = ({
     return (
         <div className="h-full">
             <h3 className="font-semibold text-xl">
-                Today's attendance -{" "}
-                {formatDateToDDMMYYYY(new Date().toISOString().split("T")[0])}
+                Today's attendance - {}
+                {new Date().toLocaleDateString()}
             </h3>
             <div className="grid grid-cols-2 px-2 py-1 capitalize font-semibold pr-4">
                 <div>student</div>
@@ -32,14 +31,27 @@ export const CourseAttendance = ({
                     <span>actions</span>
                 </div>
             </div>
-            <div className="flex flex-col h-4/5 overflow-auto rounded-md">
+            <div className="flex flex-col h-[80%] 3xl:h-[90%] overflow-auto rounded-md relative">
                 {isPresencesLoading ? (
                     <div className="grid grid-cols-2 p-2 animate-pulse bg-zinc-800 h-full">
                         <div className="w-64 3xl:w-72"></div>
                         <div></div>
                     </div>
+                ) : todayPresences && !todayPresences.total ? (
+                    <div className="h-full flex flex-col justify-center items-center text-yellow-600">
+                        <span>Attendance has not been taken yet</span>
+                        <Link
+                            to="/attendance-form"
+                            state={{
+                                forcedCourseId: params.course_id,
+                                forcedTakeAttendance: true,
+                            }}
+                            className="btn"
+                        >
+                            Click here to take attendance
+                        </Link>
+                    </div>
                 ) : (
-                    todayPresences &&
                     todayPresences?.data.map((presence) => (
                         <div
                             key={presence.id}

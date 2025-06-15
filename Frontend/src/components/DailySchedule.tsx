@@ -5,15 +5,15 @@ import { Link } from "react-router";
 import { Fragment } from "react/jsx-runtime";
 import { SkeleDailyScheduleTable } from "./ui/SkeleDailyScheduleTable";
 import { useQueryIndexLessonSchedule } from "@/hooks/lessonScheduleQueries";
-import { formatDateToDDMMYYYY } from "@/utilities/utils";
 
-export const DailySchedule = () => {
+export const 
+DailySchedule = () => {
     // queries
     const {
         data: dailySchedule,
         isLoading,
         isError,
-    } = useQueryIndexLessonSchedule() as UseQueryResult<
+    } = useQueryIndexLessonSchedule({}) as UseQueryResult<
         LessonSchedule[],
         Error
     >;
@@ -23,7 +23,7 @@ export const DailySchedule = () => {
     return (
         <>
             <h3 className="dashboard_h3">
-                Schedule for today - {formatDateToDDMMYYYY(new Date().toISOString().split("T")[0])}
+                Schedule for today - {new Date().toLocaleDateString()}
             </h3>
             <div className="shrink-0 grid grid-cols-3 rounded-t-md border-t border-x [&>div]:border [&>div]:border-b-0 overflow-hidden capitalize [&>div]:flex [&>div]:items-center [&>div]:p-2 bg-teal-700">
                 <div className="font-semibold">Period</div>
@@ -45,7 +45,7 @@ export const DailySchedule = () => {
                                 <div className="">{periods[i].timeFrame}</div>
                                 <div className="">
                                     <Link
-                                        to={`/course/${schedule?.course_id}`}
+                                        to={`/courses/${schedule?.course_id}`}
                                         className="underline underline-offset-2 hover:italic"
                                     >
                                         {schedule?.course_name}
