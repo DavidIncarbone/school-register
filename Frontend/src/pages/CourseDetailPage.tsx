@@ -39,11 +39,13 @@ export const CourseDetailPage = () => {
             <div className="md:h-2/3 lg:h-auto overflow-hidden flex max-md:flex-col gap-6 max-lg:grow">
                 <div className="md:w-1/2 lg:w-7/12 h-full">
                     <div className="gap-2 mb-4 flex flex-wrap">
-                        {navLinks.map(({ label, to, className }) => (
-                            <Link key={label} to={to} className={className}>
-                                {label}
-                            </Link>
-                        ))}
+                        {navLinks(Number(id)).map(
+                            ({ label, to, className }) => (
+                                <Link key={label} to={to} className={className}>
+                                    {label}
+                                </Link>
+                            )
+                        )}
                     </div>
                     <div className="h-4/5">
                         <CourseAnnouncements />
@@ -57,28 +59,30 @@ export const CourseDetailPage = () => {
     );
 };
 
-const navLinks = [
-    {
-        label: "Assignments",
-        to: "/teacher-assignments",
-        className: "btn-pretty !text-yellow-300",
-    },
-    {
-        label: "Grades",
-        to: "/",
-        className: "btn-pretty !text-blue-300",
-    },
-    {
-        label: "Disciplinary note",
-        to: "/",
-        className: "btn-pretty !text-red-400",
-    },
-    {
-        label: "New communication",
-        to: "/",
-        className: "btn-pretty !text-teal-400",
-    },
-];
+const navLinks = (courseId: number) => {
+    return [
+        {
+            label: "Assignments",
+            to: `/teacher-assignments?course_id=${courseId}`,
+            className: "btn-pretty !text-yellow-300",
+        },
+        {
+            label: "Grades",
+            to: "/",
+            className: "btn-pretty !text-blue-300",
+        },
+        {
+            label: "Disciplinary note",
+            to: "/",
+            className: "btn-pretty !text-red-400",
+        },
+        {
+            label: "New communication",
+            to: "/",
+            className: "btn-pretty !text-teal-400",
+        },
+    ];
+};
 
 const CourseAnnouncements = () => {
     return (

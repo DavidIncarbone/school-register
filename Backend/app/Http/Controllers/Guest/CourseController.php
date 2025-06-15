@@ -26,9 +26,12 @@ class CourseController extends Controller
         if ($user->type == "teacher") {
             $teacher = Teacher::where("email", $user->email)->firstOrFail();
 
-            $courses = $teacher->courses()->with(['subjects', 'students'])->withCount(['subjects as subjects_count' => function ($query) {
+            $courses = $teacher->courses()->withCount(['subjects as subjects_count' => function ($query) {
                 $query->select(DB::raw('count(distinct subject_id)'));
             }, "students", "teachers"])->get();
+            // $courses = $teacher->courses()->with(['subjects', 'students'])->withCount(['subjects as subjects_count' => function ($query) {
+            //     $query->select(DB::raw('count(distinct subject_id)'));
+            // }, "students", "teachers"])->get();
 
             foreach ($courses as $course) {
 

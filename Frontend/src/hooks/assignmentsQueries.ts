@@ -3,7 +3,8 @@ import { api, assignmentEndpoint } from "@/services/api";
 import { useQuery } from "@tanstack/react-query";
 
 export const useQueryIndexAssignment = (
-    params: IndexLessonAssignmentsParams
+    params: IndexLessonAssignmentsParams,
+    enabled = true
 ) => {
     return useQuery({
         queryKey: ["assignments"],
@@ -13,6 +14,7 @@ export const useQueryIndexAssignment = (
             });
             return res.data.data;
         },
-        staleTime: Infinity,
+        // staleTime: Infinity,
+        enabled,
     });
 };

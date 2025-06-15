@@ -20,7 +20,7 @@ export const CoursesList = () => {
         data: courses,
         isLoading: isCoursesLoading,
         isError: isCoursesError,
-    } = useQueryIndexCourse() as UseQueryResult<Course[], Error>;
+    } = useQueryIndexCourse({}) as UseQueryResult<Course[], Error>;
 
     const [isHovered, setIsHovered] = useState(false);
 
