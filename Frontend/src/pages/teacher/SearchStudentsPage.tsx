@@ -9,9 +9,8 @@ import { SortOption, type Course, type Student } from "../../config/types";
 import { debounce } from "lodash";
 import { type UseQueryResult } from "@tanstack/react-query";
 import { useQueryIndexCourse } from "../../hooks/coursesQueries";
-import { Search } from "lucide-react";
+import { Search, TriangleRight } from "lucide-react";
 import { StudentsList } from "../../components/teacher/StudentsList";
-import { GoTriangleDown } from "react-icons/go";
 import Loader from "../../components/ui/Loader";
 import { useQueryIndexStudent } from "@/hooks/studentsQueries";
 import { useDynamicSearchParams } from "@/hooks/useDynamicSearchParams";
@@ -133,7 +132,7 @@ export default function SearchStudentsPage() {
                                     {col.label}
                                 </span>
                                 {i < ar.length - 1 && (
-                                    <GoTriangleDown
+                                    <TriangleRight
                                         className={`${
                                             (col.dir === "desc" ||
                                                 activeDir === "desc") &&

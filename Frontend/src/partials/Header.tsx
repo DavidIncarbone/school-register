@@ -25,7 +25,7 @@ export default function Header() {
         <header
             className={`${
                 !authUser && "justify-end"
-            } h-16 sticky top-0 bg-[#1e2125] flex flex-wrap z-40`}
+            } max-md:justify-end h-16 sticky top-0 bg-[#1e2125] flex flex-wrap z-40`}
         >
             {authUser && (
                 <>
@@ -36,53 +36,50 @@ export default function Header() {
                     >
                         <input
                             type="text"
-                            className="w-full xl:w-[500px]"
+                            className="w-full md:w-[300px] lg:w-[400px]"
                             placeholder="Search for something.."
                         />
-                    </div>
-
-                    <div className="flex items-center gap-7 px-4">
-                        <Calendar className="size-6" />
-                        <Megaphone className="size-6" />
-                        <Bell className="size-6" />
                     </div>
                 </>
             )}
 
-            <div className="flex items-center gap-2 px-4">
-                {authUser && (
-                    <div
-                        onClick={() => navigate("/")}
-                        className="w-12 aspect-square border rounded-full"
-                    ></div>
-                )}
-                <div className="flex items-center gap-7">
-                    {profile && authUser ? (
-                        <div className="flex flex-col">
-                            <span className="capitalize">
-                                {profile.first_name} {profile.last_name}
-                            </span>
-                            {authUser.type === "student" ? (
-                                <span className="text-xs">student</span>
-                            ) : (
-                                <span className="text-xs">
-                                    <span className="capitalize">
-                                        {profile.subject_name}
-                                    </span>
-                                    <span> teacher</span>
-                                </span>
-                            )}
+            <div className="flex items-center gap-4 px-4">
+                {authUser && profile ? (
+                    <>
+                        <div className="flex items-center gap-6 mr-4">
+                            <Calendar className="size-6" />
+                            <Megaphone className="size-6" />
+                            <Bell className="size-6" />
                         </div>
-                    ) : (
-                        <Link to="/login">Sign in</Link>
-                    )}
-                    {authUser && (
+                        <div
+                            onClick={() => navigate("/")}
+                            className="w-12 aspect-square border rounded-full"
+                        />
+                        <div className="max-md:hidden flex items-center gap-3">
+                            <div className="flex flex-col">
+                                <span className="capitalize">
+                                    {profile.first_name} {profile.last_name}
+                                </span>
+                                {authUser.type === "student" ? (
+                                    <span className="text-xs">student</span>
+                                ) : (
+                                    <span className="text-xs">
+                                        <span className="capitalize">
+                                            {profile.subject_name}
+                                        </span>
+                                        <span> teacher</span>
+                                    </span>
+                                )}
+                            </div>
+                        </div>
                         <LogOut
                             onClick={handleLogout}
                             className="cursor-pointer"
                         />
-                    )}
-                </div>
+                    </>
+                ) : (
+                    <Link to="/login">Sign in</Link>
+                )}
             </div>
         </header>
     );
