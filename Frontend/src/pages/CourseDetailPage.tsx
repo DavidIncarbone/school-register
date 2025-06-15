@@ -3,14 +3,11 @@ import { CourseInfo } from "@/components/teacher/courseDetailPage/CourseInfo";
 import { CourseStats } from "@/components/teacher/courseDetailPage/CourseStats";
 import type { Course, IndexPresenceParams } from "@/config/types";
 import { useQueryShowCourse } from "@/hooks/coursesQueries";
-import { useGlobalStore } from "@/store/useGlobalStore";
 import type { UseQueryResult } from "@tanstack/react-query";
 import { DateTime } from "luxon";
 import { Link, useLocation, useParams } from "react-router";
 
 export const CourseDetailPage = () => {
-    // global store
-    const { profile } = useGlobalStore();
     // vars
     const localDate = DateTime.local();
     const { id } = useParams();

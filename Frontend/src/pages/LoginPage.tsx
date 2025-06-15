@@ -69,7 +69,7 @@ export default function LoginPage() {
               type="submit"
               className={`${isLoading && "cursor-not-allowed"} capitalize`}
             >
-              {isLoading ? <Loader isContained={true} /> : "accedi"}
+              {isLoading ? <Loader isContained={true} /> : "Sign in"}
             </button>
           </form>
 

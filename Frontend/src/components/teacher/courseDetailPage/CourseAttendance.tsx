@@ -15,7 +15,6 @@ export const CourseAttendance = ({
     const isWeekend = ["saturday", "sunday"].includes(
         now.weekdayLong.toLowerCase()
     );
-
     // queries
     const {
         data: todayPresences,
@@ -25,6 +24,8 @@ export const CourseAttendance = ({
         { data: Presence[]; total: number },
         Error
     >;
+    
+    // views 
     if (isPresencesError) return <pre>Presences error - da gestire</pre>;
     return (
         <div className="h-full">

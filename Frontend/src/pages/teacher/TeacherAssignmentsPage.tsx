@@ -5,7 +5,7 @@ export const TeacherAssignmentsPage = () => {
         data: assignments,
         isLoading: isAssigmentsLoading,
         isError: isAssigmentsError,
-    } = useQueryIndexAssignment({ course_id: 11 });
+    } = useQueryIndexAssignment({ course_id: 1 });
 
     // ! pagina solo per teacher => creare teacher route wrapper !
 

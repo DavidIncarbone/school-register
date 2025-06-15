@@ -1,4 +1,4 @@
-import { Info, Mail, Pencil, Phone, TableOfContents } from "lucide-react";
+import { Info, Mail, Phone, TableOfContents } from "lucide-react";
 import type { Student } from "../../config/types";
 import { useState } from "react";
 import { Link } from "react-router";
@@ -50,7 +50,6 @@ type ActionsProps = {
     id: number;
     className?: string;
     onInfoClick?: () => void;
-    onModifyClick?: () => void;
     onEmailClick?: () => void;
     onPhoneClick?: () => void;
 };
@@ -59,22 +58,18 @@ const Actions = ({
     id,
     className,
     onInfoClick,
-    onModifyClick,
     onEmailClick,
     onPhoneClick,
 }: ActionsProps) => {
     return (
         <>
-            <div onClick={onInfoClick} className={className} title="info">
-                <Info className="cursor-pointer scale-90 transition-transform hover:scale-110" />
-            </div>
             <Link
-                to={`/student/${id}`}
-                onClick={onModifyClick}
+                to={`/students/${id}`}
+                onClick={onInfoClick}
                 className={className}
-                title="modify"
+                title="info"
             >
-                <Pencil className="cursor-pointer scale-90 transition-transform hover:scale-110" />
+                <Info className="cursor-pointer scale-90 transition-transform hover:scale-110" />
             </Link>
             <div
                 onClick={onEmailClick}

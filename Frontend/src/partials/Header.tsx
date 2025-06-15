@@ -1,11 +1,11 @@
 import { FaAddressCard, FaArrowCircleDown } from "react-icons/fa";
 import { api } from "../services/api";
 import { useGlobalStore } from "../store/useGlobalStore";
-import { useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router";
 
 export default function Header() {
     const navigate = useNavigate();
-    const { authUser, setAuthUser, sidebarHidden } = useGlobalStore();
+    const { authUser, setAuthUser, sidebarHidden, profile } = useGlobalStore();
 
     const handleLogout = async () => {
         setAuthUser(null);
@@ -31,23 +31,47 @@ export default function Header() {
                 />
             </div>
 
-            <div className="flex items-center gap-10 px-4">
-                <FaAddressCard className="size-8" />
-                <FaAddressCard className="size-8" />
-                <FaAddressCard className="size-8" />
-            </div>
+            {authUser && (
+                <div className="flex items-center gap-6 px-4">
+                    <FaAddressCard className="size-8" />
+                    <FaAddressCard className="size-8" />
+                    <FaAddressCard className="size-8" />
+                </div>
+            )}
 
             <div className="flex items-center gap-2 px-4">
-                <div
-                    onClick={() => navigate("/")}
-                    className="w-12 aspect-square border rounded-full"
-                ></div>
-                <div className="flex items-center gap-2">
-                    <span>{authUser ? authUser.name : "Utente"}</span>
-                    <FaArrowCircleDown
-                        onClick={handleLogout}
-                        className="cursor-pointer"
-                    />
+                {authUser && (
+                    <div
+                        onClick={() => navigate("/")}
+                        className="w-12 aspect-square border rounded-full"
+                    ></div>
+                )}
+                <div className="flex items-center gap-4">
+                    {profile && authUser ? (
+                        <div className="flex flex-col">
+                            <span className="capitalize">
+                                {profile.first_name} {profile.last_name}
+                            </span>
+                            {authUser.type === "student" ? (
+                                <span className="text-xs">student</span>
+                            ) : (
+                                <span className="text-xs">
+                                    <span className="capitalize">
+                                        {profile.subject_name}
+                                    </span>
+                                    <span> teacher</span>
+                                </span>
+                            )}
+                        </div>
+                    ) : (
+                        <Link to="/login">Sign in</Link>
+                    )}
+                    {authUser && (
+                        <FaArrowCircleDown
+                            onClick={handleLogout}
+                            className="cursor-pointer"
+                        />
+                    )}
                 </div>
             </div>
         </header>

@@ -4,12 +4,9 @@ import Loader from "../components/ui/Loader";
 import { CoursesList } from "@/components/teacher/CoursesList";
 import { QuickActions } from "@/components/QuickActions";
 import { DailySchedule } from "@/components/DailySchedule";
-import { Search } from "lucide-react";
 import { useTakeAttendance } from "@/hooks/useTakeAttendance";
-import { useQueryIndexPersonalProfile } from "@/hooks/personalProfile";
-import { useEffect } from "react";
 
-export default function Homepage() {
+export default function DashboardPage() {
     // global store
     const { authUser } = useGlobalStore();
 

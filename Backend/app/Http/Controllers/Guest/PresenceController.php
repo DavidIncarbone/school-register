@@ -154,7 +154,6 @@ class PresenceController extends Controller
     {
         $request->validate(
             [
-
                 "is_present" => ["required", "boolean"]
             ]
         );

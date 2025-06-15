@@ -1,5 +1,5 @@
 import { useState, type FormEvent } from "react";
-import { useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { useGlobalStore } from "../store/useGlobalStore";
 import { api } from "../services/api";
 import { UserType, type User } from "../config/types";
@@ -69,7 +69,7 @@ export default function RegistrationPage() {
             <div className="h-full flex justify-center items-center">
                 <div className="auth-form">
                     <h2 className="text-3xl text-center capitalize">
-                        <span>{tempUser?.type}</span> <span>register</span>
+                        <span>{tempUser?.type}</span> <span>registration</span>
                     </h2>
                     <form onSubmit={handleSubmit}>
                         {isEmailVerified && (
@@ -114,16 +114,16 @@ export default function RegistrationPage() {
 
                         {!isEmailVerified && (
                             <div className="flex flex-col space-y-0.5">
-                                <label htmlFor="type">Ruolo</label>
+                                <label htmlFor="type">Role</label>
                                 <select id="type" name="type" required>
                                     <option value="" selected disabled hidden>
-                                        Seleziona il tuo ruolo
+                                        Select your role
                                     </option>
                                     <option value={UserType.STUDENT}>
-                                        Studente
+                                        Student
                                     </option>
                                     <option value={UserType.TEACHER}>
-                                        Insegnante
+                                        Teacher
                                     </option>
                                 </select>
                             </div>
@@ -143,7 +143,7 @@ export default function RegistrationPage() {
                                 </div>
                                 <div className="flex flex-col space-y-0.5">
                                     <label htmlFor="password_confirmation">
-                                        Conferma password
+                                        Confirm password
                                     </label>
                                     <input
                                         type="password"
@@ -161,7 +161,7 @@ export default function RegistrationPage() {
                             </>
                         )} */}
                         {!isEmailVerified ? (
-                            <button type="submit">Verifica email</button>
+                            <button type="submit">Verify email</button>
                         ) : (
                             <>
                                 <div className="flex items-center space-x-1">
@@ -170,12 +170,22 @@ export default function RegistrationPage() {
                                         type="checkbox"
                                         required
                                     />
-                                    <label htmlFor="terms" className="text-xs">
-                                        Accetta i Termini e Condizioni
+                                    <label
+                                        htmlFor="terms"
+                                        className="text-xs italic"
+                                    >
+                                        <span>Accept</span>{" "}
+                                        <a
+                                            href="https://google.com"
+                                            target="_blank"
+                                            className="  underline underline-offset-2 hover:text-blue-400"
+                                        >
+                                            Terms and Condition
+                                        </a>
                                     </label>
                                 </div>
                                 <button className="" type="submit">
-                                    Abilita account
+                                    Enable account
                                 </button>
                             </>
                         )}

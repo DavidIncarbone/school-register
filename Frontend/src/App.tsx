@@ -6,7 +6,7 @@ import { api } from "./services/api";
 import PrivateRoutes from "./layouts/PrivateRoutes";
 import RegistrationPage from "./pages/RegistrationPage";
 import PublicRoutes from "./layouts/PublicRoutes";
-import Homepage from "./pages/Homepage";
+import DashboardPage from "./pages/DashboardPage";
 import SearchStudentsPage from "./pages/teacher/SearchStudentsPage";
 import { CourseDetailPage } from "./pages/CourseDetailPage";
 import { StudentDetailPage } from "./pages/StudentDetailPage";
@@ -35,13 +35,13 @@ function App() {
             <Route path="/" Component={DefaultLayout}>
                 {/* pagine con auth */}
                 <Route Component={PrivateRoutes}>
-                    <Route index Component={Homepage} />
+                    <Route index Component={DashboardPage} />
                     <Route
                         path="/teacher/search-students"
                         Component={SearchStudentsPage}
                     />
                     <Route path="/courses/:id" Component={CourseDetailPage} />
-                    <Route path="/student/:id" Component={StudentDetailPage} />
+                    <Route path="/students/:id" Component={StudentDetailPage} />
                     <Route
                         path="/attendance-form"
                         Component={AttendanceFormPage}

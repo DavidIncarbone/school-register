@@ -5,13 +5,7 @@ import {
     type ChangeEvent,
     type MouseEvent,
 } from "react";
-import {
-    SortOption,
-    type Course,
-    type IndexStudentParams,
-    type Student,
-} from "../../config/types";
-import { useSearchParams } from "react-router";
+import { SortOption, type Course, type Student } from "../../config/types";
 import { debounce } from "lodash";
 import { type UseQueryResult } from "@tanstack/react-query";
 import { useQueryIndexCourse } from "../../hooks/coursesQueries";
@@ -20,13 +14,11 @@ import { StudentsList } from "../../components/teacher/StudentsList";
 import { GoTriangleDown } from "react-icons/go";
 import Loader from "../../components/ui/Loader";
 import { useQueryIndexStudent } from "@/hooks/studentsQueries";
+import { useDynamicSearchParams } from "@/hooks/useDynamicSearchParams";
 
 export default function SearchStudentsPage() {
     // vars
-    const [searchParams, setSearchParams] = useSearchParams();
-    const params = Object.fromEntries(
-        searchParams.entries()
-    ) as IndexStudentParams;
+    const { params, updateSearchParam } = useDynamicSearchParams();
     const [sortingCols, setSortingCols] = useState(initialSortingCols);
     const activeSort = params.sort ?? SortOption.BY_ID;
     const activeDir = params.dir ?? "asc";
@@ -51,60 +43,35 @@ export default function SearchStudentsPage() {
     // side effects
     useEffect(() => {
         if (courses && !("course_id" in params)) {
-            setSearchParams({ course_id: String(courses[0].id) });
+            updateSearchParam([
+                { key: "course_id", value: String(courses[0].id) },
+            ]);
         }
-    }, [courses, params, setSearchParams]);
+    }, [courses, params, updateSearchParam]);
 
     // actions
-    const updateSearchParam = (
-        params: { key: string; value: string }[],
-        currentParams: URLSearchParams
-    ) => {
-        const newParams = new URLSearchParams(currentParams); // clona quelli esistenti
-        params.forEach((param) => newParams.set(param.key, param.value));
-        setSearchParams(newParams);
-    };
-
     const debouncedHandleInputChange = useRef(
-        debounce(
-            (
-                e: ChangeEvent<HTMLInputElement>,
-                currentParams: URLSearchParams
-            ) => {
-                const key = "name";
-                const student_name = e.target.value;
-                updateSearchParam(
-                    [{ key, value: student_name }],
-                    currentParams
-                );
-            },
-            500
-        )
+        debounce((e: ChangeEvent<HTMLInputElement>) => {
+            const key = "name";
+            const student_name = e.target.value;
+            updateSearchParam([{ key, value: student_name }]);
+        }, 500)
     ).current;
 
-    const handleCourseSelected = async (
-        e: ChangeEvent<HTMLSelectElement>,
-        currentParams: URLSearchParams
-    ) => {
+    const handleCourseSelected = async (e: ChangeEvent<HTMLSelectElement>) => {
         const key = "course_id";
         const selectedCourseId = e.target.value;
-        updateSearchParam([{ key, value: selectedCourseId }], currentParams);
+        updateSearchParam([{ key, value: selectedCourseId }]);
     };
 
-    const handleSortingColClick = (
-        e: MouseEvent<HTMLDivElement>,
-        currentParams: URLSearchParams
-    ): void => {
+    const handleSortingColClick = (e: MouseEvent<HTMLDivElement>): void => {
         const key = "sort";
         const col = sortingCols.find((col) => col.sort === e.currentTarget.id);
         if (!col) return;
-        updateSearchParam(
-            [
-                { key, value: col.sort },
-                { key: "dir", value: col.dir === "desc" ? "asc" : "desc" },
-            ],
-            currentParams
-        );
+        updateSearchParam([
+            { key, value: col.sort },
+            { key: "dir", value: col.dir === "desc" ? "asc" : "desc" },
+        ]);
         setSortingCols((curr) =>
             curr.map((c) =>
                 c.sort === col.sort
@@ -120,21 +87,20 @@ export default function SearchStudentsPage() {
         <div className="h-full p-5 text-sm flex flex-col">
             {/* ricerca e filtro */}
             <div className="text-lg sm:text-2xl flex flex-wrap justify-center items-center gap-2 mb-2 font-bold">
-                <p>Corso selezionato:</p>
+                <p>Selected course:</p>
                 <select
-                    onChange={(e) => handleCourseSelected(e, searchParams)}
+                    onChange={handleCourseSelected}
                     name="course_id"
                     className="no-default w-fit capitalize italic cursor-pointer"
                 >
                     <option selected disabled hidden>
-                        Seleziona corso
+                        Select course
                     </option>
                     {courses &&
                         courses.map((course) => (
                             <option
                                 selected={
-                                    Number(searchParams.get("course_id")) ===
-                                    course.id
+                                    Number(params?.course_id) === course.id
                                 }
                                 key={course.id}
                                 value={course.id}
@@ -149,13 +115,12 @@ export default function SearchStudentsPage() {
                 {/* //! fare controllo per id/matricola in backend */}
                 <div className="relative w-full sm:max-w-96">
                     <input
-                        onChange={(e) =>
-                            debouncedHandleInputChange(e, searchParams)
-                        }
+                        onChange={debouncedHandleInputChange}
                         type="text"
                         name="name"
                         placeholder="Search student / ID number"
                         className="w-full"
+                        defaultValue={params?.name}
                     />
                     <Search className="absolute h-full top-0 right-2" />
                 </div>
@@ -173,14 +138,12 @@ export default function SearchStudentsPage() {
             ) : (
                 <>
                     {/* tabella studenti */}
-                    <div className="grid grid-cols-4 md:grid-cols-9 border-b-2">
+                    <div className="grid grid-cols-4 md:grid-cols-9 border-b-2 lg:pr-4">
                         {sortingCols.map((col, i, ar) => (
                             <div
                                 key={i}
                                 id={col.sort}
-                                onClick={(e) =>
-                                    handleSortingColClick(e, searchParams)
-                                }
+                                onClick={handleSortingColClick}
                                 className={`${
                                     col.sort === SortOption.BY_EMAIL &&
                                     "max-md:hidden"

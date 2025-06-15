@@ -43,7 +43,7 @@ class DatabaseSeeder extends Seeder
                 $teacher->courses()->attach($courseId);
 
                 for ($j = 1; $j <= 5; $j++) {
-                    // - crea 5 lesson schedule
+                    // - crea max 5 lesson schedule
                     LessonSchedule::factory()->create([
                         'course_id' => $courseId,
                         'subject_id' => $subjectId,
@@ -52,13 +52,11 @@ class DatabaseSeeder extends Seeder
                         'day' => $j
                     ]);
 
-                    // - crea 0-5 assignments
-                    if (rand(0, 1)) {
-                        Assignment::factory()->create([
-                            'course_id' => $courseId,
-                            'subject_id' => $subjectId,
-                        ]);
-                    }
+                    // - crea max 5 assignments
+                    Assignment::factory()->create([
+                        'course_id' => $courseId,
+                        'subject_id' => $subjectId,
+                    ]);
                 }
             }
             // crea studenti, per ogni studente:
@@ -97,7 +95,7 @@ class DatabaseSeeder extends Seeder
             'email' => 'mosca@example.com',
             'subject_id' => $subjectId,
         ]);
-        $coursesIds = $subject->courses()->inRandomOrder()->limit(3)->get()->pluck('id')->toArray();
+        $coursesIds = $subject->courses()->inRandomOrder()->limit(6)->get()->pluck('id')->toArray();
         foreach ($coursesIds as $courseId) {
             $teacherExample->courses()->attach($courseId);
         }
