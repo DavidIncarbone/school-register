@@ -54,15 +54,17 @@ export default function Homepage() {
                         <div className="big !bg-neutral-950/50 overflow-hidden">
                             <CoursesList />
                             <div className="flex flex-col mt-6 text-sm">
-                                <div className="flex font-semibold text-base border-y-2 [&>div]:p-1">
+                                <div className="flex font-semibold text-base border-y-2 [&>div]:p-1 text-center max-md:pr-5">
                                     <div className="w-1/3">Course</div>
                                     <div className="w-1/2 border-x">
-                                        Notices
+                                        Latest communication
                                     </div>
-                                    <div className="grow">Action</div>
+                                    <div className="grow">Signer</div>
                                 </div>
                                 <div className="flex line-clamp-3 border-b [&>div]:p-1">
-                                    <div className="w-1/3">lorem</div>
+                                    <div className="w-1/3 flex justify-center items-center ">
+                                        lorem
+                                    </div>
                                     <div className="border-x w-1/2 line-clamp-3">
                                         Lorem ipsum dolor, sit amet consectetur
                                         adipisicing elit. Nemo recusandae esse
@@ -70,11 +72,13 @@ export default function Homepage() {
                                         maiores ex molestiae aliquam aliquid!
                                     </div>
                                     <div className="flex justify-center items-center grow">
-                                        <Search />
+                                        Pincopallo
                                     </div>
                                 </div>
                                 <div className="flex line-clamp-3 border-b [&>div]:p-1">
-                                    <div className="w-1/3">lorem</div>
+                                    <div className="w-1/3 flex justify-center items-center">
+                                        lorem
+                                    </div>
                                     <div className="border-x w-1/2 line-clamp-3">
                                         Lorem ipsum dolor, sit amet consectetur
                                         adipisicing elit. Nemo recusandae esse
@@ -82,7 +86,7 @@ export default function Homepage() {
                                         maiores ex molestiae aliquam aliquid!
                                     </div>
                                     <div className="flex justify-center items-center grow">
-                                        <Search />
+                                        Pincopallo
                                     </div>
                                 </div>
                             </div>

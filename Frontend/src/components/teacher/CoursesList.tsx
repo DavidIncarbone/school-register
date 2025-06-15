@@ -41,7 +41,7 @@ export const CoursesList = () => {
                         ? [1, 2, 3, 4].map((el) => (
                               <CarouselItem
                                   key={el}
-                                  className="rounded-md overflow-hidden pl-4 basis-3/4 sm:basis-3/5 lg:basis-2/5 cursor-pointer hover:opacity-85 active:opacity-90"
+                                  className="rounded-md overflow-hidden pl-4 basis-3/4 md:basis-1/2 lg:basis-2/5 cursor-pointer hover:opacity-85 active:opacity-90"
                               >
                                   <SkeleCourseCard />
                               </CarouselItem>
@@ -52,7 +52,7 @@ export const CoursesList = () => {
                                       background: `hsl(${i * 90}, 50%, 50%)`,
                                   }}
                                   key={course.id}
-                                  className="rounded-md basis-3/4 sm:basis-3/5 lg:basis-2/5 cursor-pointer hover:opacity-85 active:opacity-90"
+                                  className="rounded-md basis-10/12 md:basis-1/2 lg:basis-2/5 cursor-pointer hover:opacity-85 active:opacity-90"
                               >
                                   <CourseCard course={course} />
                               </CarouselItem>
@@ -83,7 +83,7 @@ const CourseCard = ({ course }: { course: Course }) => {
                 <PersonStanding className="inline-block" />
             </div>
             <div className="flex justify-between items-center">
-                <span>Attendance: {course.students_count}</span>
+                <span>Attendance rate: {course.presences_percentage}</span>
                 <GraduationCap className="inline-block" />
             </div>
         </Link>

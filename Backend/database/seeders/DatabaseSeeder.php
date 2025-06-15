@@ -36,6 +36,7 @@ class DatabaseSeeder extends Seeder
                 // per ogni materia:
                 // - prendi un teacher random di quella materia e assegnalo al corso
                 $subjectId = $i;
+                $subject = Subject::find($subjectId);
                 $course->subjects()->attach($subjectId);
                 $teacher = Teacher::where('subject_id', $subjectId)->inRandomOrder()
                     ->first();
@@ -43,7 +44,6 @@ class DatabaseSeeder extends Seeder
 
                 for ($j = 1; $j <= 5; $j++) {
                     // - crea max 5 lesson schedule
-                    $subject = Subject::find($subjectId);
                     if (rand(0, 1)) {
                         LessonSchedule::factory()->create([
                             'course_id' => $courseId,

@@ -11,6 +11,6 @@ export const createSideBarSlice: StateCreator<
     [],
     SideBarSlice
 > = (set) => ({
-    sidebarHidden: false,
+    sidebarHidden: true,
     toggleSidebar: () => set((state) => ({ sidebarHidden: !state.sidebarHidden })),
 });
