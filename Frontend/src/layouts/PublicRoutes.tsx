@@ -9,7 +9,7 @@ export default function PublicRoutes() {
     // console.log("render public routes");
     const navigate = useNavigate();
     const { isAuthLoading, authUser, setAuthUser, setIsAuthLoading } =
-        useGlobalStore((state) => state);
+        useGlobalStore();
 
     useEffect(() => {
         const fetchAndSetUser = async () => {

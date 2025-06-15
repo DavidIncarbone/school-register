@@ -1,12 +1,15 @@
 import type { Presence } from "@/config/types";
 import { api, presencesEndpoint } from "@/services/api";
+import { formatDateToDDMMYYYY } from "@/utilities/utils";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 
 export const StudentDetailPage = () => {
     const { id } = useParams();
 
-    const [presences, setPresences] = useState<Presence[] | null>(null);
+    const [presences, setPresences] = useState<{ data: Presence[] } | null>(
+        null
+    );
 
     const params = { student_id: id };
 
@@ -27,11 +30,17 @@ export const StudentDetailPage = () => {
     return (
         <div className="bg-zinc-900 overflow-auto h-full p-8">
             {presences &&
-                presences.map((presence) => (
+                presences.data.map((presence) => (
                     <div key={presence.id} className="border p-4">
-                        <p>{presence.student_id}</p>
-                        <p>{presence.is_present}</p>
-                        <p>{presence.date}</p>
+                        <p>
+                            {presence.student_first_name}{" "}
+                            {presence.student_last_name}
+                        </p>
+                        <p>
+                            Presence status:{" "}
+                            {String(Boolean(presence.is_present))}
+                        </p>
+                        <p>{formatDateToDDMMYYYY(presence.date)}</p>
                     </div>
                 ))}
         </div>

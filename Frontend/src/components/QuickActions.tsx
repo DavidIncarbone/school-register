@@ -16,7 +16,7 @@ export const QuickActions = ({
     takeAttendance: boolean;
 }) => {
     // global store
-    const { authUser } = useGlobalStore((state) => state);
+    const { authUser } = useGlobalStore();
 
     return (
         <>

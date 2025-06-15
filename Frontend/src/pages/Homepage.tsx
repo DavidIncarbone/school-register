@@ -6,11 +6,14 @@ import { QuickActions } from "@/components/QuickActions";
 import { DailySchedule } from "@/components/DailySchedule";
 import { Search } from "lucide-react";
 import { useTakeAttendance } from "@/hooks/useTakeAttendance";
+import { useQueryIndexPersonalProfile } from "@/hooks/personalProfile";
+import { useEffect } from "react";
 
 export default function Homepage() {
     // global store
-    const { authUser } = useGlobalStore((state) => state);
+    const { authUser } = useGlobalStore();
 
+    // operazione di teacher
     const { takeAttendance } = useTakeAttendance();
 
     // views
@@ -84,7 +87,7 @@ export default function Homepage() {
                                 </div>
                             </div>
                         </div>
-                        <div className="daily-schedule flex flex-col !bg-teal-700/50 h-fit">
+                        <div className="daily-schedule flex flex-col !bg-teal-700/50">
                             <DailySchedule />
                         </div>
                         <div className="others !bg-yellow-700/50 h-fit">

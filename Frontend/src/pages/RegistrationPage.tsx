@@ -21,8 +21,7 @@ type TempUser = {
 
 export default function RegistrationPage() {
     // global vars
-    const authUser = useGlobalStore((state) => state.authUser);
-    const setAuthUser = useGlobalStore((state) => state.setAuthUser);
+    const { authUser, setAuthUser } = useGlobalStore();
     // vars
     const navigate = useNavigate();
     const [isEmailVerified, setIsEmailVerified] = useState(false);
@@ -70,8 +69,7 @@ export default function RegistrationPage() {
             <div className="h-full flex justify-center items-center">
                 <div className="auth-form">
                     <h2 className="text-3xl text-center capitalize">
-                        <span>{tempUser?.type}</span>{" "}
-                        <span>register</span>
+                        <span>{tempUser?.type}</span> <span>register</span>
                     </h2>
                     <form onSubmit={handleSubmit}>
                         {isEmailVerified && (

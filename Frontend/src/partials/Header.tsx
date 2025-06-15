@@ -5,9 +5,7 @@ import { useNavigate } from "react-router";
 
 export default function Header() {
     const navigate = useNavigate();
-    const { authUser, setAuthUser, sidebarHidden } = useGlobalStore(
-        (state) => state
-    );
+    const { authUser, setAuthUser, sidebarHidden } = useGlobalStore();
 
     const handleLogout = async () => {
         setAuthUser(null);
@@ -22,12 +20,14 @@ export default function Header() {
     return (
         <header className="h-16 sticky top-0 bg-[#1e2125] flex flex-wrap z-40">
             <div
-                className={`${sidebarHidden && "lg:translate-x-36"} transition-transform duration-500 max-sm:hidden flex items-center grow px-4`}
+                className={`${
+                    sidebarHidden && "lg:translate-x-36"
+                } transition-transform duration-500 max-sm:hidden flex items-center grow px-4`}
             >
                 <input
                     type="text"
                     className="w-full xl:w-1/2"
-                    placeholder="Cosa stai cercando?"
+                    placeholder="Search for something.."
                 />
             </div>
 

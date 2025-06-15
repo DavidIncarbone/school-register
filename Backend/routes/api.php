@@ -12,7 +12,9 @@ use App\Http\Controllers\Guest\LessonScheduleController;
 use App\Http\Controllers\Guest\PresenceController;
 use App\Http\Controllers\Guest\StudentController;
 use App\Http\Controllers\Guest\TeacherController;
+use App\Models\Course;
 use App\Models\Student;
+use App\Models\Subject;
 use App\Models\Teacher;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -49,6 +51,40 @@ Route::middleware(["auth:sanctum"])->group(function () {
     // teachers
     Route::get("/teachers", [TeacherController::class, 'index']);
     Route::get("/teachers/{teacher}", [TeacherController::class, 'show']);
+
+    // profile
+    Route::get("/profile", function () {
+        request()->validate([
+            "email" => 'required|string',
+            "type" => 'required|string|in:student,teacher,admin',
+        ]);
+        if (request()->type === "student") {
+            $student = Student::where('email', request()->email)->firstOrFail();
+            $course = Course::findOrFail($student->course_id);
+            $student->course_name = $course->name;
+            $student->course_description = $course->description;
+            return response()->json([
+                "success" => true,
+                'message' => 'Operazione effettuata con successo',
+                'data' => $student
+            ]);
+        } elseif (request()->type === "teacher") {
+            $teacher = Teacher::where('email', request()->email)->firstOrFail();
+            $subject = Subject::findOrFail($teacher->subject_id);
+            $teacher->subject_name = $subject->name;
+            $teacher->subject_description = $subject->description;
+            return response()->json([
+                "success" => true,
+                'message' => 'Operazione effettuata con successo',
+                'data' => $teacher
+            ]);
+        } else {
+            return response()->json([
+                "success" => false,
+                'message' => 'Errore durante l\'operazione',
+            ], 400);
+        }
+    });
 });
 
 

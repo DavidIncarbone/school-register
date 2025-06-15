@@ -5,7 +5,7 @@ import { Link, NavLink } from "react-router";
 
 export default function Sidebar() {
     // global store
-    const { sidebarHidden, toggleSidebar } = useGlobalStore((state) => state);
+    const { sidebarHidden, toggleSidebar } = useGlobalStore();
 
     return (
         <>

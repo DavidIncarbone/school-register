@@ -24,19 +24,16 @@ export const CourseAttendance = ({
                 Today's attendance - {}
                 {new Date().toLocaleDateString()}
             </h3>
-            <div className="grid grid-cols-2 px-2 py-1 capitalize font-semibold pr-4">
+            <div className="grid grid-cols-2 px-2 py-1 capitalize font-semibold pr-4 max-md:border-x">
                 <div>student</div>
                 <div className="grid grid-cols-3">
                     <span className="col-span-2">status</span>
                     <span>actions</span>
                 </div>
             </div>
-            <div className="flex flex-col h-[80%] 3xl:h-[90%] overflow-auto rounded-md relative">
+            <div className="flex flex-col h-[80%] 3xl:h-[90%] overflow-auto md:rounded-md max-md:border-x">
                 {isPresencesLoading ? (
-                    <div className="grid grid-cols-2 p-2 animate-pulse bg-zinc-800 h-full">
-                        <div className="w-64 3xl:w-72"></div>
-                        <div></div>
-                    </div>
+                    <div className=" animate-pulse bg-zinc-800 h-full" />
                 ) : todayPresences && !todayPresences.total ? (
                     <div className="h-full flex flex-col justify-center items-center text-yellow-600">
                         <span>Attendance has not been taken yet</span>

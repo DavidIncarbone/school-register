@@ -15,6 +15,8 @@ export const useQueryIndexPresence = (
         },
         // staleTime: 60 * 60 * 1000, // ms
         refetchInterval: 60 * 60 * 1000,
+        refetchOnWindowFocus: false,
         enabled,
+        
     });
 };

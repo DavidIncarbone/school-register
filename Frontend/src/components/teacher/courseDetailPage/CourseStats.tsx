@@ -9,7 +9,7 @@ export const CourseStats = ({
     cachedCourse: Course | undefined;
 }) => {
     return (
-        <div className="grid grid-cols-3 h-fit gap-4 lg:gap-8 [&>div]:rounded-md">
+        <div className="grid grid-cols-3 h-fit gap-4 [&>div]:rounded-md">
             <StatCard
                 value={course?.subjects_count}
                 label="Subjects"

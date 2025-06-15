@@ -7,7 +7,7 @@ import Loader from "../components/ui/Loader";
 
 export default function LoginPage() {
   const navigate = useNavigate();
-  const { authUser, setAuthUser } = useGlobalStore((state) => state);
+  const { authUser, setAuthUser } = useGlobalStore();
   const [isLoading, setIsLoading] = useState(false);
 
   const fetchAndSetUser = async () => {

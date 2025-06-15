@@ -35,6 +35,14 @@ export type Student = {
     last_name: string;
     email: string;
 };
+
+export type Profile = (Student | Teacher) & {
+    subject_name?: string;
+    subject_description?: string;
+    course_name?: string;
+    course_description?: string;
+};
+
 export type Subject = {
     id: number;
     name: string;

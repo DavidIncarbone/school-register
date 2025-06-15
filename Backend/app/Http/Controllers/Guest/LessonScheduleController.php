@@ -35,9 +35,9 @@ class LessonScheduleController extends Controller
             $lessonSchedules = LessonSchedule::whereIn('course_id', $coursesIds)->where('subject_id', $subject->id);
 
             if (!$showWeek) {
+                $day = Carbon::now()->format("l");
                 // ! addsubDay per testing
                 // $day = Carbon::now()->addDay(1)->format("l");
-                $day = Carbon::now()->format("l");
                 $lessonSchedules->where('day', 'like', strtolower($day));
             }
 

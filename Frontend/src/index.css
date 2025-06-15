@@ -84,7 +84,10 @@ body {
     }
 
     .btn {
-        @apply px-4 py-2 border rounded-md cursor-pointer scale-95 hover:scale-100 transition-transform;
+        @apply inline-block px-4 py-2 border rounded-md cursor-pointer scale-98 hover:scale-100 transition-transform;
+    }
+    .btn-pretty {
+        @apply inline-block px-4 py-1 border rounded-xl cursor-pointer scale-98 hover:scale-100 transition-transform;
     }
 
     option {
