@@ -3,7 +3,7 @@ import { api, lessonScheduleEndpoint } from "@/services/api";
 import { useQuery } from "@tanstack/react-query";
 
 export const useQueryIndexLessonSchedule = (
-    params?: IndexLessonScheduleParams,
+    params: IndexLessonScheduleParams,
     enabled = true
 ) => {
     return useQuery({

@@ -1,5 +1,5 @@
-import type { Student } from "../../config/types";
-import { SkeleStudentRecord } from "../ui/SkeleStudentRecord";
+import type { Student } from "../../../config/types";
+import { SkeleStudentRecord } from "../../ui/SkeleStudentRecord";
 import { StudentRecord } from "./StudentRecord";
 
 type StudentsListProps = {
@@ -13,7 +13,8 @@ export const StudentsList = ({
     isLoading,
     isError,
 }: StudentsListProps) => {
-    // views
+    
+    // * views
     if (isError) return <pre>students error - da gestire</pre>;
     return (
         <>

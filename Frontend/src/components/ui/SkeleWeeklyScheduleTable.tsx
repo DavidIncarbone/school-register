@@ -1,4 +1,4 @@
-import { periods } from "@/config/lessonHours";
+import { periods } from "@/config/globals";
 import { Fragment } from "react";
 
 export const SkeleWeeklyScheduleTable = () => {

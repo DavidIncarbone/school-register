@@ -4,9 +4,10 @@ import { Bot, ChevronLeft } from "lucide-react";
 import { Link, NavLink } from "react-router";
 
 export default function Sidebar() {
-    // global store
+    // * global store
     const { sidebarHidden, toggleSidebar } = useGlobalStore();
 
+    // * views
     return (
         <>
             <nav
@@ -36,11 +37,8 @@ export default function Sidebar() {
                             className={`${
                                 sidebarHidden && "rotate-180"
                             } transition-all box-content p-2 scale-75 cursor-pointer hover:scale-90 border rounded-full`}
-                        >
-                            ciao
-                        </ChevronLeft>
+                        />
                     </div>
-                    {/* <img src="/logo.png" alt="logo" className="h-full object-contain"/> */}
                 </div>
                 <div className="flex justify-center items-center">
                     <Calendar

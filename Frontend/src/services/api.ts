@@ -1,5 +1,6 @@
 import axios from "axios";
 
+// ! in PRODUZIONE: da spostare in .env il dominio e gli endpoints
 export const api = axios.create({
     baseURL: "http://localhost:8000",
     withCredentials: true,

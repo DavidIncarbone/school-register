@@ -1,4 +1,4 @@
-import { periods } from "@/config/lessonHours";
+import { periods } from "@/config/globals";
 import type { LessonSchedule } from "@/config/types";
 import type { UseQueryResult } from "@tanstack/react-query";
 import { Link } from "react-router";
@@ -7,7 +7,7 @@ import { SkeleDailyScheduleTable } from "./ui/SkeleDailyScheduleTable";
 import { useQueryIndexLessonSchedule } from "@/hooks/lessonScheduleQueries";
 
 export const DailySchedule = () => {
-    // queries
+    // * queries
     const {
         data: dailySchedule,
         isLoading,
@@ -17,7 +17,7 @@ export const DailySchedule = () => {
         Error
     >;
 
-    // views
+    // * views
     if (isError) return <pre>lessonSchedule error</pre>;
     return (
         <>
@@ -33,18 +33,7 @@ export const DailySchedule = () => {
                 {isLoading ? (
                     <SkeleDailyScheduleTable />
                 ) : !dailySchedule?.length ? (
-                    <div className="col-span-full flex flex-col justify-center items-center bg-teal-800">
-                        <span>No lessons for today!</span>
-                        <span className="lowercase text-xs">
-                            <span>Check your weekly schedule</span>{" "}
-                            <Link
-                                to="/weekly-schedule"
-                                className="italic underline underline-offset-2 hover:!scale-110 transition-transform inline-block"
-                            >
-                                here
-                            </Link>
-                        </span>
-                    </div>
+                    <ZeroLessonsMessage />
                 ) : (
                     dailyScheduleList(dailySchedule)?.map((schedule, i) => (
                         <Fragment key={i}>
@@ -66,6 +55,24 @@ export const DailySchedule = () => {
     );
 };
 
+const ZeroLessonsMessage = () => {
+    return (
+        <div className="col-span-full flex flex-col justify-center items-center bg-teal-800">
+            <span>No lessons for today!</span>
+            <span className="lowercase text-xs">
+                <span>Check your weekly schedule</span>{" "}
+                <Link
+                    to="/weekly-schedule"
+                    className="italic underline underline-offset-2 hover:!scale-110 transition-transform inline-block"
+                >
+                    here
+                </Link>
+            </span>
+        </div>
+    );
+};
+
+// riempi un array di schedules e undefined con lunghezza periods.length
 const dailyScheduleList = (
     schedule: LessonSchedule[]
 ): (LessonSchedule | undefined)[] => {

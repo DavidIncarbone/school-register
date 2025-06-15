@@ -8,8 +8,8 @@ import { DateTime } from "luxon";
 import { Link, useLocation, useParams } from "react-router";
 
 export const CourseDetailPage = () => {
-    // vars
-    const localDate = DateTime.local();
+    // * vars
+    const localDate = DateTime.local(); // localDate da libreria esterna luxon
     const { id } = useParams();
     const location = useLocation();
     const cachedCourse: Course = location.state?.course;
@@ -18,13 +18,15 @@ export const CourseDetailPage = () => {
         date: localDate.toISODate(),
         // date: "2025-06-16", // ! testing
     };
-    // queries
+
+    // * queries
     const {
         data: course,
         isLoading: isCourseLoading,
         isError: isCourseError,
     } = useQueryShowCourse(Number(id)) as UseQueryResult<Course, Error>;
 
+    // * views
     if (isCourseError) return <pre>course error - da gestire</pre>;
     return (
         <div className="p-5 3xl:p-8 md:h-full flex flex-col gap-8 lg:gap-6">

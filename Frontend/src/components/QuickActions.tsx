@@ -15,9 +15,10 @@ export const QuickActions = ({
 }: {
     takeAttendance: boolean;
 }) => {
-    // global store
+    // * global store
     const { authUser } = useGlobalStore();
 
+    // * views
     return (
         <>
             {authUser?.type === "teacher" ? (

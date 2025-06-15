@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 
 export const useQueryIndexPresence = (
     params: IndexPresenceParams,
-    enabled: boolean
+    enabled = true
 ) => {
     return useQuery({
         queryKey: ["presences", params],
@@ -17,6 +17,5 @@ export const useQueryIndexPresence = (
         refetchInterval: 60 * 60 * 1000,
         refetchOnWindowFocus: false,
         enabled,
-        
     });
 };

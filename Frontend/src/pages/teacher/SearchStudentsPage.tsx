@@ -9,21 +9,23 @@ import { SortOption, type Course, type Student } from "../../config/types";
 import { debounce } from "lodash";
 import { type UseQueryResult } from "@tanstack/react-query";
 import { useQueryIndexCourse } from "../../hooks/coursesQueries";
-import { Search, TriangleRight } from "lucide-react";
-import { StudentsList } from "../../components/teacher/StudentsList";
+import { TriangleRight } from "lucide-react";
+import { StudentsList } from "../../components/teacher/searchStudentsPage/StudentsList";
 import Loader from "../../components/ui/Loader";
 import { useQueryIndexStudent } from "@/hooks/studentsQueries";
 import { useDynamicSearchParams } from "@/hooks/useDynamicSearchParams";
 import { CourseSelect } from "@/components/teacher/CourseSelect";
+import { SearchStudentInput } from "@/components/teacher/searchStudentsPage/SearchStudentInput";
 
 export default function SearchStudentsPage() {
-    // vars
+    // * custom hooks
     const { queryParams, updateSearchParams } = useDynamicSearchParams();
+    // * vars
     const [sortingCols, setSortingCols] = useState(initialSortingCols);
     const activeSort = queryParams.sort ?? SortOption.BY_ID;
     const activeDir = queryParams.dir ?? "asc";
 
-    // queries
+    // * queries
     const {
         data: courses,
         isLoading: isCoursesLoading,
@@ -39,7 +41,7 @@ export default function SearchStudentsPage() {
         "course_id" in queryParams
     ) as UseQueryResult<{ total_students: number; data: Student[] }, Error>;
 
-    // side effects
+    // * side effects
     useEffect(() => {
         if (courses && !("course_id" in queryParams)) {
             updateSearchParams([
@@ -48,7 +50,7 @@ export default function SearchStudentsPage() {
         }
     }, [courses, queryParams, updateSearchParams]);
 
-    // actions
+    // * actions
     const debouncedHandleInputChange = useRef(
         debounce((e: ChangeEvent<HTMLInputElement>) => {
             const key = "name";
@@ -91,18 +93,10 @@ export default function SearchStudentsPage() {
                 onChange={handleCourseSelected}
             />
             <div className="flex flex-wrap gap-4 items-end pb-4 mb-4 border-b">
-                {/* //! fare controllo per id/matricola in backend */}
-                <div className="relative w-full sm:max-w-96">
-                    <input
-                        onChange={debouncedHandleInputChange}
-                        type="text"
-                        name="name"
-                        placeholder="Search student / ID number"
-                        className="w-full"
-                        defaultValue={queryParams?.name}
-                    />
-                    <Search className="absolute h-full top-0 right-2" />
-                </div>
+                <SearchStudentInput
+                    onChange={debouncedHandleInputChange}
+                    queryParams={queryParams}
+                />
                 <div className="space-x-1">
                     <span>Total students:</span>
                     {isStudentsLoading ? (
@@ -117,35 +111,12 @@ export default function SearchStudentsPage() {
             ) : (
                 <>
                     {/* tabella studenti */}
-                    <div className="grid grid-cols-4 md:grid-cols-9 border-b-2 lg:pr-4">
-                        {sortingCols.map((col, i, ar) => (
-                            <div
-                                key={i}
-                                id={col.sort}
-                                onClick={handleSortingColClick}
-                                className={`${
-                                    col.sort === SortOption.BY_EMAIL &&
-                                    "max-md:hidden"
-                                } cursor-pointer transition-colors bg-zinc-900 hover:bg-zinc-950 active:[&>*]:scale-90 [&>*]:transition-transform flex items-center gap-1 px-2 py-2 lg:py-4 first:col-span-1 not-first:md:col-span-2 last:justify-center first:rounded-tl-sm last:rounded-tr-sm`}
-                            >
-                                <span className="line-clamp-1">
-                                    {col.label}
-                                </span>
-                                {i < ar.length - 1 && (
-                                    <TriangleRight
-                                        className={`${
-                                            (col.dir === "desc" ||
-                                                activeDir === "desc") &&
-                                            "rotate-180"
-                                        } ${
-                                            activeSort === col.sort &&
-                                            "!opacity-100"
-                                        } opacity-0`}
-                                    />
-                                )}
-                            </div>
-                        ))}
-                    </div>
+                    <StudentHead
+                        sortingCols={sortingCols}
+                        activeDir={activeDir}
+                        activeSort={activeSort}
+                        onClick={handleSortingColClick}
+                    />
                     <div className="overflow-auto grow ">
                         <StudentsList
                             students={students}
@@ -158,6 +129,51 @@ export default function SearchStudentsPage() {
         </div>
     );
 }
+
+const StudentHead = ({
+    sortingCols,
+    activeDir,
+    activeSort,
+    onClick,
+}: {
+    sortingCols: SortingCols[];
+    activeDir: string;
+    activeSort: string;
+    onClick: (e: MouseEvent<HTMLDivElement>) => void;
+}) => {
+    return (
+        <div className="grid grid-cols-4 md:grid-cols-9 border-b-2 lg:pr-4">
+            {sortingCols.map((col, i, ar) => (
+                <div
+                    key={i}
+                    id={col.sort}
+                    onClick={onClick}
+                    className={`${
+                        col.sort === SortOption.BY_EMAIL && "max-md:hidden"
+                    } cursor-pointer transition-colors bg-zinc-900 hover:bg-zinc-950 active:[&>*]:scale-90 [&>*]:transition-transform flex items-center gap-1 px-2 py-2 lg:py-4 first:col-span-1 not-first:md:col-span-2 last:justify-center first:rounded-tl-sm last:rounded-tr-sm`}
+                >
+                    <span className="line-clamp-1">{col.label}</span>
+                    {i < ar.length - 1 && (
+                        <TriangleRight
+                            className={`${
+                                (col.dir === "desc" || activeDir === "desc") &&
+                                "rotate-180"
+                            } ${
+                                activeSort === col.sort && "!opacity-100"
+                            } opacity-0 scale-70`}
+                        />
+                    )}
+                </div>
+            ))}
+        </div>
+    );
+};
+
+type SortingCols = {
+    label: string;
+    sort: string;
+    dir: string;
+};
 
 const initialSortingCols = [
     { label: "ID number", sort: SortOption.BY_ID, dir: "asc" },

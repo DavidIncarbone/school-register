@@ -5,17 +5,18 @@ import { useQueryIndexCourse } from "@/hooks/coursesQueries";
 import { useDynamicSearchParams } from "@/hooks/useDynamicSearchParams";
 import type { UseQueryResult } from "@tanstack/react-query";
 import { Paperclip, Pencil, Save, Trash2 } from "lucide-react";
-import { useEffect, useRef, useState, type ChangeEvent } from "react";
+import { useEffect, useState, type ChangeEvent } from "react";
 
+// ! pagina solo per teacher => creare teacher route wrapper !
 export const TeacherAssignmentsPage = () => {
-    // ! pagina solo per teacher => creare teacher route wrapper !
-    // custom hooks
+    // * custom hooks
     const { queryParams, updateSearchParams } = useDynamicSearchParams();
-    // queries
+    // * queries
     const { data: courses } = useQueryIndexCourse({}) as UseQueryResult<
         Course[],
         Error
     >;
+
     const {
         data: assignments,
         isLoading: isAssigmentsLoading,
@@ -25,14 +26,14 @@ export const TeacherAssignmentsPage = () => {
         "course_id" in queryParams
     ) as UseQueryResult<{ data: Assignment[]; total: number }>;
 
-    // actions
+    // * actions
     const handleCourseSelected = async (e: ChangeEvent<HTMLSelectElement>) => {
         const key = "course_id";
         const selectedCourseId = e.target.value;
         updateSearchParams([{ key, value: selectedCourseId }]);
     };
 
-    // side effects
+    // * side effects
     useEffect(() => {
         if (courses && !("course_id" in queryParams)) {
             updateSearchParams([
@@ -41,7 +42,7 @@ export const TeacherAssignmentsPage = () => {
         }
     }, [courses, queryParams, updateSearchParams]);
 
-    // views
+    // * views
     if (isAssigmentsError) return <pre>assignment error - da gestire</pre>;
     return (
         <div className="px-5 py-2">
@@ -55,7 +56,7 @@ export const TeacherAssignmentsPage = () => {
                     onChange={handleCourseSelected}
                 />
             </div>
-            {/* assignments list (per corso)*/}
+            {/* assignments list (per corso) */}
             <div className="max-lg:w-[92dvw] mx-auto overflow-auto">
                 <div className="min-w-fit">
                     <AssignmentHead />
@@ -97,18 +98,19 @@ const AssignmentHead = () => {
 };
 
 const AssignmentRecord = ({ assignment }: { assignment: Assignment }) => {
+    // * vars
     const [isModifying, setIsModifying] = useState(false);
-    const assignmentBodyRef = useRef<HTMLTextAreaElement>(null);
-    // actions
+
+    // * actions
     const onModifyClick = () => {
         setIsModifying(true);
-        assignmentBodyRef.current?.focus();
     };
 
     const onSaveClick = () => {
         setIsModifying(false);
     };
 
+    // * views
     return (
         <div
             className={`${
@@ -128,7 +130,6 @@ const AssignmentRecord = ({ assignment }: { assignment: Assignment }) => {
                 className=" border px-4 w-40 flex justify-center items-center"
             />
             <textarea
-                ref={assignmentBodyRef}
                 disabled={!isModifying}
                 rows={isModifying ? 10 : 3}
                 defaultValue={assignment.body}

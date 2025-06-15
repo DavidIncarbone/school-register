@@ -7,13 +7,13 @@ import { useEffect, useState } from "react";
 import { useLocation } from "react-router";
 
 export const AttendanceFormPage = () => {
-    // vars
+    // * vars
     const [selected, setSelected] = useState<boolean[]>();
     const location = useLocation().state;
     const forcedCourseId = location?.forcedCourseId;
     const forcedTakeAttendance = location?.forcedTakeAttendance;
 
-    // queries
+    // * custom hooks, queries
     const { courseId, takeAttendance, presences } = useTakeAttendance(
         forcedCourseId,
         forcedTakeAttendance
@@ -24,19 +24,23 @@ export const AttendanceFormPage = () => {
         takeAttendance
     ) as UseQueryResult<{ data: Student[]; total_students: number }, Error>;
 
+    // * side effects
     useEffect(() => {
+        // setto selected ad un array di elementi false lungo quanto il totale degli studenti
         if (students && students.total_students) {
             setSelected(students.data.map(() => false));
         }
     }, [students]);
 
-    const handleClick = async () => {
+    // * actions
+    const onConfirmAttendance = async () => {
         await api.post("/api/presences", {
             students_ids: students?.data.map((student) => student.id),
             are_presents: selected,
         });
     };
 
+    // * views
     return (
         <div>
             <div className="grid grid-cols-2 border-b-4 mb-2 text-xl font-semibold">
@@ -45,7 +49,7 @@ export const AttendanceFormPage = () => {
             </div>
             {students ? (
                 <div>
-                    <button onClick={handleClick} className="btn">
+                    <button onClick={onConfirmAttendance} className="btn">
                         Conferma appello
                     </button>
                 </div>

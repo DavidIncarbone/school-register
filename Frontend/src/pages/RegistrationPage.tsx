@@ -1,5 +1,5 @@
 import { useState, type FormEvent } from "react";
-import { Link, useNavigate } from "react-router";
+import { useNavigate } from "react-router";
 import { useGlobalStore } from "../store/useGlobalStore";
 import { api } from "../services/api";
 import { UserType, type User } from "../config/types";
@@ -20,19 +20,19 @@ type TempUser = {
 };
 
 export default function RegistrationPage() {
-    // global vars
+    // * global store
     const { authUser, setAuthUser } = useGlobalStore();
-    // vars
+
+    // * vars
     const navigate = useNavigate();
     const [isEmailVerified, setIsEmailVerified] = useState(false);
     const [tempUser, setTempUser] = useState<TempUser | null>(null);
 
-    // actions
+    // * actions
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const formData = new FormData(e.currentTarget);
         let data = Object.fromEntries(formData.entries()) as Data;
-
         if (!isEmailVerified) {
             try {
                 const res = await api.post("/api/retrieve-temp-user", data);
@@ -155,11 +155,6 @@ export default function RegistrationPage() {
                                 </div>
                             </>
                         )}
-                        {/* {isEmailVerified && (
-                            <>
-                                <input type="checkbox" />
-                            </>
-                        )} */}
                         {!isEmailVerified ? (
                             <button type="submit">Verify email</button>
                         ) : (

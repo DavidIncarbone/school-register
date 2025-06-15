@@ -5,10 +5,13 @@ import { Bell, Calendar, LogOut, Megaphone } from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
 
 export default function Header() {
-    const navigate = useNavigate();
-    const queryClient = useQueryClient();
+    // * global store
     const { authUser, setAuthUser, sidebarHidden, profile } = useGlobalStore();
+    // * vars
+    const queryClient = useQueryClient();
+    const navigate = useNavigate();
 
+    // * actions
     const handleLogout = async () => {
         setAuthUser(null);
         navigate("/login");
@@ -17,7 +20,7 @@ export default function Header() {
         } catch (err) {
             console.error(err);
         } finally {
-            queryClient.clear();
+            queryClient.clear(); // elimina tutte le cache e tutte le queries
         }
     };
 

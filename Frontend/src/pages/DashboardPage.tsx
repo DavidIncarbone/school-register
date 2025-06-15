@@ -1,19 +1,21 @@
 import { UserType } from "../config/types";
 import { useGlobalStore } from "../store/useGlobalStore";
 import Loader from "../components/ui/Loader";
-import { CoursesList } from "@/components/teacher/CoursesList";
+import { CoursesList } from "@/components/teacher/dashboardPage/CoursesList";
 import { QuickActions } from "@/components/QuickActions";
 import { DailySchedule } from "@/components/DailySchedule";
 import { useTakeAttendance } from "@/hooks/useTakeAttendance";
 
+// todo: valutare poi di differenziare la logica in base a user.type
 export default function DashboardPage() {
-    // global store
+    // * global store
     const { authUser } = useGlobalStore();
 
-    // operazione di teacher
+    // ? operazione di teacher
+    // * custom hooks
     const { takeAttendance } = useTakeAttendance();
 
-    // views
+    // * views
     if (!authUser) return <Loader />;
     return (
         <>

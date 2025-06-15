@@ -1,11 +1,13 @@
 import { Info, Mail, Phone, TableOfContents } from "lucide-react";
-import type { Student } from "../../config/types";
+import type { Student } from "../../../config/types";
 import { useState } from "react";
 import { Link } from "react-router";
 
 export const StudentRecord = ({ student }: { student: Student }) => {
+    // * vars
     const [openActions, toggleActions] = useState(false);
 
+    // * views
     return (
         <div
             key={student.id}

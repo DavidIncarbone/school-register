@@ -6,11 +6,14 @@ import { useEffect } from "react";
 import Loader from "../components/ui/Loader";
 
 export default function PublicRoutes() {
-    // console.log("render public routes");
-    const navigate = useNavigate();
+    // * global store
     const { isAuthLoading, authUser, setAuthUser, setIsAuthLoading } =
         useGlobalStore();
 
+    // * vars
+    const navigate = useNavigate();
+
+    // * side effects
     useEffect(() => {
         const fetchAndSetUser = async () => {
             try {
@@ -27,5 +30,7 @@ export default function PublicRoutes() {
             fetchAndSetUser();
         }
     }, []);
+
+    // * views
     return !isAuthLoading ? <Outlet /> : <Loader />;
 }

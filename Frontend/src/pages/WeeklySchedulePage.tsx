@@ -1,5 +1,5 @@
 import { SkeleWeeklyScheduleTable } from "@/components/ui/SkeleWeeklyScheduleTable";
-import { periods } from "@/config/lessonHours";
+import { periods } from "@/config/globals";
 import type { LessonSchedule } from "@/config/types";
 import { useQueryIndexLessonSchedule } from "@/hooks/lessonScheduleQueries";
 import type { UseQueryResult } from "@tanstack/react-query";
@@ -7,7 +7,7 @@ import { Link } from "react-router";
 import { Fragment } from "react/jsx-runtime";
 
 export const WeeklySchedulePage = () => {
-    // queries
+    // * queries
     const {
         data: lessonSchedule,
         isLoading,
@@ -16,9 +16,8 @@ export const WeeklySchedulePage = () => {
         show_week: Number(true),
     }) as UseQueryResult<LessonSchedule[], Error>;
 
-    // views
+    // * views
     if (isError) return <pre>lessonSchedule error</pre>;
-
     return (
         <section className="p-4">
             <h3 className="dashboard_h3">Courses schedule</h3>
@@ -112,6 +111,7 @@ const days = [
     WeekDay.SATURDAY,
 ];
 
+// ritorna un array di lezioni di un certo periodo (1°,2°...) lungo quanto i giorni di days
 const courseListByPeriod = (
     courses: LessonSchedule[],
     lesson_time: number

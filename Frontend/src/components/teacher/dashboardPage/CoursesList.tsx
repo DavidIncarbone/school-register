@@ -12,19 +12,20 @@ import { useQueryIndexCourse } from "@/hooks/coursesQueries";
 import type { Course } from "@/config/types";
 import { useState } from "react";
 import { Link } from "react-router";
-import SkeleCourseCard from "../ui/SkeleCourseCard";
+import SkeleCourseCard from "../../ui/SkeleCourseCard";
 
 export const CoursesList = () => {
-    // queries
+    // * vars
+    const [isHovered, setIsHovered] = useState(false);
+
+    // * queries
     const {
         data: courses,
         isLoading: isCoursesLoading,
         isError: isCoursesError,
     } = useQueryIndexCourse({}) as UseQueryResult<Course[], Error>;
 
-    const [isHovered, setIsHovered] = useState(false);
-
-    // view
+    // * views
     if (isCoursesError) return <pre>courses error - da gestire</pre>;
     return (
         <>

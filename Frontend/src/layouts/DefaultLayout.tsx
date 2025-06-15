@@ -8,26 +8,16 @@ export default function DefaultLayout() {
     const [mainHeight, setMainHeight] = useState(window.innerHeight - 64);
 
     useEffect(() => {
-        // let rafId: number | null = null;
+        // al resize della window, fai il calcolo della height del main (100vh - headerHeight(64px))
+        // throttle per 500ms
         const handleWindowResize = throttle(() => {
             setMainHeight(window.innerHeight - 64);
         }, 500);
-        // const handleWindowResize = () => {
-        //     if (rafId === null) {
-        //         rafId = requestAnimationFrame(() => {
-        //             setMainHeight(window.innerHeight - 64);
-        //             rafId = null;
-        //         });
-        //     }
-        // };
         window.addEventListener("resize", handleWindowResize);
 
         return () => {
             window.removeEventListener("resize", handleWindowResize);
             handleWindowResize.cancel();
-            // if (rafId !== null) {
-            //     cancelAnimationFrame(rafId);
-            // }
         };
     }, []);
 
@@ -46,3 +36,29 @@ export default function DefaultLayout() {
         </>
     );
 }
+
+// =============================================================================
+//
+// =============================================================================
+
+// implementazione con raf
+
+// useEffect(() => {
+// let rafId: number | null = null;
+// const handleWindowResize = () => {
+//     if (rafId === null) {
+//         rafId = requestAnimationFrame(() => {
+//             setMainHeight(window.innerHeight - 64);
+//             rafId = null;
+//         });
+//     }
+// };
+// window.addEventListener("resize", handleWindowResize);
+
+// return () => {
+//     window.removeEventListener("resize", handleWindowResize);
+// if (rafId !== null) {
+//     cancelAnimationFrame(rafId);
+// }
+//     };
+// }, []);

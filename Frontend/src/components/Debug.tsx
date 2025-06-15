@@ -5,7 +5,7 @@ import type { UseQueryResult } from "@tanstack/react-query";
 import { useEffect } from "react";
 
 export const Debug = () => {
-    const { data } = useQueryIndexCourse() as UseQueryResult<Course[], Error>;
+    const { data } = useQueryIndexCourse({}) as UseQueryResult<Course[], Error>;
 
     const storeAssignment = async () => {
         if (data) {

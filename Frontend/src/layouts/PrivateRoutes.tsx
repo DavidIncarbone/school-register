@@ -4,18 +4,22 @@ import { useEffect } from "react";
 import type { User } from "../config/types";
 import { api } from "../services/api";
 import Loader from "../components/ui/Loader";
-import { useQueryIndexPersonalProfile } from "@/hooks/personalProfile";
+import { useQueryIndexPersonalProfile } from "@/hooks/personalProfileQueries";
 
 export default function PrivateRoutes() {
-    // console.log("render private routes");
-    const navigate = useNavigate();
+    // * global store
     const { authUser, setAuthUser, setIsAuthLoading, setProfile } =
         useGlobalStore();
 
+    // * vars
+    const navigate = useNavigate();
+
+    // * queries
     const { data: personalProfile } = useQueryIndexPersonalProfile(
         Boolean(authUser)
     );
 
+    // * side effects
     useEffect(() => {
         const fetchAndSetAuthUser = async () => {
             try {
@@ -40,5 +44,6 @@ export default function PrivateRoutes() {
         }
     }, [personalProfile, setProfile]);
 
+    // * views
     return authUser ? <Outlet /> : <Loader />;
 }
