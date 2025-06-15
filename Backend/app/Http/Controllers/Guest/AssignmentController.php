@@ -36,13 +36,9 @@ class AssignmentController extends Controller
             $subjectId = $teacher->subject_id;
             $courseId = request()->course_id;
             $teacher->courses()->findOrFail($courseId);
-            $assignments = Assignment::where("subject_id", $subjectId)->where("course_id", $courseId)->get();
+            $assignments = Assignment::where("subject_id", $subjectId)->where("course_id", $courseId)->paginate(4);
 
-            return response()->json([
-                'success' => true,
-                'message' => 'Richiesta effettuata con successo',
-                'data' => $assignments,
-            ], 200);
+            return response()->json($assignments, 200);
         } else if ($user->type == "student") {
             $student = Student::where('email', $user->email)->firstOrFail();
             $courseId = $student->course_id;
@@ -50,13 +46,9 @@ class AssignmentController extends Controller
 
             Course::find($student->course_id)->subjects()->findOrFail($subjectId);
 
-            $assignments = Assignment::where("course_id", $courseId)->where("subject_id", $subjectId)->get();
+            $assignments = Assignment::where("course_id", $courseId)->where("subject_id", $subjectId)->paginate(4);
 
-            return response()->json([
-                'success' => true,
-                'message' => 'Richiesta effettuata con successo',
-                'data' => $assignments,
-            ], 200);
+            return response()->json($assignments, 200);
         }
     }
 

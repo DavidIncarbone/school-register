@@ -82,6 +82,15 @@ export type LessonSchedule = {
     lesson_time: number;
 };
 
+export type Assignment = {
+    id: number;
+    course_id: number;
+    subject_id: number;
+    body: string;
+    assignment_date: string;
+    deadline: string;
+};
+
 export type IndexStudentParams = {
     course_id?: number;
     first_name?: string;

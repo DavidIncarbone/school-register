@@ -11,7 +11,7 @@ export const CourseSelect = ({
     onChange: (e: ChangeEvent<HTMLSelectElement>) => void;
 }) => {
     return (
-        <div className="text-lg sm:text-2xl flex flex-wrap justify-center items-center gap-2 mb-2 font-bold">
+        <div className="text-lg sm:text-2xl flex flex-wrap justify-center items-center gap-2 font-bold">
             <p>Selected course:</p>
             <select
                 onChange={onChange}

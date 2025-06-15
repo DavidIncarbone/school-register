@@ -4,7 +4,7 @@ import { api, studentsEndpoint } from "../services/api";
 
 export const useQueryIndexStudent = (
     params: IndexStudentParams,
-    enabled: boolean
+    enabled = true
 ) => {
     return useQuery({
         queryKey: ["students", params],

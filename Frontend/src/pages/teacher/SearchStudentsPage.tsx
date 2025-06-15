@@ -31,7 +31,6 @@ export default function SearchStudentsPage() {
         isError: isCoursesError,
     } = useQueryIndexCourse({}) as UseQueryResult<Course[], Error>;
 
-    // queries
     const {
         data: students,
         isLoading: isStudentsLoading,
@@ -85,7 +84,7 @@ export default function SearchStudentsPage() {
     // view
     if (isCoursesError) return <pre>courses error - da gestire</pre>;
     return (
-        <div className="h-full p-5 text-sm flex flex-col">
+        <div className="h-full p-5 text-sm flex flex-col gap-2">
             {/* ricerca e filtro */}
             <CourseSelect
                 courses={courses}
