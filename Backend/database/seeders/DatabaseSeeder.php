@@ -43,18 +43,16 @@ class DatabaseSeeder extends Seeder
                 $teacher->courses()->attach($courseId);
 
                 for ($j = 1; $j <= 5; $j++) {
-                    // - crea max 5 lesson schedule
-                    if (rand(0, 1)) {
-                        LessonSchedule::factory()->create([
-                            'course_id' => $courseId,
-                            'subject_id' => $subjectId,
-                            'course_name' => $course->name,
-                            'subject_name' => $subject->name,
-                            'day' => $j
-                        ]);
-                    }
+                    // - crea 5 lesson schedule
+                    LessonSchedule::factory()->create([
+                        'course_id' => $courseId,
+                        'subject_id' => $subjectId,
+                        'course_name' => $course->name,
+                        'subject_name' => $subject->name,
+                        'day' => $j
+                    ]);
 
-                    // - crea max 5 assignments
+                    // - crea 0-5 assignments
                     if (rand(0, 1)) {
                         Assignment::factory()->create([
                             'course_id' => $courseId,

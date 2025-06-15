@@ -59,7 +59,7 @@ export const AttendanceFormPage = () => {
                 <div className="space-y-2 overflow-auto h-[500px]">
                     {students &&
                         students.data.map((student, studentIndex) => (
-                            <div className="grid grid-cols-2">
+                            <div key={student.id} className="grid grid-cols-2">
                                 <div key={student.id}>
                                     <span>
                                         {student.first_name} {student.last_name}
@@ -92,6 +92,7 @@ export const AttendanceFormPage = () => {
                         {presences &&
                             presences.data.map((student) => (
                                 <div
+                                    key={student.id}
                                     className="flex
                             "
                                 >

@@ -3,12 +3,20 @@ import type { IndexPresenceParams, Presence } from "@/config/types";
 import { useQueryIndexPresence } from "@/hooks/presencesQueries";
 import type { UseQueryResult } from "@tanstack/react-query";
 import { Link } from "react-router";
+import { DateTime } from "luxon";
 
 export const CourseAttendance = ({
     params,
 }: {
     params: IndexPresenceParams;
 }) => {
+    //  vars
+    const now = DateTime.now().setLocale("en");
+    const isWeekend = ["saturday", "sunday"].includes(
+        now.weekdayLong.toLowerCase()
+    );
+
+    // queries
     const {
         data: todayPresences,
         isLoading: isPresencesLoading,
@@ -32,10 +40,16 @@ export const CourseAttendance = ({
                 </div>
             </div>
             <div className="flex flex-col h-[80%] 3xl:h-[90%] overflow-auto md:rounded-md max-md:border-x">
-                {isPresencesLoading ? (
+                {isWeekend ? (
+                    <div className="h-full flex flex-col justify-center items-center text-center text-yellow-500">
+                        <span>
+                            This operation is restricted on this day of the week
+                        </span>
+                    </div>
+                ) : isPresencesLoading ? (
                     <div className=" animate-pulse bg-zinc-800 h-full" />
                 ) : todayPresences && !todayPresences.total ? (
-                    <div className="h-full flex flex-col justify-center items-center text-yellow-600">
+                    <div className="h-full flex flex-col justify-center items-center text-yellow-500">
                         <span>Attendance has not been taken yet</span>
                         <Link
                             to="/attendance-form"
