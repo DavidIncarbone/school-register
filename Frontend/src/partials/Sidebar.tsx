@@ -18,25 +18,22 @@ export default function Sidebar() {
             >
                 <div
                     className={`${
-                        sidebarHidden && "!translate-x-20"
-                    } h-16 gap-4 flex justify-center items-center !opacity-100 !pointer-events-auto  relative z-50`}
+                        sidebarHidden && "!translate-x-2"
+                    } h-16 flex !opacity-100 !pointer-events-auto  relative z-50`}
                 >
                     <Link
                         to="/"
-                        className="h-11/12 aspect-square flex justify-end grow"
+                        className="h-full flex items-center gap-2 grow capitalize font-bold text-2xl tracking-wider font-serif px-2"
                     >
-                        <Bot
-                            className={`${
-                                sidebarHidden && "!pl-0"
-                            } h-full w-full pl-12`}
-                        />
+                        <Bot className={`size-15`} />
+                        <span>achsios</span>
                     </Link>
-                    <div className="flex justify-end items-end grow pr-4">
+                    <div className="flex items-center pr-4">
                         <ChevronLeft
                             onClick={toggleSidebar}
                             className={`${
                                 sidebarHidden && "rotate-180"
-                            } transition-all box-content p-2 scale-75 cursor-pointer hover:scale-90 border rounded-full`}
+                            } transition-all box-content p-2 scale-75 cursor-pointer hover:scale-80 opacity-70 hover:opacity-100 border rounded-full`}
                         />
                     </div>
                 </div>

@@ -34,7 +34,7 @@ export default function Header() {
                 <>
                     <div
                         className={`${
-                            sidebarHidden && "lg:translate-x-36"
+                            sidebarHidden && "lg:translate-x-64"
                         } transition-transform duration-500 max-sm:hidden flex items-center grow px-4`}
                     >
                         <input
@@ -50,14 +50,16 @@ export default function Header() {
                 {authUser && profile ? (
                     <>
                         <div className="flex items-center gap-6 mr-4">
-                            <Calendar className="size-6" />
-                            <Megaphone className="size-6" />
-                            <Bell className="size-6" />
+                            <Calendar className="size-6 scale-90 hover:scale-100 cursor-pointer opacity-70 hover:opacity-100 transition-all" />
+                            <Megaphone className="size-6 scale-90 hover:scale-100 cursor-pointer opacity-70 hover:opacity-100 transition-all" />
+                            <Bell className="size-6 scale-90 hover:scale-100 cursor-pointer opacity-70 hover:opacity-100 transition-all" />
                         </div>
                         <div
                             onClick={() => navigate("/")}
-                            className="w-12 aspect-square border rounded-full"
-                        />
+                            className="w-12 aspect-square border rounded-full overflow-hidden flex justify-center items-center"
+                        >
+                            <img src="/avatar.jpg" alt="avatar" className="w-11/12 h-11/12 object-cover"/>
+                        </div>
                         <div className="max-md:hidden flex items-center gap-3">
                             <div className="flex flex-col">
                                 <span className="capitalize">
