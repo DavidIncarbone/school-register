@@ -3,15 +3,15 @@ import type { Assignment, Course } from "@/config/types";
 import { useQueryIndexAssignment } from "@/hooks/assignmentsQueries";
 import { useQueryIndexCourse } from "@/hooks/coursesQueries";
 import { useDynamicSearchParams } from "@/hooks/useDynamicSearchParams";
-import { formatDateToDDMMYYYY } from "@/utilities/utils";
 import type { UseQueryResult } from "@tanstack/react-query";
 import { Paperclip, Pencil, Save, Trash2 } from "lucide-react";
 import { useEffect, useRef, useState, type ChangeEvent } from "react";
 
 export const TeacherAssignmentsPage = () => {
     // ! pagina solo per teacher => creare teacher route wrapper !
+    // custom hooks
     const { queryParams, updateSearchParams } = useDynamicSearchParams();
-
+    // queries
     const { data: courses } = useQueryIndexCourse({}) as UseQueryResult<
         Course[],
         Error
@@ -25,6 +25,7 @@ export const TeacherAssignmentsPage = () => {
         "course_id" in queryParams
     ) as UseQueryResult<{ data: Assignment[]; total: number }>;
 
+    // actions
     const handleCourseSelected = async (e: ChangeEvent<HTMLSelectElement>) => {
         const key = "course_id";
         const selectedCourseId = e.target.value;
@@ -86,7 +87,7 @@ const AssignmentHead = () => {
                 Deadline
             </div>
             <div className="grow border flex justify-center items-center">
-                Assignment body
+                Body
             </div>
             <div className=" border w-32 flex justify-center items-center gap-2">
                 Actions

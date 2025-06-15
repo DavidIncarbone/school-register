@@ -33,8 +33,17 @@ export const DailySchedule = () => {
                 {isLoading ? (
                     <SkeleDailyScheduleTable />
                 ) : !dailySchedule?.length ? (
-                    <div className="col-span-full flex justify-center items-center bg-teal-800">
-                        No lessons for today
+                    <div className="col-span-full flex flex-col justify-center items-center bg-teal-800">
+                        <span>No lessons for today!</span>
+                        <span className="lowercase text-xs">
+                            <span>Check your weekly schedule</span>{" "}
+                            <Link
+                                to="/weekly-schedule"
+                                className="italic underline underline-offset-2 hover:!scale-110 transition-transform inline-block"
+                            >
+                                here
+                            </Link>
+                        </span>
                     </div>
                 ) : (
                     dailyScheduleList(dailySchedule)?.map((schedule, i) => (

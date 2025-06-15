@@ -23,7 +23,7 @@ export const WeeklySchedulePage = () => {
         <section className="p-4">
             <h3 className="dashboard_h3">Courses schedule</h3>
             <div className="overflow-auto max-lg:max-w-[92vw] mx-auto">
-                <div className="min-w-[900px] rounded-md border overflow-hidden grid grid-cols-13 capitalize [&>div]:border [&>div]:p-1 [&>div]:h-16 bg-[#242831]">
+                <div className="min-w-[900px] rounded-md border overflow-hidden grid grid-cols-13 capitalize [&>div]:border [&>div]:p-1 [&>div]:h-[62px] bg-[#242831]">
                     <div className="col-span-1"></div>
                     {days.map((day, i) => (
                         <div
