@@ -9,12 +9,14 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 const client = new QueryClient();
 
 createRoot(document.getElementById("root")!).render(
-    // <StrictMode>
-    <QueryClientProvider client={client}>
-        <BrowserRouter>
-            <App />
-        </BrowserRouter>
-        <ReactQueryDevtools initialIsOpen={false} />
-    </QueryClientProvider>
-    // </StrictMode>
+  // <StrictMode>
+  //   Provider che abilita React Query in tutta l'applicazione e accetta come prop "client", l'istanza della classe "QueryClient"
+  <QueryClientProvider client={client}>
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>
+    {/* Tool per gestire le query fatte con React Query da browser */}
+    <ReactQueryDevtools initialIsOpen={false} />
+  </QueryClientProvider>
+  // </StrictMode>
 );
