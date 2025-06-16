@@ -1,6 +1,6 @@
 import { Calendar } from "@/components/ui/calendar";
 import { useGlobalStore } from "@/store/useGlobalStore";
-import { Bot, ChevronLeft, PanelLeftOpen } from "lucide-react";
+import { Bot, PanelLeftOpen } from "lucide-react";
 import { Link, NavLink } from "react-router";
 
 export default function Sidebar() {

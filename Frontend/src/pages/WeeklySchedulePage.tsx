@@ -87,7 +87,7 @@ export const WeeklySchedulePage = () => {
                 </div>
             </div>
             <strong className="mt-2 inline-block lg:hidden landscape:hidden">
-                Rotate the device for better visualisation
+                Rotate the device for better visualization
             </strong>
         </div>
     );

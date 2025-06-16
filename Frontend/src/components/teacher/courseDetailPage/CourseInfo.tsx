@@ -14,25 +14,29 @@ export const CourseInfo = ({
             <img src="/logo.png" className="object-cover rounded-lg" />
             <div className="space-y-2">
                 <h1 className="font-bold text-4xl md:text-5xl lg:text-6xl capitalize ">
-                    {isLoading ? (
-                        <div className="inline-block dots-loader"></div>
-                    ) : (
-                        cachedCourse?.name ?? course?.name ?? "Il tuo corso"
-                    )}
+                    {cachedCourse?.name ??
+                        course?.name ??
+                        (isLoading ? (
+                            <div className="inline-block dots-loader"></div>
+                        ) : (
+                            "Il tuo corso"
+                        ))}
                 </h1>
                 <div className="text-neutral-300 text-xs">
-                    {isLoading ? (
+                    {cachedCourse?.id || course?.id ? (
+                        <>ID: {cachedCourse?.id ?? course?.id}</>
+                    ) : isLoading ? (
                         <div className="inline-block w-5 dots-loader"></div>
                     ) : (
-                        "ID:" + (cachedCourse?.id ?? course?.id ?? " ")
+                        "ID: "
                     )}
                 </div>
                 <div className="max-lg:line-clamp-4 max-md:text-sm">
-                    {isLoading ? (
-                        <div className="inline-block w-5 dots-loader"></div>
-                    ) : (
-                        cachedCourse?.description ?? course?.description
-                    )}
+                    {cachedCourse?.description ??
+                        course?.description ??
+                        (isLoading ? (
+                            <div className="inline-block w-5 dots-loader"></div>
+                        ) : null)}
                 </div>
             </div>
         </div>
