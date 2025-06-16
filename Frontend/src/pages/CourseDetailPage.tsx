@@ -1,23 +1,16 @@
 import { CourseAttendance } from "@/components/teacher/courseDetailPage/CourseAttendance";
 import { CourseInfo } from "@/components/teacher/courseDetailPage/CourseInfo";
 import { CourseStats } from "@/components/teacher/courseDetailPage/CourseStats";
-import type { Course, IndexPresenceParams } from "@/config/types";
+import type { Course } from "@/config/types";
 import { useQueryShowCourse } from "@/hooks/coursesQueries";
 import type { UseQueryResult } from "@tanstack/react-query";
-import { DateTime } from "luxon";
 import { Link, useLocation, useParams } from "react-router";
 
 export const CourseDetailPage = () => {
     // * vars
-    const localDate = DateTime.local(); // localDate da libreria esterna luxon
     const { id } = useParams();
     const location = useLocation();
     const cachedCourse: Course = location.state?.course;
-    const params: IndexPresenceParams = {
-        course_id: Number(id),
-        date: localDate.toISODate(),
-        // date: "2025-06-16", // ! testing
-    };
 
     // * queries
     const {
@@ -54,7 +47,7 @@ export const CourseDetailPage = () => {
                     </div>
                 </div>
                 <div className="max-md:h-[500px] grow">
-                    <CourseAttendance params={params} />
+                    <CourseAttendance courseId={Number(id)} />
                 </div>
             </div>
         </div>

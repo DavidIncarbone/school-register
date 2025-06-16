@@ -4,15 +4,22 @@ import { useQueryIndexPresence } from "@/hooks/presencesQueries";
 import type { UseQueryResult } from "@tanstack/react-query";
 import { Link } from "react-router";
 import { DateTime } from "luxon";
+import { useState } from "react";
+import { checkIsFuture } from "@/utilities/utils";
 
-export const CourseAttendance = ({
-    params,
-}: {
-    params: IndexPresenceParams;
-}) => {
+export const CourseAttendance = ({ courseId }: { courseId: number }) => {
     // * vars
     // da libreria esterna luxon prendo datetima odierno
     const now = DateTime.now().setLocale("en");
+    const [attendanceDate, setAttendanceDate] = useState<string>(
+        now.toISODate()
+    );
+    const params: IndexPresenceParams = {
+        course_id: courseId,
+        date: attendanceDate,
+    };
+    // controllo se è una data futura
+    const isFuture = checkIsFuture(attendanceDate); // todo: fare controllo anche in be
     // controllo se è festivo o feriale
     const isWeekend = ["saturday", "sunday"].includes(
         now.weekdayLong.toLowerCase()
@@ -23,7 +30,7 @@ export const CourseAttendance = ({
         data: todayPresences,
         isLoading: isPresencesLoading,
         isError: isPresencesError,
-    } = useQueryIndexPresence(params, true) as UseQueryResult<
+    } = useQueryIndexPresence(params, !isFuture) as UseQueryResult<
         { data: Presence[]; total: number },
         Error
     >;
@@ -32,10 +39,15 @@ export const CourseAttendance = ({
     if (isPresencesError) return <pre>Presences error - da gestire</pre>;
     return (
         <div className="h-full">
-            <h3 className="font-semibold text-xl">
-                Today's attendance - {}
-                {new Date().toLocaleDateString()}
-            </h3>
+            <div className="font-semibold text-xl">
+                <span>Attendance -</span>{" "}
+                <input
+                    type="date"
+                    value={attendanceDate}
+                    max={now.toISODate()}
+                    onChange={(e) => setAttendanceDate(e.target.value)}
+                />
+            </div>
             <div className="grid grid-cols-2 px-2 py-1 capitalize font-semibold pr-4 max-md:border-x">
                 <div>student</div>
                 <div className="grid grid-cols-3">
@@ -101,11 +113,7 @@ const AttendanceRecord = ({ presence }: { presence: Presence }) => {
     );
 };
 
-const ZeroAttendanceMessage = ({
-    params,
-}: {
-    params: IndexPresenceParams;
-}) => {
+const ZeroAttendanceMessage = ({ params }: { params: IndexPresenceParams }) => {
     return (
         <div className="h-full flex flex-col justify-center items-center text-yellow-500">
             <span>Attendance has not been taken yet</span>

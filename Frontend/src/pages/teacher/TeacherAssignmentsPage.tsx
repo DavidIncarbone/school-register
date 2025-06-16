@@ -113,7 +113,7 @@ const AssignmentRecord = ({ assignment }: { assignment: Assignment }) => {
         <div
             className={`${
                 isModifying && "italic"
-            } flex odd:bg-zinc-800 3xl:h-40`}
+            } flex odd:bg-zinc-800 even:bg-zinc-950 3xl:h-40`}
         >
             <input
                 type="date"
