@@ -38,12 +38,12 @@ export const QuickActions = ({
                         >
                             <div>
                                 <div
-                                    className={`${action.iconColor} size-10 3xl:size-16 3xl:[&>*]:scale-150 flex justify-center items-center rounded-sm`}
+                                    className={`${action.iconColor} size-10 3xl:size-15 3xl:[&>*]:scale-125 flex justify-center items-center rounded-sm`}
                                 >
                                     {action.icon}
                                 </div>
                             </div>
-                            <div className="grow flex items-center">
+                            <div className="max-lg:grow flex items-center">
                                 <span
                                     className={`${
                                         action.label === "Today's Attendance" &&

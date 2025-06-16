@@ -28,7 +28,7 @@ export default function DefaultLayout() {
                 <Header />
                 <main
                     style={{ minHeight: mainHeight, height: mainHeight }}
-                    className="[&>*]:bg-[#2a2d33] bg-[#2a2d33]"
+                    className="[&>*]:bg-[#2a2d33] bg-[#2a2d33] pb-2"
                 >
                     <Outlet />
                 </main>
