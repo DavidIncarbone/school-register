@@ -19,8 +19,8 @@ export const WeeklySchedulePage = () => {
     // * views
     if (isError) return <pre>lessonSchedule error</pre>;
     return (
-        <section className="p-4">
-            <h3 className="dashboard_h3">Courses schedule</h3>
+        <div className="px-5 py-2">
+            <h1 className="title_h1">Courses schedule</h1>
             <div className="overflow-auto max-lg:max-w-[92vw] mx-auto">
                 <div className="min-w-[900px] rounded-md border overflow-hidden grid grid-cols-13 capitalize [&>div]:border [&>div]:p-1 [&>div]:h-[62px] bg-[#242831]">
                     <div className="col-span-1"></div>
@@ -89,7 +89,7 @@ export const WeeklySchedulePage = () => {
             <strong className="mt-2 inline-block lg:hidden landscape:hidden">
                 Rotate the device for better visualisation
             </strong>
-        </section>
+        </div>
     );
 };
 

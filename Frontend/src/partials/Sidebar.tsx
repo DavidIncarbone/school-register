@@ -1,6 +1,6 @@
 import { Calendar } from "@/components/ui/calendar";
 import { useGlobalStore } from "@/store/useGlobalStore";
-import { Bot, ChevronLeft } from "lucide-react";
+import { Bot, ChevronLeft, PanelLeftOpen } from "lucide-react";
 import { Link, NavLink } from "react-router";
 
 export default function Sidebar() {
@@ -19,7 +19,7 @@ export default function Sidebar() {
                 <div
                     className={`${
                         sidebarHidden && "!translate-x-2"
-                    } h-16 flex !opacity-100 !pointer-events-auto  relative z-50`}
+                    } h-16 flex !opacity-100 !pointer-events-auto gap-4  relative z-50`}
                 >
                     <Link
                         to="/"
@@ -28,12 +28,12 @@ export default function Sidebar() {
                         <Bot className={`size-15`} />
                         <span>achsios</span>
                     </Link>
-                    <div className="flex items-center pr-4">
-                        <ChevronLeft
+                    <div className={`transition-all flex items-center pr-4`}>
+                        <PanelLeftOpen
                             onClick={toggleSidebar}
                             className={`${
-                                sidebarHidden && "rotate-180"
-                            } transition-all box-content p-2 scale-75 cursor-pointer hover:scale-80 opacity-70 hover:opacity-100 border rounded-full`}
+                                sidebarHidden && "rotate-y-0"
+                            } transition-all size-6 cursor-pointer opacity-70 hover:opacity-100 -rotate-y-180`}
                         />
                     </div>
                 </div>

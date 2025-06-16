@@ -47,9 +47,7 @@ export const TeacherAssignmentsPage = () => {
     return (
         <div className="px-5 py-2">
             <div className="flex flex-col items-start mb-2">
-                <h1 className="capitalize text-4xl font-semibold self-center">
-                    assignments
-                </h1>
+                <h1 className="title_h1 self-center">assignments</h1>
                 <CourseSelect
                     courses={courses}
                     queryParams={queryParams}

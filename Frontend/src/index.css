@@ -112,6 +112,9 @@ body {
     .dashboard_h3 {
         @apply text-xl font-semibold mb-2;
     }
+    .title_h1 {
+        @apply text-3xl mb-2 font-bold capitalize;
+    }
 
     /* HTML: <div class="loader"></div> */
     .loader {

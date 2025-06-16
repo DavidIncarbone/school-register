@@ -40,7 +40,7 @@ export default function Header() {
                         <input
                             type="text"
                             className="w-full md:w-[300px] lg:w-[400px]"
-                            placeholder="Search for something.."
+                            placeholder="Search for something..."
                         />
                     </div>
                 </>

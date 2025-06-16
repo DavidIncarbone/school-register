@@ -85,14 +85,14 @@ export default function SearchStudentsPage() {
     // view
     if (isCoursesError) return <pre>courses error - da gestire</pre>;
     return (
-        <div className="h-full p-5 text-sm flex flex-col gap-2">
+        <div className="h-full px-5 py-2 text-sm flex flex-col">
             {/* ricerca e filtro */}
             <CourseSelect
                 courses={courses}
                 queryParams={queryParams}
                 onChange={handleCourseSelected}
             />
-            <div className="flex flex-wrap gap-4 items-end pb-4 mb-4 border-b">
+            <div className="flex flex-wrap gap-4 items-end mb-2">
                 <SearchStudentInput
                     onChange={debouncedHandleInputChange}
                     queryParams={queryParams}
@@ -117,7 +117,7 @@ export default function SearchStudentsPage() {
                         activeSort={activeSort}
                         onClick={handleSortingColClick}
                     />
-                    <div className="overflow-auto grow ">
+                    <div className="overflow-auto grow">
                         <StudentsList
                             students={students}
                             isLoading={isStudentsLoading}
