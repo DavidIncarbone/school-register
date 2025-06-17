@@ -1,12 +1,15 @@
 import { CourseAttendance } from "@/components/teacher/courseDetailPage/CourseAttendance";
 import { CourseInfo } from "@/components/teacher/courseDetailPage/CourseInfo";
 import { CourseStats } from "@/components/teacher/courseDetailPage/CourseStats";
-import type { Course } from "@/config/types";
+import { UserType, type Course } from "@/config/types";
 import { useQueryShowCourse } from "@/hooks/coursesQueries";
+import { useGlobalStore } from "@/store/useGlobalStore";
 import type { UseQueryResult } from "@tanstack/react-query";
 import { Link, useLocation, useParams } from "react-router";
 
 export const CourseDetailPage = () => {
+    // * global store
+    const { authUser } = useGlobalStore();
     // * vars
     const { id } = useParams();
     const location = useLocation();
@@ -32,7 +35,11 @@ export const CourseDetailPage = () => {
                 <CourseStats cachedCourse={cachedCourse} course={course} />
             </div>
             <div className="md:h-2/3 lg:h-auto overflow-hidden flex max-md:flex-col gap-6 max-lg:grow">
-                <div className="md:w-1/2 lg:w-7/12 h-full">
+                <div
+                    className={`${
+                        authUser?.type === UserType.STUDENT && "!w-full"
+                    } md:w-1/2 lg:w-7/12 h-full`}
+                >
                     <div className="gap-2 mb-4 flex flex-wrap">
                         {navLinks(Number(id)).map(
                             ({ label, to, className }) => (
@@ -46,9 +53,11 @@ export const CourseDetailPage = () => {
                         <CourseAnnouncements />
                     </div>
                 </div>
-                <div className="max-md:h-[500px] grow">
-                    <CourseAttendance courseId={Number(id)} />
-                </div>
+                {authUser?.type === UserType.TEACHER && (
+                    <div className="max-md:h-[500px] grow">
+                        <CourseAttendance courseId={Number(id)} />
+                    </div>
+                )}
             </div>
         </div>
     );

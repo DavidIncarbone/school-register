@@ -1,14 +1,17 @@
 import { CourseSelect } from "@/components/teacher/CourseSelect";
-import type { Assignment, Course } from "@/config/types";
+import { UserType, type Assignment, type Course } from "@/config/types";
 import { useQueryIndexAssignment } from "@/hooks/assignmentsQueries";
 import { useQueryIndexCourse } from "@/hooks/coursesQueries";
 import { useDynamicSearchParams } from "@/hooks/useDynamicSearchParams";
+import { useGlobalStore } from "@/store/useGlobalStore";
 import type { UseQueryResult } from "@tanstack/react-query";
 import { Paperclip, Pencil, Save, Trash2 } from "lucide-react";
 import { useEffect, useState, type ChangeEvent } from "react";
 
 // ! pagina solo per teacher => creare teacher route wrapper !
 export const TeacherAssignmentsPage = () => {
+    // * global store
+    const { authUser } = useGlobalStore();
     // * custom hooks
     const { queryParams, updateSearchParams } = useDynamicSearchParams();
     // * queries
@@ -48,11 +51,13 @@ export const TeacherAssignmentsPage = () => {
         <div className="px-5 py-2">
             <div className="flex flex-col items-start mb-2">
                 <h1 className="title_h1 self-center">assignments</h1>
-                <CourseSelect
-                    courses={courses}
-                    queryParams={queryParams}
-                    onChange={handleCourseSelected}
-                />
+                {authUser?.type === UserType.TEACHER && (
+                    <CourseSelect
+                        courses={courses}
+                        queryParams={queryParams}
+                        onChange={handleCourseSelected}
+                    />
+                )}
             </div>
             {/* assignments list (per corso) */}
             <div className="max-lg:w-[92dvw] mx-auto overflow-auto">
