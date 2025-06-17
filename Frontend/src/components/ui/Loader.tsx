@@ -8,7 +8,7 @@ export default function Loader({
   return (
     <>
       {isContained ? (
-        <div className="absolute w-full h-full">
+        <div className="relative w-full h-full">
           <span className="text-transparent">.</span>
           <div className={`w-full h-full flex justify-center items-center`}>
             <span
