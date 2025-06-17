@@ -99,7 +99,7 @@ export const AddAssignment = ({
               </p>
             )}
           </div>
-          <div className="flex flex-col border border-white p-3">
+          <div className="flex flex-col border border-white p-3 h-[118.67px]">
             <label htmlFor="deadline">Deadline</label>
             <input
               type="date"
@@ -107,14 +107,14 @@ export const AddAssignment = ({
               {...register("deadline")}
               id="deadline"
               max={deadlineDate}
-              className="border border-white p-3 h[118,67px]"
+              className="border border-white p-3 "
             />
             {errors.deadline && (
               <p className="text-red-500 text-sm">{errors.deadline.message}</p>
             )}
           </div>
         </div>
-        <div className="form-">
+        <div className="">
           <label htmlFor="body">Body</label>
           <p className="text-xs text-white/80 pb-1">
             Max. 10 rows | Max. 255 charachters
@@ -127,9 +127,11 @@ export const AddAssignment = ({
             rows={10}
             maxLength={255}
           ></textarea>
-          {errors.body && (
-            <p className="text-red-500 text-sm">{errors.body?.message}</p>
-          )}
+          <div className="h-[20px]">
+            {errors.body && (
+              <p className="text-red-500 text-sm">{errors.body?.message}</p>
+            )}
+          </div>
         </div>
         <div className="flex gap-3 items-center mt-2">
           <button type="submit" className=" btn-pretty">
