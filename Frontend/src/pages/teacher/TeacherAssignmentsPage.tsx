@@ -17,6 +17,7 @@ export const TeacherAssignmentsPage = () => {
 
   //   variables
   const [isLoading, setIsLoading] = useState(false);
+  const [isFormShowing, setIsFormShowing] = useState(false);
   // * queries
   const { data: courses } = useQueryIndexCourse({}) as UseQueryResult<
     Course[],
@@ -39,6 +40,8 @@ export const TeacherAssignmentsPage = () => {
     updateSearchParams([{ key, value: selectedCourseId }]);
   };
 
+  const handleForm = () => setIsFormShowing(!isFormShowing);
+
   // * side effects
   useEffect(() => {
     if (courses && !("course_id" in queryParams)) {
@@ -52,23 +55,38 @@ export const TeacherAssignmentsPage = () => {
     <div className="px-5 py-2">
       <div className="flex flex-col items-start mb-2">
         <h1 className="title_h1 self-center">assignments</h1>
-        <div className="text-lg sm:text-2xl flex flex-wrap justify-center items-center gap-2 font-bold">
-          <p>Selected course:</p>
-          <CourseSelect
-            courses={courses}
-            queryParams={queryParams}
-            onChange={handleCourseSelected}
-          />
+        <div className="text-lg sm:text-2xl flex flex-wrap justify-center items-center gap-2 font-bold w-full ">
+          <div className="flex justify-between items-center w-full ">
+            <div>
+              <p>Selected course:</p>
+              <CourseSelect
+                courses={courses}
+                queryParams={queryParams}
+                onChange={handleCourseSelected}
+              />
+            </div>
+            {!isFormShowing ? (
+              <button className="btn-pretty" onClick={handleForm}>
+                +
+              </button>
+            ) : (
+              <button className="btn-pretty" onClick={handleForm}>
+                -
+              </button>
+            )}
+          </div>
         </div>
       </div>
-      <section id="formSection">
-        <AddAssignment
-          courses={courses}
-          queryParams={queryParams}
-          isLoading={isLoading}
-          setIsLoading={setIsLoading}
-        />
-      </section>
+      {isFormShowing && (
+        <section id="formSection" className="mb-5">
+          <AddAssignment
+            courses={courses}
+            queryParams={queryParams}
+            isLoading={isLoading}
+            setIsLoading={setIsLoading}
+          />
+        </section>
+      )}
       {/* assignments list (per corso) */}
       <div className="max-lg:w-[92dvw] mx-auto overflow-auto">
         <div className="min-w-fit">

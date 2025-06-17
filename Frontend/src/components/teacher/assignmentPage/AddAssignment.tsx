@@ -33,8 +33,16 @@ export const AddAssignment = ({
   setIsLoading,
 }: AddAssignmentProps) => {
   console.log(courses);
+
+  // vars
   const startDate = new Date().toISOString().split("T")[0];
   const deadlineDate = new Date("2025/06/31").toISOString().split("T")[0];
+  const currentCourse = courses?.find(
+    (course) => course.id == queryParams.course_id
+  );
+  const errors = new Error();
+
+  // console.log(queryParams);
 
   //   queries
 
@@ -54,7 +62,10 @@ export const AddAssignment = ({
 
   return (
     <section className="mt-5">
-      <h3 className="text-white">Add Assignment</h3>
+      <h2 className="text-white text-2xl">
+        Add Assignment for{" "}
+        <span className="underline capitalize">{currentCourse?.name}</span>
+      </h2>
       <form
         action=""
         id="AssignmentForm"
@@ -63,8 +74,11 @@ export const AddAssignment = ({
       >
         <div className="grid grid-cols-3 gap-4">
           <div className="form-select flex flex-col">
-            <label htmlFor="courses">Selected course</label>
-            <CourseSelect courses={courses} queryParams={queryParams} />
+            <input
+              type="hidden"
+              name="course_id"
+              value={queryParams.course_id}
+            />
           </div>
           <div className="flex flex-col">
             <label htmlFor="start">Start</label>
@@ -98,12 +112,14 @@ export const AddAssignment = ({
             maxLength={255}
           ></textarea>
         </div>
-        <button type="submit" className="mt-2 btn-pretty">
-          Add Assignment
-        </button>
-        <button type="reset" className="btn">
-          Reset
-        </button>
+        <div className="flex gap-3 items-center mt-2">
+          <button type="submit" className=" btn-pretty">
+            Add Assignment
+          </button>
+          <button type="reset" className="btn-pretty">
+            Reset
+          </button>
+        </div>
       </form>
     </section>
   );
