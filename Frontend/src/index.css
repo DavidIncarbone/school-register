@@ -193,7 +193,7 @@ body {
     }
 
     .dashboard {
-        @apply px-5 gap-4 3xl:gap-6 h-full [&>*]:bg-zinc-800 [&>*]:rounded-md [&>*]:p-2;
+        @apply px-5 gap-4 3xl:gap-6 min-h-full [&>*]:bg-zinc-800 [&>*]:rounded-md [&>*]:p-2;
     }
 
     .dashboard.student-dashboard {

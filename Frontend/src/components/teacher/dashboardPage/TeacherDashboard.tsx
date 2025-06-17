@@ -4,10 +4,31 @@ import { DailySchedule } from "@/components/DailySchedule";
 import { useTakeAttendance } from "@/hooks/useTakeAttendance";
 import { GeneralAnnouncements } from "@/components/GeneralAnnouncements";
 import { CoursesCommunications } from "./CoursesCommunications";
+import { useEffect } from "react";
+import toast from "react-hot-toast";
 
 export const TeacherDashboard = () => {
     // * custom hooks
     const { takeAttendance } = useTakeAttendance();
+
+    useEffect(() => {
+        if (takeAttendance) {
+            toast.custom(
+                (t) => (
+                    <div
+                        className={`transition-all duration-300 transform px-4 py-2 rounded shadow bg-yellow-100 text-yellow-800 ${
+                            t.visible
+                                ? "opacity-100 scale-100 translate-y-0"
+                                : "opacity-0 scale-70 -translate-y-2"
+                        }`}
+                    >
+                        ⚠️ Take attendance before class starts.
+                    </div>
+                ),
+                { position: "top-center" }
+            );
+        }
+    }, [takeAttendance]);
 
     // * views
     return (

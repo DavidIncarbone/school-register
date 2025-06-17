@@ -77,7 +77,7 @@ const DashboardAssignments = () => {
     return (
         <>
             <TitleAndNavigation
-                title="Assignments"
+                title="Latest Assignments"
                 path="/teacher-assignments"
             />
             <div className="grid grid-cols-3 border rounded-t-sm text-center">
@@ -104,7 +104,7 @@ const DashboardAssignments = () => {
                           key={as.id}
                           className="grid grid-cols-3 border last:rounded-b-sm"
                       >
-                          <div className="flex justify-center items-center border-r">
+                          <div className="flex justify-center items-center border-r capitalize">
                               {as.subject.name}
                           </div>
                           <div className="line-clamp-2 col-span-2 p-1">

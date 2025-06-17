@@ -28,7 +28,7 @@ export const QuickActions = ({
                     to={action.path}
                     className={`${
                         action.path === "/attendance-form" && takeAttendance
-                            ? "!bg-red-950"
+                            ? "!bg-red-950 animate-pulse"
                             : action.path === "/attendance-form" &&
                               !takeAttendance &&
                               "hidden"
@@ -36,6 +36,11 @@ export const QuickActions = ({
                             ${
                                 authUser?.type === UserType.STUDENT &&
                                 action.path === "/teacher/search-students" &&
+                                "hidden"
+                            }
+                            ${
+                                authUser?.type === UserType.TEACHER &&
+                                action.path === "/subjects" &&
                                 "hidden"
                             }
                             max-md:aspect-square max-md:h-24 rounded-md bg-slate-900 hover:bg-slate-950 active:bg-black p-2 flex flex-col justify-center items-center text-center text-xs 3xl:text-lg gap-1`}
@@ -83,6 +88,12 @@ const quickActions = [
         icon: <CalendarDays />,
         iconColor: "bg-green-500",
         label: "Weekly schedule",
+    },
+    {
+        path: "/subjects",
+        icon: <LayoutList />,
+        iconColor: "bg-blue-500",
+        label: "Subjects",
     },
     {
         path: "/teacher/search-students",
