@@ -67,7 +67,7 @@ const navLinks = (courseId: number) => {
     return [
         {
             label: "Assignments",
-            to: `/teacher-assignments?course_id=${courseId}`,
+            to: `/assignments?course_id=${courseId}`,
             className: "btn-pretty !text-yellow-300",
         },
         {

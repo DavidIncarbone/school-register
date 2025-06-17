@@ -11,7 +11,7 @@ import type { UseQueryResult } from "@tanstack/react-query";
 import { useEffect, useState, type ChangeEvent } from "react";
 
 // ! pagina solo per teacher => creare teacher route wrapper !
-export const TeacherAssignmentsPage = () => {
+export const AssignmentsPage = () => {
     // * global store
     const { authUser } = useGlobalStore();
     // * custom hooks

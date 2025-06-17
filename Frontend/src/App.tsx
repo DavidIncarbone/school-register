@@ -13,8 +13,12 @@ import { StudentDetailPage } from "./pages/StudentDetailPage";
 import { AttendanceFormPage } from "./pages/teacher/AttendanceFormPage";
 import { WeeklySchedulePage } from "./pages/WeeklySchedulePage";
 import { Debug } from "./components/Debug";
-import { TeacherAssignmentsPage } from "./pages/teacher/TeacherAssignmentsPage";
+import { AssignmentsPage } from "./pages/AssignmentsPage";
 import { Toaster } from "react-hot-toast";
+import { SubjectsPage } from "./pages/student/SubjectsPage";
+import { Unauthorized } from "./pages/Unauthorized";
+import { RequireRole } from "./components/RequireRole";
+import { UserType } from "./config/types";
 
 function App() {
     // collaterals effect
@@ -39,10 +43,6 @@ function App() {
                     <Route Component={PrivateRoutes}>
                         <Route index Component={DashboardPage} />
                         <Route
-                            path="/teacher/search-students"
-                            Component={SearchStudentsPage}
-                        />
-                        <Route
                             path="/courses/:id"
                             Component={CourseDetailPage}
                         />
@@ -51,16 +51,36 @@ function App() {
                             Component={StudentDetailPage}
                         />
                         <Route
-                            path="/attendance-form"
-                            Component={AttendanceFormPage}
-                        />
-                        <Route
                             path="/weekly-schedule"
                             Component={WeeklySchedulePage}
                         />
                         <Route
-                            path="/teacher-assignments"
-                            Component={TeacherAssignmentsPage}
+                            path="/assignments"
+                            Component={AssignmentsPage}
+                        />
+                        <Route
+                            path="/search-students"
+                            element={
+                                <RequireRole role={UserType.TEACHER}>
+                                    <SearchStudentsPage />
+                                </RequireRole>
+                            }
+                        />
+                        <Route
+                            path="/attendance-form"
+                            element={
+                                <RequireRole role={UserType.TEACHER}>
+                                    <AttendanceFormPage />
+                                </RequireRole>
+                            }
+                        />
+                        <Route
+                            path="/subjects"
+                            element={
+                                <RequireRole role={UserType.STUDENT}>
+                                    <SubjectsPage />
+                                </RequireRole>
+                            }
                         />
                     </Route>
 
@@ -68,6 +88,7 @@ function App() {
                     <Route Component={PublicRoutes}>
                         <Route path="/login" Component={LoginPage} />
                         <Route path="/register" Component={RegistrationPage} />
+                        <Route path="/unauthorized" Component={Unauthorized} />
                     </Route>
                 </Route>
             </Routes>

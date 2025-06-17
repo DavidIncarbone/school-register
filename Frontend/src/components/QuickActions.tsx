@@ -35,7 +35,7 @@ export const QuickActions = ({
                     } 
                             ${
                                 authUser?.type === UserType.STUDENT &&
-                                action.path === "/teacher/search-students" &&
+                                action.path === "/search-students" &&
                                 "hidden"
                             }
                             ${
@@ -96,7 +96,7 @@ const quickActions = [
         label: "Subjects",
     },
     {
-        path: "/teacher/search-students",
+        path: "/search-students",
         icon: <LayoutList />,
         iconColor: "bg-blue-500",
         label: "Students list",
@@ -108,7 +108,7 @@ const quickActions = [
         label: "Exams",
     },
     {
-        path: "/teacher-assignments",
+        path: "/assignments",
         icon: <NotebookPen />,
         iconColor: "bg-amber-500",
         label: "Assignments",
