@@ -5,6 +5,7 @@ import { useQueryIndexAssignment } from "@/hooks/assignmentsQueries";
 import { useQueryIndexPresence } from "@/hooks/presencesQueries";
 import { useGlobalStore } from "@/store/useGlobalStore";
 import type { UseQueryResult } from "@tanstack/react-query";
+import ReactECharts from "echarts-for-react";
 
 export const StudentDashboard = () => {
     // * global store
@@ -53,6 +54,48 @@ export const StudentDashboard = () => {
     );
 };
 
+const option = {
+    tooltip: {
+        trigger: "item",
+    },
+    legend: {
+        orient: "vertical",
+        top: "0",
+        left: "0",
+        color: "white"
+    },
+    series: [
+        {
+            name: "Access From",
+            type: "pie",
+            radius: ["40%", "70%"],
+            avoidLabelOverlap: false,
+            label: {
+                show: false,
+                position: "center",
+            },
+            emphasis: {
+                label: {
+                    show: true,
+                    fontSize: 40,
+                    fontWeight: "bold",
+                    color: "white" 
+                },
+            },
+            // labelLine: {
+            //     show: false,
+            // },
+            data: [
+                { value: 1048, name: "Search Engine" },
+                { value: 735, name: "Direct" },
+                { value: 580, name: "Email" },
+                { value: 484, name: "Union Ads" },
+                { value: 300, name: "Video Ads" },
+            ],
+        },
+    ],
+};
+
 const StudentAttendanceChart = ({
     total_days,
     // total_presences,
@@ -62,10 +105,5 @@ const StudentAttendanceChart = ({
     total_presences?: number;
     presences_percentage?: number;
 }) => {
-    return (
-        <>
-            <div>days: {total_days}</div>
-            <div>rate: {presences_percentage}</div>
-        </>
-    );
+    return <ReactECharts option={option} />;
 };
