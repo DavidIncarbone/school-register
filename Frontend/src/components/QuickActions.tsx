@@ -1,3 +1,4 @@
+import { UserType } from "@/config/types";
 import { useGlobalStore } from "@/store/useGlobalStore";
 import {
     BarChart3,
@@ -21,45 +22,44 @@ export const QuickActions = ({
     // * views
     return (
         <>
-            {authUser?.type === "teacher" ? (
-                <>
-                    {quickActions.map((action, i) => (
-                        <Link
-                            key={i}
-                            to={action.path}
+            {quickActions.map((action, i) => (
+                <Link
+                    key={i}
+                    to={action.path}
+                    className={`${
+                        action.path === "/attendance-form" && takeAttendance
+                            ? "!bg-red-950"
+                            : action.path === "/attendance-form" &&
+                              !takeAttendance &&
+                              "hidden"
+                    } 
+                            ${
+                                authUser?.type === UserType.STUDENT &&
+                                action.path === "/teacher/search-students" &&
+                                "hidden"
+                            }
+                            max-md:aspect-square max-md:h-24 rounded-md bg-slate-900 hover:bg-slate-950 active:bg-black p-2 flex flex-col justify-center items-center text-center text-xs 3xl:text-lg gap-1`}
+                >
+                    <div>
+                        <div
+                            className={`${action.iconColor} size-10 3xl:size-15 3xl:[&>*]:scale-125 flex justify-center items-center rounded-sm`}
+                        >
+                            {action.icon}
+                        </div>
+                    </div>
+                    <div className="max-lg:grow flex items-center">
+                        <span
                             className={`${
                                 action.label === "Today's Attendance" &&
-                                takeAttendance
-                                    ? "!bg-red-950"
-                                    : action.label === "Today's Attendance" &&
-                                      !takeAttendance &&
-                                      "hidden"
-                            } max-md:aspect-square max-md:h-24 rounded-md bg-slate-900 hover:bg-slate-950 active:bg-black p-2 flex flex-col justify-center items-center text-center text-xs 3xl:text-lg gap-1`}
+                                takeAttendance &&
+                                "!text-red-500"
+                            }`}
                         >
-                            <div>
-                                <div
-                                    className={`${action.iconColor} size-10 3xl:size-15 3xl:[&>*]:scale-125 flex justify-center items-center rounded-sm`}
-                                >
-                                    {action.icon}
-                                </div>
-                            </div>
-                            <div className="max-lg:grow flex items-center">
-                                <span
-                                    className={`${
-                                        action.label === "Today's Attendance" &&
-                                        takeAttendance &&
-                                        "!text-red-500"
-                                    }`}
-                                >
-                                    {action.label}
-                                </span>
-                            </div>
-                        </Link>
-                    ))}
-                </>
-            ) : (
-                <div>quick actions students</div>
-            )}
+                            {action.label}
+                        </span>
+                    </div>
+                </Link>
+            ))}
         </>
     );
 };

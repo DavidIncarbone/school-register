@@ -36,7 +36,7 @@ export type Student = {
     email: string;
 };
 
-export type Profile = (Student | Teacher) & {
+export type Profile = (Student & Teacher) & {
     subject_name?: string;
     subject_description?: string;
     course_name?: string;
@@ -75,6 +75,7 @@ export type Presence = {
 };
 
 export type LessonSchedule = {
+    subject_name: number;
     course_name: string;
     subject_id: number;
     course_id: number;
@@ -108,7 +109,7 @@ export type IndexPresenceParams = {
 export type IndexLessonScheduleParams = {
     show_week?: number;
 };
-export type IndexLessonAssignmentsParams =
+export type IndexAssignmentsParams =
     | {
           course_id?: number;
           sort?: "by_assignment_date" | "by_deadline";

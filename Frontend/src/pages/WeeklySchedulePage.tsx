@@ -1,12 +1,15 @@
 import { SkeleWeeklyScheduleTable } from "@/components/ui/SkeleWeeklyScheduleTable";
 import { periods } from "@/config/globals";
-import type { LessonSchedule } from "@/config/types";
+import { UserType, type LessonSchedule } from "@/config/types";
 import { useQueryIndexLessonSchedule } from "@/hooks/lessonScheduleQueries";
+import { useGlobalStore } from "@/store/useGlobalStore";
 import type { UseQueryResult } from "@tanstack/react-query";
 import { Link } from "react-router";
 import { Fragment } from "react/jsx-runtime";
 
 export const WeeklySchedulePage = () => {
+    // * global store
+    const { authUser } = useGlobalStore();
     // * queries
     const {
         data: lessonSchedule,
@@ -45,15 +48,15 @@ export const WeeklySchedulePage = () => {
                                         {courseListByPeriod(
                                             lessonSchedule,
                                             lessonTime.period
-                                        ).map((course, i) => (
+                                        ).map((lesson, i) => (
                                             <div
                                                 className="col-span-2 flex justify-center items-center"
                                                 key={i}
                                             >
                                                 <div className="size-full mx-2">
-                                                    {course && (
+                                                    {lesson && (
                                                         <Link
-                                                            to={`/courses/${course.course_id}`}
+                                                            to={`/courses/${lesson.course_id}`}
                                                             style={{
                                                                 background: `hsl(${
                                                                     i * 45
@@ -71,9 +74,10 @@ export const WeeklySchedulePage = () => {
                                                                 className="w-2 rounded-full z-20 h-3/5 left-2"
                                                             ></div>
                                                             <span className="font-semibold">
-                                                                {
-                                                                    course.course_name
-                                                                }
+                                                                {authUser?.type ===
+                                                                UserType.STUDENT
+                                                                    ? lesson.subject_name
+                                                                    : lesson.course_name}
                                                             </span>
                                                         </Link>
                                                     )}

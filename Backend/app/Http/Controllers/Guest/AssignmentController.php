@@ -42,13 +42,19 @@ class AssignmentController extends Controller
         } else if ($user->type == "student") {
             $student = Student::where('email', $user->email)->firstOrFail();
             $courseId = $student->course_id;
-            $subjectId = request()->subject_id;
 
-            Course::find($student->course_id)->subjects()->findOrFail($subjectId);
+            $assignments = Assignment::where("course_id", $courseId)->orderBy('assignment_date', 'desc');
+            if (request()->subject_id) {
+                $subjectId = request()->subject_id;
+                Course::find($student->course_id)->subjects()->findOrFail($subjectId);
+                $assignments->where("subject_id", $subjectId);
+            }
 
-            $assignments = Assignment::where("course_id", $courseId)->where("subject_id", $subjectId)->paginate(4);
+            $result = $assignments->orderBy('assignment_date', 'desc')->paginate(4);
 
-            return response()->json($assignments, 200);
+            Log::info($result);
+
+            return response()->json($result);
         }
     }
 

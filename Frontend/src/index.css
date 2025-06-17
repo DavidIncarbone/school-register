@@ -182,30 +182,48 @@ body {
         scrollbar-width: none;
     }
 
-    .teacher-dashboard {
+    .dashboard {
+        @apply px-5 gap-4 3xl:gap-6 h-full [&>*]:bg-zinc-800 [&>*]:rounded-md [&>*]:p-2;
+    }
+
+    .dashboard.student-dashboard {
+        display: grid;
+        grid-template-areas:
+            "info info daily-schedule"
+            "attendance assignments daily-schedule"
+            "grades announcements announcements";
+        grid-template-columns: repeat(3, 1fr);
+        grid-template-rows: repeat(3, 1fr);
+        @media screen and (max-width: 1024px) {
+            grid-template-areas:
+                "info daily-schedule"
+                "attendance assignments"
+                "grades announcements";
+            grid-template-columns: repeat(2, 1fr);
+        }
+        @media screen and (max-width: 640px) {
+            grid-template-areas:
+                "info"
+                "daily-schedule"
+                "attendance"
+                "assignments"
+                "grades"
+                "announcements";
+            grid-template-columns: 1fr;
+            grid-template-rows: auto;
+        }
+    }
+    .dashboard.teacher-dashboard {
         display: grid;
         grid-template-areas:
             "info info info daily-schedule daily-schedule"
-            "info info info daily-schedule daily-schedule"
-            "info info info daily-schedule daily-schedule"
-            "info info info daily-schedule daily-schedule"
             "big big big daily-schedule daily-schedule "
-            "big big big daily-schedule daily-schedule "
-            "big big big daily-schedule daily-schedule"
-            "big big big others others"
-            "big big big others others"
             "big big big others others";
         grid-template-columns: repeat(5, 1fr);
         @media screen and (max-width: 1024px) {
             grid-template-areas:
                 "info daily-schedule"
-                "info daily-schedule"
-                "info daily-schedule"
                 "big big "
-                "big big"
-                "big big"
-                "big big"
-                "others others"
                 "others others";
             grid-template-columns: repeat(2, 1fr);
         }
@@ -215,9 +233,8 @@ body {
                 "daily-schedule"
                 "big"
                 "others";
-            grid-template-columns: repeat(1, 1fr);
+            grid-template-columns: 1fr;
         }
-        @apply px-5 gap-4 3xl:gap-6 h-full [&>*]:bg-zinc-800 [&>*]:rounded-md [&>*]:p-2;
     }
 
     .info {
@@ -231,6 +248,15 @@ body {
     }
     .others {
         grid-area: others;
+    }
+    .attendance {
+        grid-area: attendance;
+    }
+    .grades {
+        grid-area: grades;
+    }
+    .announcements {
+        grid-area: announcements;
     }
 }
 

@@ -102,12 +102,21 @@ class PresenceController extends Controller
             }
         } elseif ($user->type === "student") {
             $student = Student::where("email", $user->email)->first();
-            $presences = Presence::where('student_id', $student->id)->orderBy('date', 'desc')->paginate(30);
+            // todo: limitare ricerca per anno scolastico corrente
+            $presences = Presence::where('student_id', $student->id)->orderBy('date', 'desc')->get();
+            $totalRecordsCount = count($presences);
+            $presenceCount = Presence::where("student_id", $student->id)->where("is_present", 1)->count();
+            $presencesPercentage = round($presenceCount / $totalRecordsCount, 2);
+            // $presencesPercentage = $totalRecordsCount > 0 ? round(($presenceCount / $totalRecordsCount) * 100) : 0;
+
             return response()->json([
                 'success' => true,
                 'message' => 'Richiesta effettuata con successo',
+                'total_days' => $totalRecordsCount,
+                'total_presences' => $presenceCount,
+                'presences_percentage' => $presencesPercentage,
                 'data' => $presences,
-            ], 201);
+            ]);
         }
     }
 

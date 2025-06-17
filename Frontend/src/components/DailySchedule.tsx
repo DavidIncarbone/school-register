@@ -1,12 +1,15 @@
 import { periods } from "@/config/globals";
-import type { LessonSchedule } from "@/config/types";
+import { UserType, type LessonSchedule } from "@/config/types";
 import type { UseQueryResult } from "@tanstack/react-query";
 import { Link } from "react-router";
 import { Fragment } from "react/jsx-runtime";
 import { SkeleDailyScheduleTable } from "./ui/SkeleDailyScheduleTable";
 import { useQueryIndexLessonSchedule } from "@/hooks/lessonScheduleQueries";
+import { useGlobalStore } from "@/store/useGlobalStore";
 
 export const DailySchedule = () => {
+    // * global store
+    const { authUser } = useGlobalStore();
     // * queries
     const {
         data: dailySchedule,
@@ -42,9 +45,14 @@ export const DailySchedule = () => {
                             <div className="">
                                 <Link
                                     to={`/courses/${schedule?.course_id}`}
-                                    className="underline underline-offset-2 hover:italic"
+                                    className={`${
+                                        authUser?.type === UserType.TEACHER &&
+                                        "underline underline-offset-2 hover:italic"
+                                    } `}
                                 >
-                                    {schedule?.course_name}
+                                    {authUser?.type === UserType.STUDENT
+                                        ? schedule?.subject_name
+                                        : schedule?.course_name}
                                 </Link>
                             </div>
                         </Fragment>

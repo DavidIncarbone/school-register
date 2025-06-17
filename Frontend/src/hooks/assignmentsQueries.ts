@@ -1,9 +1,9 @@
-import type { IndexLessonAssignmentsParams } from "@/config/types";
+import type { IndexAssignmentsParams } from "@/config/types";
 import { api, assignmentEndpoint } from "@/services/api";
 import { useQuery } from "@tanstack/react-query";
 
 export const useQueryIndexAssignment = (
-    params: IndexLessonAssignmentsParams,
+    params: IndexAssignmentsParams,
     enabled = true
 ) => {
     return useQuery({
