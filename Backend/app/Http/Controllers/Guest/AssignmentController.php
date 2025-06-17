@@ -36,7 +36,7 @@ class AssignmentController extends Controller
             $subjectId = $teacher->subject_id;
             $courseId = request()->course_id;
             $teacher->courses()->findOrFail($courseId);
-            $assignments = Assignment::where("subject_id", $subjectId)->where("course_id", $courseId)->paginate(4);
+            $assignments = Assignment::where("subject_id", $subjectId)->where("course_id", $courseId)->paginate(31);
 
             return response()->json($assignments, 200);
         } else if ($user->type == "student") {

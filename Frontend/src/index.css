@@ -61,6 +61,11 @@
   border: 1px solid red;
 }
 
+input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+  padding-right: 10px;
+}
+
 body {
   font-family: "Montserrat", sans-serif;
   font-optical-sizing: auto;
