@@ -6,7 +6,8 @@ import { useQueryClient } from "@tanstack/react-query";
 
 export default function Header() {
     // * global store
-    const { authUser, setAuthUser, sidebarHidden, profile } = useGlobalStore();
+    const { authUser, setAuthUser, setProfile, sidebarHidden, profile } =
+        useGlobalStore();
     // * vars
     const queryClient = useQueryClient();
     const navigate = useNavigate();
@@ -14,6 +15,7 @@ export default function Header() {
     // * actions
     const handleLogout = async () => {
         setAuthUser(null);
+        setProfile(null);
         navigate("/login");
         try {
             await api.post("/logout");

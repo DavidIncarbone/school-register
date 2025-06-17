@@ -7,7 +7,7 @@ export type AuthUserSlice = {
     authUser: User | null;
     setAuthUser: (user: User | null) => void;
     profile: Profile | null;
-    setProfile: (record: Profile) => void;
+    setProfile: (record: Profile | null) => void;
 };
 
 export const createAuthUserSlice: StateCreator<
