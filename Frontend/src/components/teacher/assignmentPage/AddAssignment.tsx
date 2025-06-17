@@ -1,22 +1,16 @@
-import {
-  useState,
-  type Dispatch,
-  type FormEvent,
-  type SetStateAction,
-} from "react";
-import { CourseSelect } from "../CourseSelect";
-import Loader from "@/components/ui/Loader";
-import { api, assignmentEndpoint } from "@/services/api";
-import {
-  useMutationStoreAssignment,
-  useQueryIndexAssignment,
-} from "@/hooks/assignmentsQueries";
+import { type Dispatch, type FormEvent, type SetStateAction } from "react";
+
+import { useMutationStoreAssignment } from "@/hooks/assignmentsQueries";
 import type {
   Assignment,
   Course,
   IndexAssignmentsParams,
 } from "@/config/types";
-import { numericUUID } from "@/utilities/utils";
+import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+// TYPES
 
 type AddAssignmentProps = {
   courses: Course[] | undefined;
@@ -40,13 +34,26 @@ export const AddAssignment = ({
   const currentCourse = courses?.find(
     (course) => course.id == queryParams.course_id
   );
-  const errors = new Error();
-
-  // console.log(queryParams);
 
   //   queries
-
   const { mutate } = useMutationStoreAssignment(queryParams);
+
+  // Validation
+  const schema = z.object({
+    body: z
+      .string()
+      .min(1, "Body field is required")
+      .max(255, "the maximum number of characters is 255"),
+    assignment_date: z.string().nonempty("Start's filed is required"),
+    deadline: z.string().nonempty("Deadline's filed is required"),
+  });
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(schema),
+  });
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.target as HTMLFormElement);
@@ -54,10 +61,10 @@ export const AddAssignment = ({
       ...Object.fromEntries(formData.entries()),
       id: 0, // solo per typescript
     } as Assignment;
-    console.log(data);
-    setIsLoading(true);
-    console.log(assignmentEndpoint);
-    mutate(data);
+    console.log("ok", data);
+    // setIsLoading(true);
+
+    // mutate(data);
   };
 
   return (
@@ -70,33 +77,41 @@ export const AddAssignment = ({
         action=""
         id="AssignmentForm"
         className="w-full"
-        onSubmit={(e) => onSubmit(e)}
+        onSubmit={handleSubmit((e) => onSubmit(e))}
       >
-        <div className="grid grid-cols-3 gap-4">
-          <div className="form-select flex flex-col">
-            <input
-              type="hidden"
-              name="course_id"
-              value={queryParams.course_id}
-            />
-          </div>
-          <div className="flex flex-col">
-            <label htmlFor="start">Start</label>
+        <p className="text-gray-400 text-sm mb-3">
+          The fields marked with * are required
+        </p>
+        <div className="grid grid-cols-3 gap-4 mb-3">
+          <div className="flex flex-col border border-white p-3">
+            <label htmlFor="start">Start*</label>
             <input
               type="date"
-              name="assignment_date"
+              // name="assignment_date"
+              {...register("assignment_date")}
               id="start"
               max={startDate}
+              className="border border-white p-3"
             />
+            {errors.body && (
+              <p className="text-red-500 text-sm">
+                {errors.assignment_date?.message}
+              </p>
+            )}
           </div>
-          <div className="flex flex-col">
+          <div className="flex flex-col border border-white p-3">
             <label htmlFor="deadline">Deadline</label>
             <input
               type="date"
-              name="deadline"
+              // name="deadline"
+              {...register("deadline")}
               id="deadline"
               max={deadlineDate}
+              className="border border-white p-3 h[118,67px]"
             />
+            {errors.deadline && (
+              <p className="text-red-500 text-sm">{errors.deadline.message}</p>
+            )}
           </div>
         </div>
         <div className="form-">
@@ -105,12 +120,16 @@ export const AddAssignment = ({
             Max. 10 rows | Max. 255 charachters
           </p>
           <textarea
-            name="body"
+            // name="body"
             id="body"
-            className="w-full border border-white"
+            {...register("body")} // name assegnato tramite useForm
+            className="w-full border border-white p-3"
             rows={10}
             maxLength={255}
           ></textarea>
+          {errors.body && (
+            <p className="text-red-500 text-sm">{errors.body?.message}</p>
+          )}
         </div>
         <div className="flex gap-3 items-center mt-2">
           <button type="submit" className=" btn-pretty">
@@ -120,6 +139,8 @@ export const AddAssignment = ({
             Reset
           </button>
         </div>
+        {/* HIDDEN INPUT */}
+        <input type="hidden" name="course_id" value={queryParams.course_id} />
       </form>
     </section>
   );
