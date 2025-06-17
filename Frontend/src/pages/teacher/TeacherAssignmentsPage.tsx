@@ -19,8 +19,9 @@ export const TeacherAssignmentsPage = () => {
   const { queryParams, updateSearchParams } = useDynamicSearchParams();
 
   // vars
-
   const [isFormShowing, setIsFormShowing] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
   // * queries
   const { data: courses } = useQueryIndexCourse({}) as UseQueryResult<
     Course[],
