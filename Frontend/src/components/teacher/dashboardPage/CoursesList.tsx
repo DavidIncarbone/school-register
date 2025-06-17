@@ -13,6 +13,7 @@ import type { Course } from "@/config/types";
 import { useState } from "react";
 import { Link } from "react-router";
 import SkeleCourseCard from "../../ui/SkeleCourseCard";
+import { TitleAndNavigation } from "@/components/TitleAndNavigation";
 
 export const CoursesList = () => {
     // * vars
@@ -29,7 +30,7 @@ export const CoursesList = () => {
     if (isCoursesError) return <pre>courses error - da gestire</pre>;
     return (
         <>
-            <h3 className="dashboard_h3">Your courses</h3>
+            <TitleAndNavigation title="Your courses" />
             <Carousel
                 plugins={[Autoplay({ delay: 10000, active: !isHovered })]}
                 orientation="horizontal"

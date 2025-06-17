@@ -16,4 +16,13 @@ class Assignment extends Model
         'assignment_date',
         'deadline'
     ];
+
+    public function subject()
+    {
+        return $this->belongsTo(Subject::class);
+    }
+    public function course()
+    {
+        return $this->belongsTo(Course::class);
+    }
 }

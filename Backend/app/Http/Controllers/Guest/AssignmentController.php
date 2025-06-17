@@ -36,7 +36,7 @@ class AssignmentController extends Controller
             $subjectId = $teacher->subject_id;
             $courseId = request()->course_id;
             $teacher->courses()->findOrFail($courseId);
-            $assignments = Assignment::where("subject_id", $subjectId)->where("course_id", $courseId)->paginate(31);
+            $assignments = Assignment::where("subject_id", $subjectId)->where("course_id", $courseId)->with(['course'])->paginate(30);
 
             return response()->json($assignments, 200);
         } else if ($user->type == "student") {
@@ -50,7 +50,7 @@ class AssignmentController extends Controller
                 $assignments->where("subject_id", $subjectId);
             }
 
-            $result = $assignments->orderBy('assignment_date', 'desc')->paginate(4);
+            $result = $assignments->with(['subject'])->orderBy('assignment_date', 'desc')->paginate(4);
 
             Log::info($result);
 

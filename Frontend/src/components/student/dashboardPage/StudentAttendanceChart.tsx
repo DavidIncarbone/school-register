@@ -28,6 +28,7 @@ export const StudentAttendanceChart = ({
                 label: {
                     show: true,
                     position: "outside", // oppure "inside"
+                    color: "#fff",
                     // colore di default per tutte le etichette
                     formatter: (params: { name: string; percent?: number }) => {
                         const percentRounded =
