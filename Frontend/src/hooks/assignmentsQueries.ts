@@ -23,7 +23,7 @@ export const useMutationStoreAssignment = (params: IndexAssignmentsParams) => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationKey: ["assignments"],
-    mutationFn: async (newAssignment: Assignment) => {
+    mutationFn: async (newAssignment: unknown) => {
       console.log("post");
       const res = await api.post(assignmentEndpoint, newAssignment);
       return res.data;

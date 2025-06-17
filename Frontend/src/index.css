@@ -61,11 +61,6 @@
   border: 1px solid red;
 }
 
-input[type="date"]::-webkit-calendar-picker-indicator {
-  filter: invert(1);
-  padding-right: 10px;
-}
-
 body {
   font-family: "Montserrat", sans-serif;
   font-optical-sizing: auto;
@@ -89,6 +84,10 @@ body {
   input:not([type="checkbox"]):not([type="date"]),
   select {
     @apply ring px-2 lg:px-4 py-1 lg:py-2 rounded-sm;
+  }
+  input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+    padding-right: 10px;
   }
 
   select.no-default {
@@ -193,82 +192,82 @@ body {
     scrollbar-width: none;
   }
 
-    .dashboard {
-        @apply px-5 gap-4 3xl:gap-6 h-full [&>*]:bg-zinc-800 [&>*]:rounded-md [&>*]:p-2;
-    }
+  .dashboard {
+    @apply px-5 gap-4 3xl:gap-6 h-full [&>*]:bg-zinc-800 [&>*]:rounded-md [&>*]:p-2;
+  }
 
-    .dashboard.student-dashboard {
-        display: grid;
-        grid-template-areas:
-            "info info daily-schedule"
-            "attendance assignments daily-schedule"
-            "grades announcements announcements";
-        grid-template-columns: repeat(3, 1fr);
-        grid-template-rows: repeat(3, 1fr);
-        @media screen and (max-width: 1024px) {
-            grid-template-areas:
-                "info daily-schedule"
-                "attendance assignments"
-                "grades announcements";
-            grid-template-columns: repeat(2, 1fr);
-        }
-        @media screen and (max-width: 640px) {
-            grid-template-areas:
-                "info"
-                "daily-schedule"
-                "attendance"
-                "assignments"
-                "grades"
-                "announcements";
-            grid-template-columns: 1fr;
-            grid-template-rows: auto;
-        }
+  .dashboard.student-dashboard {
+    display: grid;
+    grid-template-areas:
+      "info info daily-schedule"
+      "attendance assignments daily-schedule"
+      "grades announcements announcements";
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    @media screen and (max-width: 1024px) {
+      grid-template-areas:
+        "info daily-schedule"
+        "attendance assignments"
+        "grades announcements";
+      grid-template-columns: repeat(2, 1fr);
     }
-    .dashboard.teacher-dashboard {
-        display: grid;
-        grid-template-areas:
-            "info info info daily-schedule daily-schedule"
-            "big big big daily-schedule daily-schedule "
-            "big big big others others";
-        grid-template-columns: repeat(5, 1fr);
-        @media screen and (max-width: 1024px) {
-            grid-template-areas:
-                "info daily-schedule"
-                "big big "
-                "others others";
-            grid-template-columns: repeat(2, 1fr);
-        }
-        @media screen and (max-width: 640px) {
-            grid-template-areas:
-                "info"
-                "daily-schedule"
-                "big"
-                "others";
-            grid-template-columns: 1fr;
-        }
+    @media screen and (max-width: 640px) {
+      grid-template-areas:
+        "info"
+        "daily-schedule"
+        "attendance"
+        "assignments"
+        "grades"
+        "announcements";
+      grid-template-columns: 1fr;
+      grid-template-rows: auto;
     }
+  }
+  .dashboard.teacher-dashboard {
+    display: grid;
+    grid-template-areas:
+      "info info info daily-schedule daily-schedule"
+      "big big big daily-schedule daily-schedule "
+      "big big big others others";
+    grid-template-columns: repeat(5, 1fr);
+    @media screen and (max-width: 1024px) {
+      grid-template-areas:
+        "info daily-schedule"
+        "big big "
+        "others others";
+      grid-template-columns: repeat(2, 1fr);
+    }
+    @media screen and (max-width: 640px) {
+      grid-template-areas:
+        "info"
+        "daily-schedule"
+        "big"
+        "others";
+      grid-template-columns: 1fr;
+    }
+  }
 
-    .info {
-        grid-area: info;
-    }
-    .big {
-        grid-area: big;
-    }
-    .daily-schedule {
-        grid-area: daily-schedule;
-    }
-    .others {
-        grid-area: others;
-    }
-    .attendance {
-        grid-area: attendance;
-    }
-    .grades {
-        grid-area: grades;
-    }
-    .announcements {
-        grid-area: announcements;
-    }
+  .info {
+    grid-area: info;
+  }
+  .big {
+    grid-area: big;
+  }
+  .daily-schedule {
+    grid-area: daily-schedule;
+  }
+  .others {
+    grid-area: others;
+  }
+  .attendance {
+    grid-area: attendance;
+  }
+  .grades {
+    grid-area: grades;
+  }
+  .announcements {
+    grid-area: announcements;
+  }
 }
 
 @theme inline {
@@ -351,3 +350,54 @@ body {
         @apply bg-background ;
     }
 } */
+
+/* ***** CHECKBOX ***** */
+
+.custom-checkbox {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  user-select: none;
+}
+
+.custom-checkbox input[type="checkbox"] {
+  display: none;
+}
+
+.checkmark {
+  width: 20px;
+  height: 20px;
+  background-color: #eee;
+  border: 2px solid #ccc;
+  border-radius: 4px;
+  position: relative;
+  transition: all 0.2s ease;
+  margin-right: 10px;
+}
+
+.custom-checkbox input:checked + .checkmark {
+  background-color: #4caf50;
+  border-color: #4caf50;
+}
+
+.checkmark::after {
+  content: "";
+  position: absolute;
+  display: none;
+  left: 6px;
+  top: 2px;
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.custom-checkbox input:checked + .checkmark::after {
+  display: block;
+}
+
+.label-text {
+  font-size: 16px;
+  color: #333;
+}

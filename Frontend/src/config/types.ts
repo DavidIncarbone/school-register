@@ -37,10 +37,10 @@ export type Student = {
 };
 
 export type Profile = (Student & Teacher) & {
-    subject_name?: string;
-    subject_description?: string;
-    course_name?: string;
-    course_description?: string;
+  subject_name?: string;
+  subject_description?: string;
+  course_name?: string;
+  course_description?: string;
 };
 
 export type Subject = {
@@ -75,18 +75,18 @@ export type Presence = {
 };
 
 export type LessonSchedule = {
-    subject_name: string;
-    course_name: string;
-    subject_id: number;
-    course_id: number;
-    day: "monday" | "tuesday" | "wednesday" | "thursday" | "friday";
-    lesson_time: number;
+  subject_name: string;
+  course_name: string;
+  subject_id: number;
+  course_id: number;
+  day: "monday" | "tuesday" | "wednesday" | "thursday" | "friday";
+  lesson_time: number;
 };
 
 export type Assignment = {
-  id: number;
+  id?: number;
   course_id: number;
-  subject_id: number;
+  subject_id?: number;
   body: string;
   assignment_date: string;
   deadline: string;
