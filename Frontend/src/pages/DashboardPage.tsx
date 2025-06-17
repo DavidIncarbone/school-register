@@ -2,7 +2,7 @@ import { UserType } from "../config/types";
 import { useGlobalStore } from "../store/useGlobalStore";
 import Loader from "../components/ui/Loader";
 import { TeacherDashboard } from "@/components/teacher/dashboardPage/TeacherDashboard";
-import { StudentDashboard } from "./student/dashboardPage/StudentDashboard";
+import { StudentDashboard } from "@/components/student/dashboardPage/StudentDashboard";
 
 // todo: valutare poi di differenziare la logica in base a user.type
 export default function DashboardPage() {
