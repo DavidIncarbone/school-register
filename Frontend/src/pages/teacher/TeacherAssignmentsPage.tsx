@@ -1,3 +1,6 @@
+import { AddAssignment } from "@/components/teacher/assignmentPage/AddAssignment";
+import { AssignmentHead } from "@/components/teacher/assignmentPage/AssignmentHead";
+import { AssignmentRecord } from "@/components/teacher/assignmentPage/AssignmentRecord";
 import { CourseSelect } from "@/components/teacher/CourseSelect";
 import { UserType, type Assignment, type Course } from "@/config/types";
 import { useQueryIndexAssignment } from "@/hooks/assignmentsQueries";
@@ -36,6 +39,8 @@ export const TeacherAssignmentsPage = () => {
         updateSearchParams([{ key, value: selectedCourseId }]);
     };
 
+    const handleForm = () => setIsFormShowing(!isFormShowing);
+
     // * side effects
     useEffect(() => {
         if (courses && !("course_id" in queryParams)) {
@@ -51,14 +56,40 @@ export const TeacherAssignmentsPage = () => {
         <div className="px-5 py-2">
             <div className="flex flex-col items-start mb-2">
                 <h1 className="title_h1 self-center">assignments</h1>
-                {authUser?.type === UserType.TEACHER && (
-                    <CourseSelect
+                <div className="text-lg sm:text-2xl flex flex-wrap justify-center items-center gap-2 font-bold w-full ">
+                    <div className="flex justify-between items-center w-full ">
+                        <div>
+                            <p>Selected course:</p>
+                            {authUser?.type === UserType.TEACHER && (
+                                <CourseSelect
+                                    courses={courses}
+                                    queryParams={queryParams}
+                                    onChange={handleCourseSelected}
+                                />
+                            )}
+                        </div>
+                        {!isFormShowing ? (
+                            <button className="btn-pretty" onClick={handleForm}>
+                                +
+                            </button>
+                        ) : (
+                            <button className="btn-pretty" onClick={handleForm}>
+                                -
+                            </button>
+                        )}
+                    </div>
+                </div>
+            </div>
+            {isFormShowing && (
+                <section id="formSection" className="mb-5">
+                    <AddAssignment
                         courses={courses}
                         queryParams={queryParams}
-                        onChange={handleCourseSelected}
+                        isLoading={isLoading}
+                        setIsLoading={setIsLoading}
                     />
-                )}
-            </div>
+                </section>
+            )}
             {/* assignments list (per corso) */}
             <div className="max-lg:w-[92dvw] mx-auto overflow-auto">
                 <div className="min-w-fit">
@@ -74,91 +105,10 @@ export const TeacherAssignmentsPage = () => {
                     </div>
                 </div>
             </div>
+
             <p className="mt-2 landscape:hidden">
                 Rotate the device for better visualization
             </p>
-        </div>
-    );
-};
-
-const AssignmentHead = () => {
-    return (
-        <div className="flex text-center border border-b-0 rounded-t-sm overflow-hidden font-semibold bg-zinc-950">
-            <div className=" border w-40 py-2 flex justify-center items-center">
-                Start
-            </div>
-            <div className=" border w-40 flex justify-center items-center">
-                Deadline
-            </div>
-            <div className="grow border flex justify-center items-center">
-                Body
-            </div>
-            <div className=" border w-32 flex justify-center items-center gap-2">
-                Actions
-            </div>
-        </div>
-    );
-};
-
-const AssignmentRecord = ({ assignment }: { assignment: Assignment }) => {
-    // * vars
-    const [isModifying, setIsModifying] = useState(false);
-
-    // * actions
-    const onModifyClick = () => {
-        setIsModifying(true);
-    };
-
-    const onSaveClick = () => {
-        setIsModifying(false);
-    };
-
-    // * views
-    return (
-        <div
-            className={`${
-                isModifying && "italic"
-            } flex odd:bg-zinc-800 even:bg-zinc-950 3xl:h-40`}
-        >
-            <input
-                type="date"
-                disabled={!isModifying}
-                defaultValue={assignment.assignment_date}
-                className=" border px-4 w-40 flex justify-center items-center"
-            />
-            <input
-                type="date"
-                disabled={!isModifying}
-                defaultValue={assignment.deadline}
-                className=" border px-4 w-40 flex justify-center items-center"
-            />
-            <textarea
-                disabled={!isModifying}
-                rows={isModifying ? 10 : 3}
-                defaultValue={assignment.body}
-                className="grow border min-w-92 p-3 tracking-wider leading-7 flex justify-center items-center"
-            />
-            <div className="border w-32 flex justify-center items-center gap-2 [&>*]:cursor-pointer [&>*]:scale-90 [&>*]:hover:scale-100 [&>*]:transition-transform">
-                {isModifying ? (
-                    <Save onClick={onSaveClick} className="text-blue-400" />
-                ) : (
-                    <>
-                        <Pencil
-                            onClick={onModifyClick}
-                            className="text-yellow-500"
-                        />
-                        <Trash2 className="text-red-600" />
-                        <div className="relative w-fit cursor-pointer text-slate-400">
-                            <input
-                                className=" opacity-0 absolute inset-0"
-                                type="file"
-                                accept=".txt,.doc,.docx,.pdf"
-                            />
-                            <Paperclip />
-                        </div>
-                    </>
-                )}
-            </div>
         </div>
     );
 };
