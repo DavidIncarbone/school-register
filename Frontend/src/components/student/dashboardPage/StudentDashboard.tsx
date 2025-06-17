@@ -28,7 +28,7 @@ export const StudentDashboard = () => {
 
     return (
         <div className="dashboard student-dashboard">
-            <div className="info max-md:overflow-auto max-md:flex md:grid md:grid-cols-3 lg:grid-cols-4  !px-4 gap-4 !bg-slate-800 max-lg:h-fit">
+            <div className="info max-md:overflow-auto max-sm:flex sm:grid sm:grid-cols-3 lg:grid-cols-4  !px-4 gap-4 !bg-slate-800 max-lg:h-fit">
                 <QuickActions takeAttendance={false} />
             </div>
             <div className="daily-schedule flex flex-col !bg-teal-700/50">
@@ -46,7 +46,7 @@ export const StudentDashboard = () => {
                     )}
                 </>
             </div>
-            <div className="assignments">
+            <div className="assignments !bg-fuchsia-900/50">
                 <LatestAssignments />
             </div>
             <div className="grades">grades</div>

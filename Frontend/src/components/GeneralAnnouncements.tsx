@@ -17,6 +17,18 @@ export const GeneralAnnouncements = () => {
                     <div>lorem</div>
                     <div>Lorem ipsum dolor sit amet.</div>
                 </div>
+                <div className="flex justify-between border p-2">
+                    <div>lorem</div>
+                    <div>Lorem ipsum dolor sit amet.</div>
+                </div>
+                <div className="flex justify-between border p-2">
+                    <div>lorem</div>
+                    <div>Lorem ipsum dolor sit amet.</div>
+                </div>
+                <div className="flex justify-between border p-2">
+                    <div>lorem</div>
+                    <div>Lorem ipsum dolor sit amet.</div>
+                </div>
             </div>
         </>
     );
