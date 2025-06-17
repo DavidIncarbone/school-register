@@ -62,24 +62,28 @@ export const TeacherAssignmentsPage = () => {
         <div className="text-lg sm:text-2xl flex flex-wrap justify-center items-center gap-2 font-bold w-full ">
           <div className="flex justify-between items-center w-full ">
             <div>
-              <p>Selected course:</p>
               {authUser?.type === UserType.TEACHER && (
-                <CourseSelect
-                  courses={courses}
-                  queryParams={queryParams}
-                  onChange={handleCourseSelected}
-                />
+                <>
+                  <p>Selected course:</p>
+                  <CourseSelect
+                    courses={courses}
+                    queryParams={queryParams}
+                    onChange={handleCourseSelected}
+                  />
+                </>
               )}
             </div>
-            {!isFormShowing ? (
-              <button className="btn-pretty" onClick={handleForm}>
-                +
-              </button>
-            ) : (
-              <button className="btn-pretty" onClick={handleForm}>
-                -
-              </button>
-            )}
+
+            {authUser?.type === UserType.TEACHER &&
+              (!isFormShowing ? (
+                <button className="btn-pretty" onClick={handleForm}>
+                  +
+                </button>
+              ) : (
+                <button className="btn-pretty" onClick={handleForm}>
+                  -
+                </button>
+              ))}
           </div>
         </div>
       </div>

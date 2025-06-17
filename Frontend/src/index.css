@@ -61,11 +61,6 @@
   border: 1px solid red;
 }
 
-input[type="date"]::-webkit-calendar-picker-indicator {
-  filter: invert(1);
-  padding-right: 10px;
-}
-
 body {
   font-family: "Montserrat", sans-serif;
   font-optical-sizing: auto;
@@ -89,6 +84,10 @@ body {
   input:not([type="checkbox"]):not([type="date"]),
   select {
     @apply ring px-2 lg:px-4 py-1 lg:py-2 rounded-sm;
+  }
+  input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+    padding-right: 10px;
   }
 
   select.no-default {
