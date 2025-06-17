@@ -100,7 +100,7 @@ export const AddAssignment = ({
             )}
           </div>
           <div className="flex flex-col border border-white p-3 h-[118.67px]">
-            <label htmlFor="deadline">Deadline</label>
+            <label htmlFor="deadline">Deadline*</label>
             <input
               type="date"
               // name="deadline"
@@ -115,7 +115,7 @@ export const AddAssignment = ({
           </div>
         </div>
         <div className="">
-          <label htmlFor="body">Body</label>
+          <label htmlFor="body">Body*</label>
           <p className="text-xs text-white/80 pb-1">
             Max. 10 rows | Max. 255 charachters
           </p>
