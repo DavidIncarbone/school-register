@@ -6,7 +6,7 @@ export const assignmentsSchema = z.object({
   body: z
     .string()
     .min(1, "Body field is required")
-    .max(255, "the maximum number of characters is 255"),
+    .max(5000, "the maximum number of characters is 5000"),
   assignment_date: z.string().nonempty("Start's filed is required"),
   deadline: z.string().nonempty("Deadline's filed is required"),
   course_id: z.any(),

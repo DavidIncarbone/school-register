@@ -4,6 +4,10 @@ import { api } from "../services/api";
 import { Link, useNavigate } from "react-router";
 import type { User } from "../config/types";
 import Loader from "../components/ui/Loader";
+import { useMutationLoginUser, useQueryGetUser } from "@/hooks/userQueries";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { loginSchema } from "@/schemas/loginSchema";
 
 export default function LoginPage() {
   // * vars
@@ -11,7 +15,24 @@ export default function LoginPage() {
   const { authUser, setAuthUser } = useGlobalStore();
   const [isLoading, setIsLoading] = useState(false);
 
+  const {
+    mutate: loginMutate,
+    isPending: isLoginPending,
+    isSuccess: isLoginSuccess,
+  } = useMutationLoginUser();
+
   // * actions
+
+  const {
+    register,
+    handleSubmit: loginSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(loginSchema),
+  });
+
+  const { data: user } = useQueryGetUser();
+
   const fetchAndSetUser = async () => {
     try {
       const res = await api.get("/api/user");

@@ -54,32 +54,29 @@ export const AssignmentRecord = ({
   };
 
   const updateAssignment = async (formData: AssignmentFormData) => {
-    console.log("test");
     updateMutate(formData as Assignment);
   };
 
   // collaterals
 
   useEffect(() => {
-    console.log(assignment);
     if (isUpdateSuccess) {
       setIsModifying(false);
-      if (updateData?.isClean) {
-        toast.success("No changes made.", {
-          style: {
-            border: "1px solid blue",
-            padding: "16px",
-            color: "blue",
-          },
-          iconTheme: {
-            primary: "blue",
-            secondary: "#FFFAEE",
-          },
-        });
-      } else {
-        toast.success("Assignment updated succesfully");
-      }
-      console.log(isUpdateSuccess);
+      // if (updateData?.isClean) {
+      //   toast.success("No changes made.", {
+      //     style: {
+      //       border: "1px solid blue",
+      //       padding: "16px",
+      //       color: "blue",
+      //     },
+      //     iconTheme: {
+      //       primary: "blue",
+      //       secondary: "#FFFAEE",
+      //     },
+      //   });
+      // } else {
+      toast.success("Assignment updated succesfully");
+      // }
     }
   }, [updateData]);
 
@@ -120,7 +117,7 @@ export const AssignmentRecord = ({
               <Loader isContained={true} />
             ) : (
               <button type="submit">
-                {/* <Save className="text-blue-400" /> */}ciao
+                <Save className="text-blue-400" />
               </button>
             )
           ) : (

@@ -72,7 +72,7 @@ class AssignmentController extends Controller
 
         $request->validate([
             'course_id' => ['required', 'integer', 'min:1'],
-            'body' => ['required', 'string', 'min:1', 'max:255'],
+            'body' => ['required', 'string', 'min:1', 'max:5000'],
             'assignment_date' => ['required', 'date'],
             'deadline' => ['required', 'date'],
         ]);
@@ -115,7 +115,7 @@ class AssignmentController extends Controller
     {
         $request->validate([
             // 'assignment_id' => ['integer', 'min:1'],
-            'body' => ['string', 'min:1', 'max:255'],
+            'body' => ['string', 'min:1', 'max:5000'],
             'assignment_date' => ['date'],
             'deadline' => ['date'],
         ]);
@@ -133,9 +133,9 @@ class AssignmentController extends Controller
         $assignment->deadline = $request->deadline;
 
         $isClean = $assignment->isClean();
-        // Log::info($isClean);
 
         $assignment->update();
+
 
         return response()->json([
             'success' => true,
