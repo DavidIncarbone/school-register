@@ -32,10 +32,9 @@ class Subject extends Model
     {
         return $this->hasMany(Teacher::class);
     }
-    
-    public function grades()
-    {
-        return $this->belongsToMany(Student::class, 'grades')->using(Grade::class)->withPivot(['grade', 'date']);
-    }
 
+    public function exams()
+    {
+        return $this->belongsToMany(Student::class, 'exams')->using(Exam::class)->withPivot(['topic', 'grade', 'date']);
+    }
 }
