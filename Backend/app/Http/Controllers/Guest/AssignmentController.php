@@ -18,8 +18,6 @@ class AssignmentController extends Controller
     public function index()
     {
 
-        // todo: filtri
-
         request()->validate([
             "course_id" => ["integer", "min:1"],
             "subject_id" => ["integer", "min:1"],
@@ -27,35 +25,43 @@ class AssignmentController extends Controller
             "dir" => ['string', 'in:asc,desc'],
         ]);
 
+        $dir = request()->dir ?? 'asc';
+        $sort = request()->sort ?? 'by_assignment_date';
+
         $user = request()->user();
+        $result = [];
 
         if ($user->type == 'teacher') {
-
             $teacher = Teacher::where('email', $user->email)->firstOrFail();
-
             $subjectId = $teacher->subject_id;
             $courseId = request()->course_id;
             $teacher->courses()->findOrFail($courseId);
-            $assignments = Assignment::where("subject_id", $subjectId)->where("course_id", $courseId)->with(['course'])->orderBy("created_at", "desc")->paginate(30);
 
-            return response()->json($assignments, 200);
-        } else if ($user->type == "student") {
+            $result = Assignment::where("subject_id", $subjectId)
+                ->where("course_id", $courseId)
+                ->with(['course']);
+        } elseif ($user->type == "student") {
             $student = Student::where('email', $user->email)->firstOrFail();
             $courseId = $student->course_id;
 
-            $assignments = Assignment::where("course_id", $courseId)->orderBy('assignment_date', 'desc');
+            $result = Assignment::where("course_id", $courseId);
+
             if (request()->subject_id) {
                 $subjectId = request()->subject_id;
-                Course::find($student->course_id)->subjects()->findOrFail($subjectId);
-                $assignments->where("subject_id", $subjectId);
+                Course::find($courseId)->subjects()->findOrFail($subjectId);
+                $result->where("subject_id", $subjectId);
             }
 
-            $result = $assignments->with(['subject'])->orderBy('assignment_date', 'desc')->paginate(4);
-
-            Log::info($result);
-
-            return response()->json($result);
+            $result->with(['subject']);
         }
+
+        if ($sort === 'by_assignment_date') {
+            $result->orderBy("assignment_date", $dir);
+        } elseif ($sort === 'by_deadline') {
+            $result->orderBy("deadline", $dir);
+        }
+
+        return response()->json($result->paginate(4));
     }
 
     /**
