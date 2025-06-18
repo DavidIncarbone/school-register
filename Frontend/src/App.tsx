@@ -33,10 +33,9 @@ function App() {
         fetchCsrfCookie();
     }, []);
 
-    // return <Debug />;
-
     return (
         <>
+            {/* <Debug /> */}
             <Routes>
                 <Route path="/" Component={DefaultLayout}>
                     {/* pagine con auth */}

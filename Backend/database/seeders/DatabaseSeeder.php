@@ -4,7 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Assignment;
 use App\Models\Course;
-use App\Models\Grade;
+use App\Models\Exam;
 use App\Models\LessonSchedule;
 use App\Models\Presence;
 use App\Models\Student;
@@ -69,10 +69,12 @@ class DatabaseSeeder extends Seeder
                     ]);
                 }
                 // - crea un voto per ogni sua materia
-                $course->subjects()->each(function ($subject) use ($student) {
-                    Grade::create([
+                $course->subjects()->each(function ($subject) use ($student, $course) {
+                    Exam::create([
                         'student_id' => $student->id,
                         'subject_id' => $subject->id,
+                        'course_id' => $course->id,
+                        'topic' => fake()->sentence(6),
                         'grade' => rand(15, 30),
                         'date' => fake()->dateTimeBetween('-1 week', 'now'),
 
@@ -117,10 +119,12 @@ class DatabaseSeeder extends Seeder
             ]);
         }
         // - crea un voto per ogni sua materia
-        $course->subjects()->each(function ($subject) use ($studentExample) {
-            Grade::create([
+        $course->subjects()->each(function ($subject) use ($studentExample, $course) {
+            Exam::create([
                 'student_id' => $studentExample->id,
                 'subject_id' => $subject->id,
+                'course_id' => $course->id,
+                'topic' => fake()->sentence(6),
                 'grade' => rand(15, 30),
                 'date' => fake()->dateTimeBetween('-1 week', 'now'),
 
