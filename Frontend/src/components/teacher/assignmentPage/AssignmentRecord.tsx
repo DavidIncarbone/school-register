@@ -1,12 +1,21 @@
+import Loader from "@/components/ui/Loader";
 import { UserType, type Assignment } from "@/config/types";
 import { useGlobalStore } from "@/store/useGlobalStore";
 import { Paperclip, Pencil, Save, Trash2 } from "lucide-react";
-import { useState } from "react";
+import { useState, type Dispatch, type SetStateAction } from "react";
 
 export const AssignmentRecord = ({
   assignment,
+  // destroyAssignment,
+  // isDestroyPending,
+  setIsOpen,
+  setAssignmentId,
 }: {
   assignment: Assignment;
+  // destroyAssignment: (assignmentId: number) => void;
+  // isDestroyPending: boolean;
+  setIsOpen: Dispatch<SetStateAction<boolean>>;
+  setAssignmentId: Dispatch<SetStateAction<number>>;
 }) => {
   const { authUser } = useGlobalStore();
   // * vars
@@ -49,23 +58,28 @@ export const AssignmentRecord = ({
         />
 
         <div className="border w-32 flex justify-center items-center gap-2 [&>*]:cursor-pointer [&>*]:scale-90 [&>*]:hover:scale-100 [&>*]:transition-transform">
-          {authUser?.type === UserType.TEACHER &&
-            (isModifying ? (
-              <Save onClick={onSaveClick} className="text-blue-400" />
-            ) : (
-              <>
-                <Pencil onClick={onModifyClick} className="text-yellow-500" />
-                <Trash2 className="text-red-600" />
-                <div className="relative w-fit cursor-pointer text-slate-400">
-                  <input
-                    className=" opacity-0 absolute inset-0"
-                    type="file"
-                    accept=".txt,.doc,.docx,.pdf"
-                  />
-                  <Paperclip />
-                </div>
-              </>
-            ))}
+          {authUser?.type === UserType.TEACHER && isModifying ? (
+            <Save onClick={onSaveClick} className="text-blue-400" />
+          ) : (
+            <>
+              <Pencil onClick={onModifyClick} className="text-yellow-500" />
+              <Trash2
+                className="text-red-600"
+                onClick={() => {
+                  setAssignmentId(assignment.id as number);
+                  setIsOpen(true);
+                }}
+              />
+              <div className="relative w-fit cursor-pointer text-slate-400">
+                <input
+                  className=" opacity-0 absolute inset-0"
+                  type="file"
+                  accept=".txt,.doc,.docx,.pdf"
+                />
+                <Paperclip />
+              </div>
+            </>
+          )}
           {authUser?.type === UserType.STUDENT && (
             <label className="custom-checkbox">
               <input type="checkbox" id="myCheckbox" />

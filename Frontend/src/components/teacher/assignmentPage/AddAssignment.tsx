@@ -1,4 +1,4 @@
-import { useEffect, type Dispatch, type SetStateAction } from "react";
+import { useEffect, useState, type Dispatch, type SetStateAction } from "react";
 
 import { useMutationStoreAssignment } from "@/hooks/assignmentsQueries";
 import type { Course, IndexAssignmentsParams } from "@/config/types";
@@ -15,7 +15,7 @@ const schema = z.object({
     .max(255, "the maximum number of characters is 255"),
   assignment_date: z.string().nonempty("Start's filed is required"),
   deadline: z.string().nonempty("Deadline's filed is required"),
-  course_id: z.string().min(1),
+  course_id: z.any(),
 });
 // TYPES
 
@@ -55,10 +55,9 @@ AddAssignmentProps) => {
 
   //   queries
   const {
-    mutate,
-    isSuccess,
-    isPending,
-    data: newAssignment,
+    mutate: storeMutate,
+    isSuccess: isStoreSuccess,
+    isPending: isStorePending,
   } = useMutationStoreAssignment(queryParams);
 
   const {
@@ -72,21 +71,22 @@ AddAssignmentProps) => {
   });
 
   useEffect(() => {
-    if (isSuccess) {
+    if (isStoreSuccess) {
       toast.success("Assignment added successfully");
       reset(defaultValues);
       setIsFormShowing(false);
     }
-  }, [isSuccess, reset]);
+  }, [isStoreSuccess, reset]);
 
   // Validation
 
   const createNewAssignment = async (formData: AssignmentFormData) => {
     console.log(formData);
     console.log(typeof queryParams?.course_id);
-    mutate(formData);
+    storeMutate(formData);
     // toast.success("Assignment added succesfully");
   };
+
   return (
     <section className="mt-5">
       <h2 className="text-white text-2xl">
@@ -102,7 +102,7 @@ AddAssignmentProps) => {
         <p className="text-gray-400 text-sm mb-3">
           The fields marked with * are required
         </p>
-        <div className="grid grid-cols-3 gap-4 mb-3">
+        <div className="grid grid-cols-3 gap-4 mb-3 max-[640px]:grid-cols-1">
           <div className="flex flex-col gap-2 p-3">
             <div className="flex flex-col gap-0.5">
               <label htmlFor="start">Start*</label>
@@ -163,10 +163,10 @@ AddAssignmentProps) => {
         <div className="flex gap-3 items-center mt-2">
           <button
             type="submit"
-            className={`btn-pretty ${isPending && "!cursor-not-allowed"}`}
-            disabled={isPending}
+            className={`btn-pretty ${isStorePending && "!cursor-not-allowed"}`}
+            disabled={isStorePending}
           >
-            {isPending ? (
+            {isStorePending ? (
               <>
                 <div className="absolute inset-0">
                   <Loader isContained={true} />
@@ -180,7 +180,7 @@ AddAssignmentProps) => {
           <button
             type="reset"
             className={`${
-              isPending && "!cursor-not-allowed opacity-50"
+              isStorePending && "!cursor-not-allowed opacity-50"
             } btn-pretty`}
           >
             Reset

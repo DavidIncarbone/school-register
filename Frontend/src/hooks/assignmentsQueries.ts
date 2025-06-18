@@ -37,3 +37,22 @@ export const useMutationStoreAssignment = (params: IndexAssignmentsParams) => {
     },
   });
 };
+export const useMutationDestroyAssignment = (
+  params: IndexAssignmentsParams
+) => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationKey: ["assignments"],
+    mutationFn: async (assignmentId: number) => {
+      console.log("try to delete");
+      await api.delete(assignmentEndpoint + `/${assignmentId}`);
+    },
+    onSuccess: () => {
+      console.log("deleted");
+      queryClient.invalidateQueries({
+        queryKey: ["assignments", params],
+        exact: true,
+      });
+    },
+  });
+};

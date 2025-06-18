@@ -113,8 +113,9 @@ class AssignmentController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Assignment $assignment)
     {
-        //
+        $assignment->deleteOrFail();
+        return response()->json([], 204);
     }
 }
