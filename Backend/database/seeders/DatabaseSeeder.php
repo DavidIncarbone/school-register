@@ -119,11 +119,13 @@ class DatabaseSeeder extends Seeder
             ]);
         }
         // - crea un voto per ogni sua materia
-        $course->subjects()->each(function ($subject) use ($studentExample) {
+        $course->subjects()->each(function ($subject) use ($studentExample, $course) {
             Exam::create([
                 'student_id' => $studentExample->id,
                 'subject_id' => $subject->id,
-                'Exam' => rand(15, 30),
+                'course_id' => $course->id,
+                'topic' => fake()->sentence(6),
+                'grade' => rand(15, 30),
                 'date' => fake()->dateTimeBetween('-1 week', 'now'),
 
             ]);

@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\SubjectController as AdminSubjectController;
 use App\Http\Controllers\Admin\PresenceController as AdminPresenceController;
 use App\Http\Controllers\Guest\AssignmentController;
 use App\Http\Controllers\Guest\CourseController;
+use App\Http\Controllers\Guest\ExamController;
 use App\Http\Controllers\Guest\LessonScheduleController;
 use App\Http\Controllers\Guest\PresenceController;
 use App\Http\Controllers\Guest\StudentController;
@@ -53,6 +54,14 @@ Route::middleware(["auth:sanctum"])->group(function () {
     // teachers
     Route::get("/teachers", [TeacherController::class, 'index']);
     Route::get("/teachers/{teacher}", [TeacherController::class, 'show']);
+
+    // exams
+    Route::get("/exams", [ExamController::class, 'index']);
+    Route::get("/exams/{exam}", [ExamController::class, 'show']);
+    Route::post("/exams", [ExamController::class, 'store'])->middleware(['teacher-access']);
+    Route::patch("/exams/{exam}", [ExamController::class, 'update'])->middleware(['teacher-access']);
+    Route::delete("/exams/{exam}", [ExamController::class, 'destroy'])->middleware(['teacher-access']);
+
 
     // profile
     Route::get("/profile", function () {
