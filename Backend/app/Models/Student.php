@@ -22,8 +22,13 @@ class Student extends Model
         return $this->hasMany(Presence::class);
     }
 
-    public function exams()
+    public function grades()
     {
-        return $this->belongsToMany(Subject::class, 'exams')->using(Exam::class)->withPivot(['topic', 'grade', 'date']);
+        return $this->hasMany(Grade::class);
+    }
+
+    public function notes()
+    {
+        return $this->belongsToMany(Teacher::class, 'notes')->using(Note::class)->withPivot('body');
     }
 }

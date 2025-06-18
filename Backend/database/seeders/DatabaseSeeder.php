@@ -5,7 +5,9 @@ namespace Database\Seeders;
 use App\Models\Assignment;
 use App\Models\Course;
 use App\Models\Exam;
+use App\Models\Grade;
 use App\Models\LessonSchedule;
+use App\Models\Note;
 use App\Models\Presence;
 use App\Models\Student;
 use App\Models\Subject;
@@ -13,6 +15,7 @@ use App\Models\Teacher;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Log;
 
 class DatabaseSeeder extends Seeder
 {
@@ -22,17 +25,17 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         // crea materie, per ogni materia 
-        $subjectsCount = 10;
+        $subjectsCount = 4;
         Subject::factory($subjectsCount)->create()->each(function ($subject) {
             //  - crea uno o piu teacher
-            Teacher::factory(rand(1, 3))->create(["subject_id" => $subject->id]);
+            Teacher::factory(rand(1, 1))->create(["subject_id" => $subject->id]);
         });
 
         // crea i corsi, per ogni corso:
-        Course::factory(12)->create()->each(function ($course) use ($subjectsCount) {
+        Course::factory(6)->create()->each(function ($course) use ($subjectsCount) {
             $courseId = $course->id;
             // - assegna 6-10 materie
-            for ($i = 1; $i <= rand(6, $subjectsCount); $i++) {
+            for ($i = 1; $i <= $subjectsCount; $i++) {
                 // per ogni materia:
                 // - prendi un teacher random di quella materia e assegnalo al corso
                 $subjectId = $i;
@@ -58,9 +61,19 @@ class DatabaseSeeder extends Seeder
                         'subject_id' => $subjectId,
                     ]);
                 }
+
+                // - crea due esami
+                for ($k = 1; $k <= 2; $k++) {
+                    Exam::factory()->create([
+                        'course_id' => $courseId,
+                        'subject_id' => $subjectId,
+                        'topic' => fake()->sentence(2),
+                        'date' => fake()->dateTimeBetween('-1 week', '-1 day'),
+                    ]);
+                }
             }
             // crea studenti, per ogni studente:
-            Student::factory(30)->create(['course_id' =>  $courseId])->each(function ($student) use ($course) {
+            Student::factory(20)->create(['course_id' =>  $courseId])->each(function ($student) use ($course) {
                 // - crea delle presenze a partire da una settimana fa ad oggi
                 for ($i = 7; $i >= 0; $i--) {
                     Presence::factory()->create([
@@ -68,18 +81,28 @@ class DatabaseSeeder extends Seeder
                         'date' => Carbon::now()->subDays($i)->toDateString(),
                     ]);
                 }
-                // - crea un voto per ogni sua materia
-                $course->subjects()->each(function ($subject) use ($student, $course) {
-                    Exam::create([
-                        'student_id' => $student->id,
-                        'subject_id' => $subject->id,
-                        'course_id' => $course->id,
-                        'topic' => fake()->sentence(6),
-                        'grade' => rand(15, 30),
-                        'date' => fake()->dateTimeBetween('-1 week', 'now'),
 
+                // - crea un voto per ogni esame di ogni sua materia
+                $course->exams()->each(function ($exam) use ($student) {
+                    Grade::create([
+                        'exam_id' => $exam->id,
+                        'student_id' => $student->id,
+                        'grade' => rand(15, 30),
                     ]);
                 });
+
+                // Log::info($student->course());
+                // - crea una nota (bias)
+                if (fake()->boolean(20)) {
+
+                    $randTeacher = Course::find($student->course_id)->teachers()->inRandomOrder()->first();
+
+                    Note::create([
+                        'student_id' => $student->id,
+                        'teacher_id' => $randTeacher->id,
+                        'body' => fake()->sentence(6),
+                    ]);
+                }
             });
         });
 
@@ -112,22 +135,18 @@ class DatabaseSeeder extends Seeder
             'course_id' => $courseId,
         ]);
         // - crea delle presenze a partire da una settimana fa ad oggi
-        for ($i = 7; $i >= 0; $i--) {
+        for ($i = 7; $i > 0; $i--) {
             Presence::factory()->create([
                 'student_id' => $studentExample->id,
                 'date' => Carbon::now()->subDays($i)->toDateString(),
             ]);
         }
-        // - crea un voto per ogni sua materia
-        $course->subjects()->each(function ($subject) use ($studentExample, $course) {
-            Exam::create([
+        // - crea un voto per ogni esame di ogni sua materia
+        $course->exams()->each(function ($exam) use ($studentExample) {
+            Grade::create([
+                'exam_id' => $exam->id,
                 'student_id' => $studentExample->id,
-                'subject_id' => $subject->id,
-                'course_id' => $course->id,
-                'topic' => fake()->sentence(6),
                 'grade' => rand(15, 30),
-                'date' => fake()->dateTimeBetween('-1 week', 'now'),
-
             ]);
         });
     }
