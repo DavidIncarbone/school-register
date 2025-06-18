@@ -20,11 +20,13 @@ export const AssignmentRecord = ({
   assignment,
   setIsOpen,
   setAssignmentId,
+  setAssignmentBody,
   queryParams,
 }: {
   assignment: Assignment;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
   setAssignmentId: Dispatch<SetStateAction<number>>;
+  setAssignmentBody: Dispatch<SetStateAction<string>>;
   queryParams: IndexAssignmentsParams;
 }) => {
   // * vars
@@ -52,12 +54,14 @@ export const AssignmentRecord = ({
   };
 
   const updateAssignment = async (formData: AssignmentFormData) => {
+    console.log("test");
     updateMutate(formData as Assignment);
   };
 
   // collaterals
 
   useEffect(() => {
+    console.log(assignment);
     if (isUpdateSuccess) {
       setIsModifying(false);
       if (updateData?.isClean) {
@@ -92,14 +96,14 @@ export const AssignmentRecord = ({
           type="date"
           disabled={!isModifying}
           {...register("assignment_date")}
-          defaultValue={assignment.assignment_date}
+          defaultValue={assignment.assignment_date.split(" ")[0]}
           className=" border px-4 w-40 flex justify-center items-center"
         />
         <input
           type="date"
           disabled={!isModifying}
           {...register("deadline")}
-          defaultValue={assignment.deadline}
+          defaultValue={assignment.deadline.split(" ")[0]}
           className=" border px-4 w-40 flex justify-center items-center"
         />
         <textarea
@@ -116,7 +120,7 @@ export const AssignmentRecord = ({
               <Loader isContained={true} />
             ) : (
               <button type="submit">
-                <Save className="text-blue-400" />
+                {/* <Save className="text-blue-400" /> */}ciao
               </button>
             )
           ) : (
@@ -126,6 +130,7 @@ export const AssignmentRecord = ({
                 className="text-red-600"
                 onClick={() => {
                   setAssignmentId(assignment.id as number);
+                  setAssignmentBody(assignment.body as string);
                   setIsOpen(true);
                 }}
               />
