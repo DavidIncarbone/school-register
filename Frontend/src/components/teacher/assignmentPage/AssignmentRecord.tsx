@@ -1,57 +1,110 @@
 import Loader from "@/components/ui/Loader";
-import { UserType, type Assignment } from "@/config/types";
+import {
+  UserType,
+  type Assignment,
+  type IndexAssignmentsParams,
+} from "@/config/types";
+import { useMutationUpdateAssignment } from "@/hooks/assignmentsQueries";
+import {
+  assignmentsSchema,
+  type AssignmentFormData,
+} from "@/schemas/assignmentsSchema";
 import { useGlobalStore } from "@/store/useGlobalStore";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Paperclip, Pencil, Save, Trash2 } from "lucide-react";
-import { useState, type Dispatch, type SetStateAction } from "react";
+import { useEffect, useState, type Dispatch, type SetStateAction } from "react";
+import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
 
 export const AssignmentRecord = ({
   assignment,
-  // destroyAssignment,
-  // isDestroyPending,
   setIsOpen,
   setAssignmentId,
+  queryParams,
 }: {
   assignment: Assignment;
-  // destroyAssignment: (assignmentId: number) => void;
-  // isDestroyPending: boolean;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
   setAssignmentId: Dispatch<SetStateAction<number>>;
+  queryParams: IndexAssignmentsParams;
 }) => {
-  const { authUser } = useGlobalStore();
   // * vars
+  const { authUser } = useGlobalStore();
   const [isModifying, setIsModifying] = useState(false);
 
-  // * actions
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(assignmentsSchema),
+  });
+
+  // queries
+
+  const {
+    mutate: updateMutate,
+    isSuccess: isUpdateSuccess,
+    isPending: isUpdatePending,
+    data: updateData,
+  } = useMutationUpdateAssignment(queryParams, assignment.id as number); // * actions
   const onModifyClick = () => {
     setIsModifying(true);
   };
 
-  const onSaveClick = () => {
-    setIsModifying(false);
+  const updateAssignment = async (formData: AssignmentFormData) => {
+    updateMutate(formData as Assignment);
   };
+
+  // collaterals
+
+  useEffect(() => {
+    if (isUpdateSuccess) {
+      setIsModifying(false);
+      if (updateData?.isClean) {
+        toast.success("No changes made.", {
+          style: {
+            border: "1px solid blue",
+            padding: "16px",
+            color: "blue",
+          },
+          iconTheme: {
+            primary: "blue",
+            secondary: "#FFFAEE",
+          },
+        });
+      } else {
+        toast.success("Assignment updated succesfully");
+      }
+      console.log(isUpdateSuccess);
+    }
+  }, [updateData]);
 
   // * views
   return (
     <>
-      <div
+      <form
         className={`${
           isModifying && "italic"
         } flex odd:bg-zinc-800 even:bg-zinc-950 3xl:h-40`}
+        onSubmit={handleSubmit(updateAssignment)}
       >
         <input
           type="date"
           disabled={!isModifying}
+          {...register("assignment_date")}
           defaultValue={assignment.assignment_date}
           className=" border px-4 w-40 flex justify-center items-center"
         />
         <input
           type="date"
           disabled={!isModifying}
+          {...register("deadline")}
           defaultValue={assignment.deadline}
           className=" border px-4 w-40 flex justify-center items-center"
         />
         <textarea
           disabled={!isModifying}
+          {...register("body")}
           rows={isModifying ? 10 : 3}
           defaultValue={assignment.body}
           className="grow border min-w-92 p-3 tracking-wider leading-7 flex justify-center items-center"
@@ -59,7 +112,13 @@ export const AssignmentRecord = ({
 
         <div className="border w-32 flex justify-center items-center gap-2 [&>*]:cursor-pointer [&>*]:scale-90 [&>*]:hover:scale-100 [&>*]:transition-transform">
           {authUser?.type === UserType.TEACHER && isModifying ? (
-            <Save onClick={onSaveClick} className="text-blue-400" />
+            isUpdatePending ? (
+              <Loader isContained={true} />
+            ) : (
+              <button type="submit">
+                <Save className="text-blue-400" />
+              </button>
+            )
           ) : (
             <>
               <Pencil onClick={onModifyClick} className="text-yellow-500" />
@@ -87,7 +146,7 @@ export const AssignmentRecord = ({
             </label>
           )}
         </div>
-      </div>
+      </form>
     </>
   );
 };

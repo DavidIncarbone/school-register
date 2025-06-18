@@ -37,6 +37,35 @@ export const useMutationStoreAssignment = (params: IndexAssignmentsParams) => {
     },
   });
 };
+export const useMutationUpdateAssignment = (
+  params: IndexAssignmentsParams,
+  assignmentId: number
+) => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationKey: ["assignments", assignmentId],
+    mutationFn: async (assignment: Assignment) => {
+      console.log("try to update");
+      const res = await api.patch(
+        assignmentEndpoint + `/${assignmentId}`,
+        assignment
+      );
+      return res.data;
+    },
+    onSuccess: () => {
+      console.log("updated");
+
+      // Funzione per refetchare la index
+      queryClient.invalidateQueries({
+        queryKey: ["assignments", params],
+
+        // Esattamente come deve essere la queryKey
+        exact: true,
+      });
+    },
+  });
+};
+
 export const useMutationDestroyAssignment = (
   params: IndexAssignmentsParams
 ) => {

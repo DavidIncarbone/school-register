@@ -1,26 +1,16 @@
-import { useEffect, useState, type Dispatch, type SetStateAction } from "react";
-
+import { useEffect, type Dispatch, type SetStateAction } from "react";
 import { useMutationStoreAssignment } from "@/hooks/assignmentsQueries";
 import type { Course, IndexAssignmentsParams } from "@/config/types";
-import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "react-hot-toast";
 import Loader from "@/components/ui/Loader";
+import {
+  assignmentsSchema,
+  type AssignmentFormData,
+} from "@/schemas/assignmentsSchema";
 
-const schema = z.object({
-  body: z
-    .string()
-    .min(1, "Body field is required")
-    .max(255, "the maximum number of characters is 255"),
-  assignment_date: z.string().nonempty("Start's filed is required"),
-  deadline: z.string().nonempty("Deadline's filed is required"),
-  course_id: z.any(),
-});
 // TYPES
-
-// Tipizzazione custom di zod
-type AssignmentFormData = z.infer<typeof schema>;
 
 type AddAssignmentProps = {
   courses: Course[] | undefined;
@@ -46,12 +36,23 @@ AddAssignmentProps) => {
   const currentCourse = courses?.find(
     (course) => course.id == queryParams.course_id
   );
+
   const defaultValues = {
     course_id: queryParams?.course_id,
     assignment_date: "",
     deadline: "",
     body: "",
   };
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm({
+    resolver: zodResolver(assignmentsSchema),
+    defaultValues,
+  });
 
   //   queries
   const {
@@ -60,15 +61,15 @@ AddAssignmentProps) => {
     isPending: isStorePending,
   } = useMutationStoreAssignment(queryParams);
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    reset,
-  } = useForm({
-    resolver: zodResolver(schema),
-    defaultValues,
-  });
+  // actions
+
+  const createNewAssignment = async (formData: AssignmentFormData) => {
+    console.log(formData);
+    console.log(typeof queryParams?.course_id);
+    storeMutate(formData);
+  };
+
+  // collaterals effects
 
   useEffect(() => {
     if (isStoreSuccess) {
@@ -78,14 +79,7 @@ AddAssignmentProps) => {
     }
   }, [isStoreSuccess, reset]);
 
-  // Validation
-
-  const createNewAssignment = async (formData: AssignmentFormData) => {
-    console.log(formData);
-    console.log(typeof queryParams?.course_id);
-    storeMutate(formData);
-    // toast.success("Assignment added succesfully");
-  };
+  // views
 
   return (
     <section className="mt-5">

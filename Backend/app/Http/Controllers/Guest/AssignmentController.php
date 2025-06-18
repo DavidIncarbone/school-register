@@ -133,7 +133,7 @@ class AssignmentController extends Controller
         $assignment->deadline = $request->deadline;
 
         $isClean = $assignment->isClean();
-        Log::info($isClean);
+        // Log::info($isClean);
 
         $assignment->update();
 

@@ -144,6 +144,7 @@ export const AssignmentsPage = () => {
                     // isDestroyPending={isDestroyPending}
                     setIsOpen={setIsOpen}
                     setAssignmentId={setAssignmentId}
+                    queryParams={queryParams}
                   />
                 ))
               )}
