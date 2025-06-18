@@ -43,7 +43,7 @@ Route::middleware(["auth:sanctum"])->group(function () {
     // asignments
     Route::get("/assignments", [AssignmentController::class, "index"]);
     Route::post("/assignments", [AssignmentController::class, "store"])->middleware(['teacher-access']);
-    Route::patch("/assignments", [AssignmentController::class, "update"])->middleware(['teacher-access']);
+    Route::patch("/assignments/{assignment}", [AssignmentController::class, "update"])->middleware(['teacher-access']);
     Route::delete("/assignments/{assignment}", [AssignmentController::class, "destroy"])->middleware(['teacher-access']);
 
     // students

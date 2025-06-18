@@ -105,9 +105,38 @@ class AssignmentController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Assignment $assignment)
     {
-        //
+        $request->validate([
+            // 'assignment_id' => ['integer', 'min:1'],
+            'body' => ['string', 'min:1', 'max:255'],
+            'assignment_date' => ['date'],
+            'deadline' => ['date'],
+        ]);
+
+        $user = $request->user();
+
+        $teacher = Teacher::where("email", $user->email)->firstOrFail();
+
+        // $course = $teacher->courses()->findOrFail($request->course_id);
+
+        // $assignment->course_id = $course->id;
+        // $assignment->subject_id = $teacher->subject_id;
+        $assignment->body = $request->body;
+        $assignment->assignment_date = $request->assignment_date;
+        $assignment->deadline = $request->deadline;
+
+        $isClean = $assignment->isClean();
+        Log::info($isClean);
+
+        $assignment->update();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Assignment modificato con successo',
+            'data' => $assignment,
+            'isClean' => $isClean
+        ], 201);
     }
 
     /**
