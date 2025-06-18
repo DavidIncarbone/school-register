@@ -20,8 +20,8 @@ return new class extends Migration
             $table->foreign("course_id")->references("id")->on("courses")->onDelete("CASCADE");
             $table->foreign("subject_id")->references("id")->on("subjects")->onDelete("CASCADE");
             $table->text("body");
-            $table->date("assignment_date");
-            $table->date("deadline");
+            $table->dateTime("assignment_date");
+            $table->dateTime("deadline");
             $table->timestamps();
         });
     }
