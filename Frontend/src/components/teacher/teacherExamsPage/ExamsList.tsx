@@ -14,6 +14,7 @@ export const ExamsList = ({
     queryParams,
     exams,
     examIdShowed,
+    isAddExamFormOpen,
     setExamIdShowed,
     setUpdatingExam,
     setIsAddExamFormOpen,
@@ -21,6 +22,7 @@ export const ExamsList = ({
     queryParams: Record<string, string>;
     exams: Exam[] | undefined;
     examIdShowed: number;
+    isAddExamFormOpen: boolean;
     setExamIdShowed: Dispatch<SetStateAction<number>>;
     setUpdatingExam: Dispatch<
         SetStateAction<Record<string, string> | undefined>
@@ -38,6 +40,9 @@ export const ExamsList = ({
         const examId = button.id;
         setExamIdShowed(Number(examId));
     };
+
+    const btnDisabled =
+        isRemoveLoading || Boolean(examIdShowed) || isAddExamFormOpen;
 
     return (
         <div className=" bg-zinc-800 w-11/12 lg:w-3/5 mx-auto rounded-sm border">
@@ -66,9 +71,9 @@ export const ExamsList = ({
                     </div>
                     <div className="border-r border-b col-span-1 flex justify-center items-center">
                         <button
-                            disabled={isRemoveLoading}
+                            disabled={btnDisabled}
                             className={`${
-                                isRemoveLoading && "!cursor-not-allowed"
+                                btnDisabled && "!cursor-not-allowed"
                             } cursor-pointer`}
                         >
                             <Navigation
@@ -80,9 +85,9 @@ export const ExamsList = ({
                     </div>
                     <div className="border-b col-span-1 flex justify-center items-center gap-2">
                         <button
-                            disabled={isRemoveLoading}
+                            disabled={btnDisabled}
                             className={`${
-                                isRemoveLoading && "!cursor-not-allowed"
+                                btnDisabled && "!cursor-not-allowed"
                             } cursor-pointer`}
                         >
                             <Pencil
@@ -100,9 +105,9 @@ export const ExamsList = ({
                             />
                         </button>
                         <button
-                            disabled={isRemoveLoading}
+                            disabled={btnDisabled}
                             className={`${
-                                isRemoveLoading && "!cursor-not-allowed"
+                                btnDisabled && "!cursor-not-allowed"
                             } cursor-pointer`}
                         >
                             <Trash2

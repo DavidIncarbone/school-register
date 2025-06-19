@@ -105,6 +105,7 @@ export const TeacherExamsPage = () => {
                         queryParams={queryParams}
                         exams={exams}
                         examIdShowed={examIdShowed}
+                        isAddExamFormOpen={isAddExamFormOpen}
                         setExamIdShowed={setExamIdShowed}
                         setUpdatingExam={setUpdatingExam}
                         setIsAddExamFormOpen={setIsAddExamFormOpen}
