@@ -4,16 +4,23 @@ import type { ChangeEvent } from "react";
 export const CourseSelect = ({
   courses,
   queryParams,
-  onChange,
+  // onChange,
+  updateSearchParams,
 }: {
   courses: Course[] | undefined;
   queryParams: IndexAssignmentsParams;
-  onChange?: (e: ChangeEvent<HTMLSelectElement>) => void;
+  // onChange?: (e: ChangeEvent<HTMLSelectElement>) => void;
+  updateSearchParams: (params: { key: string; value: string }[]) => void
 }) => {
+  const handleCourseSelected = async (e: ChangeEvent<HTMLSelectElement>) => {
+      const key = "course_id";
+      const selectedCourseId = e.target.value;
+      updateSearchParams([{ key, value: selectedCourseId }]);
+  };
   return (
     <>
       <select
-        onChange={onChange}
+        onChange={handleCourseSelected}
         name="course_id"
         className="no-default w-fit capitalize italic cursor-pointer"
       >

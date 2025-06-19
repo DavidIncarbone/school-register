@@ -62,11 +62,11 @@ export default function SearchStudentsPage() {
     }, 500)
   ).current;
 
-  const handleCourseSelected = async (e: ChangeEvent<HTMLSelectElement>) => {
-    const key = "course_id";
-    const selectedCourseId = e.target.value;
-    updateSearchParams([{ key, value: selectedCourseId }]);
-  };
+  // const handleCourseSelected = async (e: ChangeEvent<HTMLSelectElement>) => {
+  //   const key = "course_id";
+  //   const selectedCourseId = e.target.value;
+  //   updateSearchParams([{ key, value: selectedCourseId }]);
+  // };
 
   const handleSortingColClick = (e: MouseEvent<HTMLDivElement>): void => {
     console.log(e.currentTarget);
@@ -96,7 +96,8 @@ export default function SearchStudentsPage() {
       <CourseSelect
         courses={courses}
         queryParams={queryParams}
-        onChange={handleCourseSelected}
+        updateSearchParams={updateSearchParams}
+        // onChange={handleCourseSelected}
       />
       <div className="flex flex-wrap gap-4 items-end mb-2">
         <SearchStudentInput

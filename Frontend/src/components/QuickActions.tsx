@@ -102,7 +102,7 @@ const quickActions = [
         label: "Students list",
     },
     {
-        path: "/",
+        path: "/exams",
         icon: <BarChart3 />,
         iconColor: "bg-teal-500",
         label: "Exams",

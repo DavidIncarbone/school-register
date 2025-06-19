@@ -11,7 +11,6 @@ use Illuminate\Http\Request;
 
 class ExamController extends Controller
 {
-    // todo: da finire! riflettere bene sulla logica e su COSA MOSTRARE in base al userType
     /**
      * Display a listing of the resource.
      */
@@ -112,7 +111,7 @@ class ExamController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Request $request, Exam $exam)
+    public function destroy(Exam $exam)
     {
         $this->checkExam($exam);
 
@@ -132,7 +131,6 @@ class ExamController extends Controller
     {
 
         $teacher = $this->getTeacher();
-
 
         $teacher->courses()->findOrFail($exam->course_id);
 

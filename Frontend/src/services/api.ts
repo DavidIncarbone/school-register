@@ -13,3 +13,4 @@ export const presencesEndpoint = "/api/presences";
 export const lessonScheduleEndpoint = "/api/lesson_schedules";
 export const assignmentEndpoint = "/api/assignments";
 export const profileEndpoint = "/api/profile";
+export const examsEndpoint = "/api/exams";

@@ -38,8 +38,8 @@ class AssignmentController extends Controller
             $teacher->courses()->findOrFail($courseId);
 
             $result = Assignment::where("subject_id", $subjectId)
-                ->where("course_id", $courseId)
-                ->with(['course']);
+                ->where("course_id", $courseId);
+                // ->with(['course']);
         } elseif ($user->type == "student") {
             $student = Student::where('email', $user->email)->firstOrFail();
             $courseId = $student->course_id;

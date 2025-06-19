@@ -21,7 +21,7 @@ class PresenceFactory extends Factory
 
         return [
             "student_id" => 1,
-            "is_present" => (bool)rand(0, 1),
+            "is_present" => (bool)fake()->boolean(70),
             "date" => fake()->dateTimeBetween('-1 year', "now"),
         ];
     }

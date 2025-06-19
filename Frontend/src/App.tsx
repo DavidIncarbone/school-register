@@ -19,6 +19,7 @@ import { SubjectsPage } from "./pages/student/SubjectsPage";
 import { Unauthorized } from "./pages/Unauthorized";
 import { RequireRole } from "./components/RequireRole";
 import { UserType } from "./config/types";
+import { ExamsPage } from "./pages/ExamsPage";
 
 function App() {
     // collaterals effect
@@ -35,7 +36,7 @@ function App() {
 
     return (
         <>
-            <Debug />
+            {/* <Debug /> */}
             <Routes>
                 <Route path="/" Component={DefaultLayout}>
                     {/* pagine con auth */}
@@ -56,6 +57,10 @@ function App() {
                         <Route
                             path="/assignments"
                             Component={AssignmentsPage}
+                        />
+                        <Route
+                            path="/exams"
+                            Component={ExamsPage}
                         />
                         <Route
                             path="/search-students"
