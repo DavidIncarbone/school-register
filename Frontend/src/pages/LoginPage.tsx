@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from "react";
+import { useState } from "react";
 import { useGlobalStore } from "../store/useGlobalStore";
 import { api } from "../services/api";
 import { Link, useNavigate } from "react-router";

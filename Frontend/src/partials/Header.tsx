@@ -3,6 +3,7 @@ import { useGlobalStore } from "../store/useGlobalStore";
 import { Link, useNavigate } from "react-router";
 import { Bell, Bot, Calendar, LogOut, Megaphone } from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
+import { useState } from "react";
 
 export default function Header() {
     // * global store

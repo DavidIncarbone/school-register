@@ -4,11 +4,13 @@ import type { ChangeEvent } from "react";
 export const CourseSelect = ({
     courses,
     queryParams,
+    cb,
     // onChange,
     updateSearchParams,
 }: {
     courses: Course[] | undefined;
     queryParams: IndexAssignmentsParams;
+    cb?: () => void;
     // onChange?: (e: ChangeEvent<HTMLSelectElement>) => void;
     updateSearchParams: (params: { key: string; value: string }[]) => void;
 }) => {
@@ -16,6 +18,7 @@ export const CourseSelect = ({
         const key = "course_id";
         const selectedCourseId = e.target.value;
         updateSearchParams([{ key, value: selectedCourseId }]);
+        if (cb) cb();
     };
     return (
         <>
