@@ -3,7 +3,6 @@ import { AssignmentHead } from "@/components/teacher/assignmentPage/AssignmentHe
 import { AssignmentRecord } from "@/components/teacher/assignmentPage/AssignmentRecord";
 import { CourseSelect } from "@/components/teacher/CourseSelect";
 import DeleteModalAssignment from "@/components/ui/modal";
-import DeleteModalExample from "@/components/ui/modal";
 import {
     SortOptionAssignment,
     UserType,
@@ -11,25 +10,14 @@ import {
     type Course,
 } from "@/config/types";
 import {
-    useInfiniteQueryIndexAssignment,
     useMutationDestroyAssignment,
-    // useQueryIndexAssignment,
+    useQueryIndexAssignment,
 } from "@/hooks/assignmentsQueries";
 import { useQueryIndexCourse } from "@/hooks/coursesQueries";
 import { useDynamicSearchParams } from "@/hooks/useDynamicSearchParams";
 import { useGlobalStore } from "@/store/useGlobalStore";
-import type {
-    InfiniteData,
-    UseInfiniteQueryResult,
-    UseQueryResult,
-} from "@tanstack/react-query";
-import {
-    Fragment,
-    useEffect,
-    useState,
-    type ChangeEvent,
-    type MouseEvent,
-} from "react";
+import type { UseQueryResult } from "@tanstack/react-query";
+import { useEffect, useState, type MouseEvent } from "react";
 import toast from "react-hot-toast";
 
 export const AssignmentsPage = () => {
@@ -37,7 +25,6 @@ export const AssignmentsPage = () => {
     const { authUser } = useGlobalStore();
     // * custom hooks
     const { queryParams, updateSearchParams } = useDynamicSearchParams();
-
     // vars
     const [isFormShowing, setIsFormShowing] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
@@ -59,13 +46,11 @@ export const AssignmentsPage = () => {
         data: assignments,
         isLoading: isAssigmentsLoading,
         isError: isAssigmentsError,
-        fetchNextPage: assignmentsFetchNextPage,
-        fetchPreviousPage: assignmentsFetchPreviousPage,
-    } = useInfiniteQueryIndexAssignment(
+    } = useQueryIndexAssignment(
         queryParams,
         "course_id" in queryParams
-    ) as UseInfiniteQueryResult<
-        InfiniteData<{ data: Assignment[]; last_page: number }, unknown>,
+    ) as UseQueryResult<
+        { data: Assignment[]; current_page: number; last_page: number },
         Error
     >;
 
@@ -75,8 +60,12 @@ export const AssignmentsPage = () => {
         isPending: isDestroyPending,
     } = useMutationDestroyAssignment(queryParams);
 
-    // * actions
+    // * hardcoded vars
+    const prevBtnDisabled = assignments && assignments.current_page <= 1;
+    const nextBtnDisabled =
+        assignments && assignments.current_page >= assignments.last_page;
 
+    // * actions
     const handleForm = () => setIsFormShowing(!isFormShowing);
 
     const destroyAssignment = async (assignmentId: number) => {
@@ -101,6 +90,32 @@ export const AssignmentsPage = () => {
         );
     };
 
+    const fetchPrevPage = () => {
+        if (assignments) {
+            if (assignments.current_page > 1) {
+                updateSearchParams([
+                    {
+                        key: "page",
+                        value: String(assignments?.current_page - 1),
+                    },
+                ]);
+            }
+        }
+    };
+
+    const fetchNextPage = () => {
+        if (assignments) {
+            if (assignments.current_page < assignments.last_page) {
+                updateSearchParams([
+                    {
+                        key: "page",
+                        value: String(assignments?.current_page + 1),
+                    },
+                ]);
+            }
+        }
+    };
+
     // * side effects
     useEffect(() => {
         if (courses && !("course_id" in queryParams)) {
@@ -116,14 +131,13 @@ export const AssignmentsPage = () => {
             form?.scrollIntoView({ behavior: "smooth", block: "end" });
         }
     }, [isFormShowing]);
+
     useEffect(() => {
         if (isDestroySuccess) {
             toast.success("Assignment deleted succesfully");
             setIsOpen(false);
         }
     }, [isDestroySuccess]);
-
-    console.log(assignments?.pageParams);
 
     // * views
     if (isAssigmentsError) return <pre>assignment error - da gestire</pre>;
@@ -192,25 +206,17 @@ export const AssignmentsPage = () => {
                             {isAssigmentsLoading ? (
                                 <div className="h-[425px] animate-pulse bg-zinc-800"></div>
                             ) : (
-                                assignments?.pages.map((page, i) => (
-                                    <Fragment key={i}>
-                                        {page.data.map((as) => (
-                                            <AssignmentRecord
-                                                key={as.id}
-                                                assignment={as}
-                                                // destroyAssignment={destroyAssignment}
-                                                // isDestroyPending={isDestroyPending}
-                                                setIsOpen={setIsOpen}
-                                                setAssignmentId={
-                                                    setAssignmentId
-                                                }
-                                                setAssignmentBody={
-                                                    setAssignmentBody
-                                                }
-                                                queryParams={queryParams}
-                                            />
-                                        ))}
-                                    </Fragment>
+                                assignments?.data?.map((as) => (
+                                    <AssignmentRecord
+                                        key={as.id}
+                                        assignment={as}
+                                        // destroyAssignment={destroyAssignment}
+                                        // isDestroyPending={isDestroyPending}
+                                        setIsOpen={setIsOpen}
+                                        setAssignmentId={setAssignmentId}
+                                        setAssignmentBody={setAssignmentBody}
+                                        queryParams={queryParams}
+                                    />
                                 ))
                             )}
                         </div>
@@ -218,19 +224,25 @@ export const AssignmentsPage = () => {
                 </div>
 
                 {/* pagination */}
-                <button
-                    onClick={() => assignmentsFetchPreviousPage()}
-                    className="btn-pretty"
-                >
-                    previoues page
-                </button>
-
-                <button
-                    onClick={() => assignmentsFetchNextPage()}
-                    className="btn-pretty"
-                >
-                    next page
-                </button>
+                <div className="flex justify-center gap-4 mt-4">
+                    <button
+                        onClick={fetchPrevPage}
+                        disabled={prevBtnDisabled}
+                        className={`${
+                            prevBtnDisabled && "!cursor-not-allowed opacity-50"
+                        } btn-pretty`}
+                    >
+                        previous page
+                    </button>
+                    <button
+                        onClick={fetchNextPage}
+                        className={`${
+                            nextBtnDisabled && "!cursor-not-allowed opacity-50"
+                        } btn-pretty`}
+                    >
+                        next page
+                    </button>
+                </div>
 
                 <p className="mt-2 landscape:hidden">
                     Rotate the device for better visualization
@@ -252,13 +264,13 @@ const initialSortingCols = [
     {
         label: "Start",
         sort: SortOptionAssignment.BY_ASSIGNMENT_DATE,
-        dir: "asc",
+        dir: "desc",
         className: "border w-40 flex justify-center items-center py-3",
     },
     {
         label: "Deadline",
         sort: SortOptionAssignment.BY_DEADLINE,
-        dir: "asc",
+        dir: "desc",
         className: "border w-40 flex justify-center items-center",
     },
     {

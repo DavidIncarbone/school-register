@@ -114,7 +114,6 @@ export const AddOrUpdateExamForm = ({
                         <input
                             type="date"
                             {...register("date")}
-                            id="date"
                             className="border border-white p-3"
                         />
                     </div>
@@ -126,12 +125,10 @@ export const AddOrUpdateExamForm = ({
                     <label className="flex flex-col" htmlFor="topic">
                         <span>Topic*</span>
                         <span className="text-xs text-white/80 pb-1">
-                            {" "}
-                            Max. 10 rows | Max. 255 charachters
+                            Max. 50 charachters
                         </span>
                     </label>
                     <textarea
-                        id="topic"
                         {...register("topic")}
                         className="w-full border border-white p-3"
                         rows={2}

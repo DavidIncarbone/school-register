@@ -19,4 +19,9 @@ class Assignment extends Pivot
         'assignment_date',
         'deadline'
     ];
+
+    public function subject()
+    {
+        return $this->belongsTo(Subject::class);
+    }
 }

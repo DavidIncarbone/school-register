@@ -1,45 +1,45 @@
 import type { Assignment, IndexAssignmentsParams } from "@/config/types";
 import { api, assignmentEndpoint } from "@/services/api";
 import {
-    useInfiniteQuery,
+    // useInfiniteQuery,
     useMutation,
     useQuery,
     useQueryClient,
 } from "@tanstack/react-query";
 
-export const useInfiniteQueryIndexAssignment = (
-    params: IndexAssignmentsParams,
-    enabled = true
-) => {
-    return useInfiniteQuery({
-        queryKey: ["assignments", params],
-        queryFn: async ({ pageParam }) => {
-            const res = await api.get(
-                assignmentEndpoint + `?page=${pageParam}`,
-                {
-                    params,
-                }
-            );
-            return res.data;
-        },
-        initialPageParam: 1,
-        getNextPageParam: (lastPage) => {
-            // console.log(lastPage);
-            if (lastPage.current_page < lastPage.last_page) {
-                return lastPage.current_page + 1;
-            }
-            return undefined; // segnala che non ci sono più pagine
-        },
-        getPreviousPageParam: (firstPage) => {
-            // console.log(firstPage);
-            if (firstPage.current_page > 1) {
-                return firstPage.current_page - 1;
-            }
-            return undefined; // segnala che non ci sono più pagine
-        },
-        enabled,
-    });
-};
+// export const useInfiniteQueryIndexAssignment = (
+//     params: IndexAssignmentsParams,
+//     enabled = true
+// ) => {
+//     return useInfiniteQuery({
+//         queryKey: ["assignments", params],
+//         queryFn: async ({ pageParam }) => {
+//             const res = await api.get(
+//                 assignmentEndpoint + `?page=${pageParam}`,
+//                 {
+//                     params,
+//                 }
+//             );
+//             return res.data;
+//         },
+//         initialPageParam: 1,
+//         getNextPageParam: (lastPage) => {
+//             // console.log(lastPage);
+//             if (lastPage.current_page < lastPage.last_page) {
+//                 return lastPage.current_page + 1;
+//             }
+//             return undefined; // segnala che non ci sono più pagine
+//         },
+//         getPreviousPageParam: (firstPage) => {
+//             // console.log(firstPage);
+//             if (firstPage.current_page > 1) {
+//                 return firstPage.current_page - 1;
+//             }
+//             return undefined; // segnala che non ci sono più pagine
+//         },
+//         enabled,
+//     });
+// };
 
 export const useQueryIndexAssignment = (
     params: IndexAssignmentsParams,
@@ -53,8 +53,9 @@ export const useQueryIndexAssignment = (
             });
             return res.data;
         },
-        // staleTime: Infinity,
+        staleTime: Infinity,
         enabled,
+        placeholderData: (previousData) => previousData, // per evitare flickering (loading state)
     });
 };
 
