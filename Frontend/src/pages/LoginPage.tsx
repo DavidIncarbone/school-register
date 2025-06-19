@@ -12,7 +12,7 @@ import toast from "react-hot-toast";
 export default function LoginPage() {
   // * vars
   const navigate = useNavigate();
-  const { authUser, setAuthUser } = useGlobalStore();
+  const { authUser, setAuthUser, profile } = useGlobalStore();
   const [isLoading, setIsLoading] = useState(false);
 
   // * actions
@@ -29,24 +29,28 @@ export default function LoginPage() {
     try {
       const res = await api.get("/api/user");
       const user = res.data as User;
-
       setAuthUser(user);
-      navigate("/");
-      toast.success(`Benvenuto ${user.name}`);
-    } catch (err) {
+      toast.success(`Welcome ${user?.name}`);
+    } catch (err: any) {
       console.error(err);
-    } finally {
-      setIsLoading(false);
     }
   };
 
   const handleSubmit = async (formData: LoginUser) => {
-    setIsLoading(true);
     try {
+      setIsLoading(true);
       await api.post("/login", formData);
       fetchAndSetUser();
-    } catch (err: unknown) {
+      navigate("/");
+    } catch (err: any) {
       console.error(err);
+      console.error(err.status);
+      if (err.status === 422) {
+        toast.error("Unregistered User", {
+          position: "top-center",
+        });
+      }
+    } finally {
       setIsLoading(false);
     }
   };

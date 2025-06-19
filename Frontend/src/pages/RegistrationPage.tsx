@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router";
 import { useGlobalStore } from "../store/useGlobalStore";
 import { api } from "../services/api";
@@ -11,14 +11,8 @@ import {
   type RetrieveTempUserFormData,
 } from "@/schemas/registerSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
-
-type Data = {
-  name: string;
-  email: string;
-  type: UserType;
-  password: string;
-  password_confirmation: string;
-};
+import toast from "react-hot-toast";
+import Loader from "@/components/ui/Loader";
 
 type TempUser = {
   first_name: string;
@@ -35,6 +29,8 @@ export default function RegistrationPage() {
   const navigate = useNavigate();
   const [isEmailVerified, setIsEmailVerified] = useState(false);
   const [tempUser, setTempUser] = useState<TempUser | null>(null);
+  const [isTempUserPending, setIsTempUserPending] = useState(false);
+  const [isEnableUserPending, setIsenableUserPending] = useState(false);
 
   const {
     register: registerTempUser,
@@ -54,9 +50,9 @@ export default function RegistrationPage() {
   // * actions
   const retrieveTempUser = async (formData: RetrieveTempUserFormData) => {
     try {
+      setIsTempUserPending(true);
       console.log("Sono nel retrieve temp user");
       const res = await api.post("/api/retrieve-temp-user", formData);
-      //   let tempUser: TempUser = res.data;
       console.log(res.data);
       const tempUser: TempUser = {
         first_name: res.data.first_name,
@@ -67,12 +63,28 @@ export default function RegistrationPage() {
       setTempUser(tempUser);
       setIsEmailVerified(true);
       console.log(formData);
-    } catch (err: unknown) {
+      toast.success("User successfully verified", {
+        position: "top-center",
+      });
+      setIsTempUserPending(false);
+    } catch (err: any) {
       console.error(err);
+      if (err.status === 404) {
+        toast.error("Invalid credentials", {
+          position: "top-center",
+        });
+      } else if (err.status === 401) {
+        toast.error("User already enabled", {
+          position: "top-center",
+        });
+      }
+    } finally {
+      setIsTempUserPending(false);
     }
   };
   const enableUser = async (formData: EnableUserFormData) => {
     try {
+      setIsenableUserPending(true);
       console.log("sono nell'enable user");
       const data = {
         ...formData,
@@ -82,42 +94,29 @@ export default function RegistrationPage() {
       await api.post("/register", data);
       const res = await api.get("/api/user");
       console.log(res.data, "user");
+      const user = res.data as User;
       setAuthUser(res.data as User);
       navigate("/");
+      toast.success(`Welcome ${user.name}`);
     } catch (err: unknown) {
       console.error(err);
+    } finally {
+      setIsenableUserPending(false);
     }
   };
 
-  //   try {
-  //     if (tempUser) {
-  //       formData = {
-  //         ...formData,
-  //         email: tempUser.email,
-  //         name: `${tempUser.first_name} ${tempUser.last_name}`,
-  //         type: tempUser.type,
-  //       };
-  //     }
-  //     console.log(formData);
-  //     await api.post("/register", formData);
-  //     const res = await api.get("/api/user");
-  //     setAuthUser(res.data as User);
-  //     navigate("/");
-  //   } catch (err: unknown) {
-  //     console.error(err);
-  //   }
   console.log(tempUser);
   return (
     !authUser && (
       <div className="h-full flex justify-center items-center">
         <div className="auth-form">
           <h2 className="text-3xl text-center capitalize">
-            <span>{tempUser?.type}</span> <span>registration</span>
+            <span>{tempUser?.type}</span> <span>Check-In</span>
           </h2>
 
           {!isEmailVerified ? (
             <form onSubmit={handleTempUserSubmit(retrieveTempUser)}>
-              <div className="flex flex-col space-y-0.5">
+              <div className="flex flex-col gap-1">
                 <label htmlFor="email">Email</label>
                 <input
                   disabled={isEmailVerified}
@@ -126,73 +125,79 @@ export default function RegistrationPage() {
                   placeholder="example@example.com"
                   defaultValue={tempUser?.email ? tempUser.email : ""}
                   id="email"
-                  // name="email"
-
                   {...registerTempUser("email")}
                 />
-                {tempUserErrors.email?.message}
+                <span className="text-red-500">
+                  {tempUserErrors.email?.message}
+                </span>
               </div>
-              <div className="flex flex-col space-y-0.5">
+              <div className="flex flex-col gap-1">
                 <label htmlFor="type">Role</label>
-                <select
-                  id="type"
-                  /*name="type"*/
-
-                  {...registerTempUser("type")}
-                >
+                <select id="type" {...registerTempUser("type")}>
                   <option value="" selected disabled hidden>
                     Select your role
                   </option>
                   <option value={UserType.STUDENT}>Student</option>
                   <option value={UserType.TEACHER}>Teacher</option>
                 </select>
-                {tempUserErrors.type?.message}
+                <span className="text-red-500">
+                  {tempUserErrors.type?.message}
+                </span>
               </div>
-              <button type="submit">Verify</button>
+              <button
+                type="submit"
+                className={`flex justify-center
+                `}
+              >
+                {isTempUserPending ? (
+                  <Loader isContained={true} />
+                ) : (
+                  <div>Verify</div>
+                )}
+              </button>
             </form>
           ) : (
             <form onSubmit={handleEnableUserSubmit(enableUser)}>
-              <div className="flex flex-col space-y-0.5">
+              <div className="flex flex-col gap-1">
                 <label htmlFor="email">Email</label>
                 <input
                   disabled={isEmailVerified}
                   className={`${isEmailVerified && "cursor-not-allowed"}`}
                   type="email"
                   placeholder="example@example.com"
-                  value={tempUser?.email ? tempUser.email : ""}
+                  defaultValue={tempUser?.email ? tempUser.email : ""}
                   id="email"
-                  // name="email"
-
                   {...registerEnableUser("email")}
                 />
-                {enableUserErrors.email?.message}
+                <span className="text-red">
+                  {enableUserErrors.email?.message}
+                </span>
               </div>
-              <div className="flex flex-col space-y-0.5">
+              <div className="flex flex-col gap-1">
                 <label htmlFor="name">Name</label>
                 <input
                   disabled={isEmailVerified}
                   className={`${isEmailVerified && "cursor-not-allowed"}`}
                   type="name"
                   {...registerEnableUser("name")}
-                  value={
+                  defaultValue={
                     tempUser?.first_name &&
                     tempUser?.last_name &&
                     `${tempUser.first_name} ${tempUser.last_name}`
                   }
                   id="name"
-                  //   name="name"
-
                   autoFocus
                 />
-                {enableUserErrors.name?.message}
+                <span className="text-red">
+                  {enableUserErrors.name?.message}
+                </span>
               </div>
               <div className="flex flex-col space-y-0.5">
                 <label htmlFor="password">Password</label>
                 <input
                   type="password"
                   placeholder="password"
-                  // defaultValue="ciaociao"
-                  // name="password"
+                  defaultValue="ciaociao"
                   {...registerEnableUser("password")}
                 />
                 {enableUserErrors.password?.message}
@@ -202,8 +207,7 @@ export default function RegistrationPage() {
                 <input
                   type="password"
                   placeholder="password_confirmation"
-                  // defaultValue="ciaociao"
-                  // name="password_confirmation"
+                  defaultValue="ciaociao"
                   {...registerEnableUser("password_confirmation")}
                 />
                 {enableUserErrors.password_confirmation?.message}
@@ -221,7 +225,13 @@ export default function RegistrationPage() {
                   </a>
                 </label>
               </div>
-              <button type="submit">Enable</button>
+              <button type="submit">
+                {isEnableUserPending ? (
+                  <Loader isContained={true} />
+                ) : (
+                  <div>Enable</div>
+                )}
+              </button>
             </form>
           )}
         </div>
