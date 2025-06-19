@@ -35,7 +35,7 @@ function App() {
 
     return (
         <>
-            {/* <Debug /> */}
+            <Debug />
             <Routes>
                 <Route path="/" Component={DefaultLayout}>
                     {/* pagine con auth */}

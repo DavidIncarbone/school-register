@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Mockery\Matcher\Subset;
 
 class Course extends Model
 {
@@ -37,5 +38,10 @@ class Course extends Model
     public function students()
     {
         return $this->hasMany(Student::class);
+    }
+
+    public function exams()
+    {
+        return $this->belongsToMany(Subject::class, 'exams')->using(Exam::class)->withPivot(['topic', 'date']);
     }
 }

@@ -18,30 +18,24 @@ class ExamController extends Controller
     public function index()
     {
         request()->validate([
-            'course_id' => 'integer|exists:courses,id',
-            'subject_id' => 'integer|exists:subjects,id',
-            "sort" => ['string', 'in:by_date,by_grade,by_student_id'],
+            'course_id' => 'required|integer|exists:courses,id',
             "dir" => ['string', 'in:asc,desc'],
         ]);
+        $courseId = request()->course_id;
+        $dir = request()->dir ?? 'desc';
 
-        $dir = request()->dir ?? 'asc';
-        $sort = request()->sort ?? 'by_date';
+        $teacher = $this->getTeacher();
+        $teacher->courses()->findOrFail($courseId);
 
-        $user = request()->user();
+        $exams = Exam::where('course_id', request()->course_id)
+            ->where('subject_id', $teacher->subject_id)
+            ->orderBy('date', $dir)->get();
 
-        if ($user->type === "teacher") {
-            $teacher = Teacher::where("email", $user->email)->firstOrFail();
-            // ! controllo di course_id required
-            $exams = Exam::where('course_id', request()->course_id)->where('subject_id', $teacher->subject_id);
-            return response()->json($exams->get());
-        } elseif ($user->type === "student") {
-            $student = Student::where("email", $user->email)->firstOrFail();
-            // ! controllo di subject_id required
-            $exams = Exam::where('student_id', $student->id)->where('subject_id', request()->subject_id);
-            return response()->json($exams->get());
-        }
-
-        // $exams->orderBy()
+        return response()->json([
+            "success" => true,
+            "message" => "Operazione effettuata con successo",
+            'data' => $exams
+        ]);
     }
 
     /**
@@ -49,30 +43,104 @@ class ExamController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'course_id' => 'required|integer|exists:courses,id',
+            'topic' => 'required|string|min:1|max:255',
+            'date' => 'required|date'
+        ]);
+        $courseId = $request->course_id;
+        $topic = $request->topic;
+        $date = $request->date;
+
+        $teacher = $this->getTeacher();
+        $teacher->courses()->findOrFail($courseId);
+
+        $newExam =  Exam::create([
+            'course_id' => $courseId,
+            'subject_id' => $teacher->subject_id,
+            'topic' => $topic,
+            'date' => $date,
+        ]);
+
+        return response()->json([
+            "success" => true,
+            "message" => "Esame creato con successo",
+            'data' => $newExam,
+        ]);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Exam $exam)
     {
-        //
+        $this->checkExam($exam);
+
+        return response()->json([
+            "success" => true,
+            "message" => "Operazione effettuata con successo",
+            'data' => $exam
+        ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Exam $exam)
     {
-        //
+        $request->validate([
+            'topic' => 'string|min:1|max:255',
+            'date' => 'date'
+        ]);
+        $topic = $request->topic ?? $exam->topic;
+        $date = $request->date ?? $exam->date;
+
+        $this->checkExam($exam);
+
+        $exam->update([
+            'topic' => $topic,
+            'date' => $date,
+        ]);
+
+        return response()->json([
+            "success" => true,
+            "message" => "Esame modificato con successo",
+            'data' => $exam,
+        ]);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Request $request, Exam $exam)
     {
-        //
+        $this->checkExam($exam);
+
+        $exam->deleteOrFail();
+
+        return response()->json([], 204);
+    }
+
+    private function getTeacher()
+    {
+        $user = request()->user();
+        $teacher = Teacher::where("email", $user->email)->firstOrFail();
+        return $teacher;
+    }
+
+    private function checkExam(Exam $exam)
+    {
+
+        $teacher = $this->getTeacher();
+
+
+        $teacher->courses()->findOrFail($exam->course_id);
+
+        if ($exam->subject_id != $teacher->subject_id) {
+            return response()->json([
+                "success" => false,
+                "message" => "Operazione non autorizzata",
+            ], 401);
+        }
     }
 }

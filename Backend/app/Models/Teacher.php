@@ -26,4 +26,9 @@ class Teacher extends Model
     {
         return $this->belongsTo(Subject::class);
     }
+
+    public function notes()
+    {
+        return $this->belongsToMany(Student::class, 'notes')->using(Note::class)->withPivot('body');
+    }
 }
