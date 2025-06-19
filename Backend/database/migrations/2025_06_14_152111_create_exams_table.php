@@ -15,12 +15,15 @@ return new class extends Migration
     {
         Schema::create('exams', function (Blueprint $table) {
             $table->id();
-            $table->foreignId("student_id")->constrained();
-            $table->foreignId("subject_id")->constrained();
-            $table->foreignId("course_id")->constrained();
+            
+            $table->unsignedBigInteger('course_id');
+            $table->unsignedBigInteger('subject_id');
+
+            $table->foreign("course_id")->references('id')->on('courses')->cascadeOnDelete();
+            $table->foreign("subject_id")->references('id')->on('subjects')->cascadeOnDelete();
+            
             $table->string("topic");
-            $table->integer("grade");
-            $table->date("date");
+            $table->dateTime("date");
             $table->timestamps();
         });
     }
