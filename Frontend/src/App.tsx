@@ -19,7 +19,7 @@ import { SubjectsPage } from "./pages/student/SubjectsPage";
 import { Unauthorized } from "./pages/Unauthorized";
 import { RequireRole } from "./components/RequireRole";
 import { UserType } from "./config/types";
-import { TeacherExamsPage } from "./pages/TeacherExamsPage";
+import { TeacherExamsPage } from "./pages/teacher/TeacherExamsPage";
 
 function App() {
     // collaterals effect

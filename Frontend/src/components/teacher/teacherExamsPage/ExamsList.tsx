@@ -1,0 +1,64 @@
+import type { Exam } from "@/config/types";
+import { formatDateToDDMMYYYY } from "@/utilities/utils";
+import { Navigation, Pencil, Trash2 } from "lucide-react";
+import type { Dispatch, MouseEvent, SetStateAction } from "react";
+
+export const ExamsList = ({
+    exams,
+    examIdShowed,
+    setExamIdShowed,
+}: {
+    exams: Exam[] | undefined;
+    examIdShowed: number;
+    setExamIdShowed: Dispatch<SetStateAction<number>>;
+}) => {
+    console.log(exams);
+
+    // * actions
+    const handleShowGrades = async (e: MouseEvent<SVGSVGElement>) => {
+        const button = e.currentTarget;
+        const examId = button.id;
+        setExamIdShowed(Number(examId));
+    };
+
+    return (
+        <div className=" bg-zinc-800 w-11/12 lg:w-3/5 mx-auto rounded-sm border">
+            {/* head */}
+            <div className="grid grid-cols-6 capitalize [&>div]:p-2 text-center font-semibold">
+                <div className="border-b col-span-2">date</div>
+                <div className="border-x border-b col-span-2">topic</div>
+                <div className="border-b border-r col-span-1">results</div>
+                <div className="border-b col-span-1">actions</div>
+            </div>
+            {/* exams */}
+            {exams?.map((exam) => (
+                <div
+                    key={exam.id}
+                    className={`${
+                        examIdShowed !== exam.id &&
+                        examIdShowed !== 0 &&
+                        "hidden"
+                    } grid grid-cols-6 [&>div]:p-2`}
+                >
+                    <div className="border-b col-span-2">
+                        {formatDateToDDMMYYYY(exam.date.split(" ")[0])}
+                    </div>
+                    <div className="border-x border-b col-span-2">
+                        {exam.topic} {exam.id}
+                    </div>
+                    <div className="border-r border-b col-span-1 flex justify-center items-center">
+                        <Navigation
+                            id={String(exam.id)}
+                            onClick={handleShowGrades}
+                            className="scale-75 hover:scale-100 text-blue-500 transition-transform cursor-pointer"
+                        />
+                    </div>
+                    <div className="border-b col-span-1 flex justify-center items-center gap-2">
+                        <Pencil className="text-yellow-500 scale-75 hover:scale-100 transition-transform cursor-pointer" />
+                        <Trash2 className="text-red-600 scale-75 hover:scale-100 transition-transform cursor-pointer" />
+                    </div>
+                </div>
+            ))}
+        </div>
+    );
+};

@@ -14,12 +14,14 @@ export const CourseSelect = ({
     // onChange?: (e: ChangeEvent<HTMLSelectElement>) => void;
     updateSearchParams: (params: { key: string; value: string }[]) => void;
 }) => {
+
     const handleCourseSelected = async (e: ChangeEvent<HTMLSelectElement>) => {
         const key = "course_id";
         const selectedCourseId = e.target.value;
         updateSearchParams([{ key, value: selectedCourseId }]);
         if (cb) cb();
     };
+    
     return (
         <>
             <select

@@ -135,7 +135,7 @@ class DatabaseSeeder extends Seeder
             'course_id' => $courseId,
         ]);
         // - crea delle presenze a partire da una settimana fa ad oggi
-        for ($i = 7; $i > 0; $i--) {
+        for ($i = 7; $i > 1; $i--) {
             Presence::factory()->create([
                 'student_id' => $studentExample->id,
                 'date' => Carbon::now()->subDays($i)->toDateString(),
