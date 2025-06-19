@@ -1,5 +1,3 @@
-import { number } from "zod";
-
 export enum UserType {
   STUDENT = "student",
   TEACHER = "teacher",

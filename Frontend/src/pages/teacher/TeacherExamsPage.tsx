@@ -1,5 +1,5 @@
 import { CourseSelect } from "@/components/teacher/CourseSelect";
-import { AddExam } from "@/components/teacher/teacherExamsPage/AddExam";
+import { AddOrUpdateExamForm } from "@/components/teacher/teacherExamsPage/AddOrUpdateExamForm";
 import { ExamsList } from "@/components/teacher/teacherExamsPage/ExamsList";
 import { GradesList } from "@/components/teacher/teacherExamsPage/GradesList";
 import { SkeleExamsList } from "@/components/ui/SkeleExamsList";
@@ -20,6 +20,7 @@ export const TeacherExamsPage = () => {
     // * vars
     const [examIdShowed, setExamIdShowed] = useState(0);
     const [isAddExamFormOpen, setIsAddExamFormOpen] = useState(false);
+    const [updatingExam, setUpdatingExam] = useState<Record<string, string>>();
     const activeCourseId = queryParams?.course_id
         ? Number(queryParams.course_id)
         : 0;
@@ -52,7 +53,7 @@ export const TeacherExamsPage = () => {
         <div className="px-5 py-2">
             {/* headings */}
             <div className="flex items-center justify-between w-11/12 lg:w-3/5 mx-auto">
-                <div className="title_h1 flex gap-1 items-center justify-center mb-2">
+                <div className="title_h1 flex gap-1 items-center justify-center">
                     <p>Exams for:</p>
                     <CourseSelect
                         courses={courses}
@@ -80,13 +81,17 @@ export const TeacherExamsPage = () => {
             </div>
             {/* add exam form */}
             {isAddExamFormOpen && (
-                <div className="w-11/12 lg:w-3/5 mx-auto">
-                    <AddExam
+                <div className="w-11/12 lg:w-3/5 mx-auto mt-4 mb-8">
+                    <AddOrUpdateExamForm
+                        queryParams={queryParams}
                         course_name={
                             courses?.find(
                                 (course) => course.id === activeCourseId
                             )?.name
                         }
+                        course_id={activeCourseId}
+                        closeForm={() => setIsAddExamFormOpen(false)}
+                        updatingExam={updatingExam}
                     />
                 </div>
             )}
@@ -97,9 +102,12 @@ export const TeacherExamsPage = () => {
                     <SkeleExamsList />
                 ) : (
                     <ExamsList
+                        queryParams={queryParams}
                         exams={exams}
                         examIdShowed={examIdShowed}
                         setExamIdShowed={setExamIdShowed}
+                        setUpdatingExam={setUpdatingExam}
+                        setIsAddExamFormOpen={setIsAddExamFormOpen}
                     />
                 )}
                 {/* grades list */}

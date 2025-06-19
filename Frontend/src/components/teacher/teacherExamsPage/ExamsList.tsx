@@ -1,18 +1,36 @@
 import type { Exam } from "@/config/types";
+import { api, examsEndpoint } from "@/services/api";
+import { useGlobalStore } from "@/store/useGlobalStore";
 import { formatDateToDDMMYYYY } from "@/utilities/utils";
 import { Navigation, Pencil, Trash2 } from "lucide-react";
-import type { Dispatch, MouseEvent, SetStateAction } from "react";
+import {
+    useState,
+    type Dispatch,
+    type MouseEvent,
+    type SetStateAction,
+} from "react";
 
 export const ExamsList = ({
+    queryParams,
     exams,
     examIdShowed,
     setExamIdShowed,
+    setUpdatingExam,
+    setIsAddExamFormOpen,
 }: {
+    queryParams: Record<string, string>;
     exams: Exam[] | undefined;
     examIdShowed: number;
     setExamIdShowed: Dispatch<SetStateAction<number>>;
+    setUpdatingExam: Dispatch<
+        SetStateAction<Record<string, string> | undefined>
+    >;
+    setIsAddExamFormOpen: Dispatch<SetStateAction<boolean>>;
 }) => {
-    console.log(exams);
+    // * global store
+    const { queryClient } = useGlobalStore();
+    // * vars
+    const [isRemoveLoading, setIsRemoveLoading] = useState(false);
 
     // * actions
     const handleShowGrades = async (e: MouseEvent<SVGSVGElement>) => {
@@ -47,15 +65,66 @@ export const ExamsList = ({
                         {exam.topic} {exam.id}
                     </div>
                     <div className="border-r border-b col-span-1 flex justify-center items-center">
-                        <Navigation
-                            id={String(exam.id)}
-                            onClick={handleShowGrades}
-                            className="scale-75 hover:scale-100 text-blue-500 transition-transform cursor-pointer"
-                        />
+                        <button
+                            disabled={isRemoveLoading}
+                            className={`${
+                                isRemoveLoading && "!cursor-not-allowed"
+                            } cursor-pointer`}
+                        >
+                            <Navigation
+                                id={String(exam.id)}
+                                onClick={handleShowGrades}
+                                className="scale-75 hover:scale-100 text-blue-500 transition-transform"
+                            />
+                        </button>
                     </div>
                     <div className="border-b col-span-1 flex justify-center items-center gap-2">
-                        <Pencil className="text-yellow-500 scale-75 hover:scale-100 transition-transform cursor-pointer" />
-                        <Trash2 className="text-red-600 scale-75 hover:scale-100 transition-transform cursor-pointer" />
+                        <button
+                            disabled={isRemoveLoading}
+                            className={`${
+                                isRemoveLoading && "!cursor-not-allowed"
+                            } cursor-pointer`}
+                        >
+                            <Pencil
+                                onClick={() => {
+                                    console.log(exam.date);
+                                    setUpdatingExam({
+                                        id: String(exam.id),
+                                        course_id: String(exam.course_id),
+                                        date: exam.date.split(" ")[0],
+                                        topic: exam.topic,
+                                    });
+                                    setIsAddExamFormOpen(true);
+                                }}
+                                className="text-yellow-500 scale-75 hover:scale-100 transition-transform"
+                            />
+                        </button>
+                        <button
+                            disabled={isRemoveLoading}
+                            className={`${
+                                isRemoveLoading && "!cursor-not-allowed"
+                            } cursor-pointer`}
+                        >
+                            <Trash2
+                                onClick={async () => {
+                                    try {
+                                        setIsRemoveLoading(true);
+                                        await api.delete(
+                                            examsEndpoint + `/${exam.id}`
+                                        );
+                                        queryClient?.invalidateQueries({
+                                            queryKey: ["exams", queryParams],
+                                            exact: true,
+                                        });
+                                    } catch (err) {
+                                        console.error(err);
+                                    } finally {
+                                        setIsRemoveLoading(false);
+                                    }
+                                }}
+                                className="text-red-600 scale-75 hover:scale-100 transition-transform"
+                            />
+                        </button>
                     </div>
                 </div>
             ))}
