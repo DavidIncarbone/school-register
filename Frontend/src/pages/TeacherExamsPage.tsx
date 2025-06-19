@@ -6,6 +6,7 @@ import { useQueryIndexCourse } from "@/hooks/coursesQueries";
 import { useQueryIndexExams } from "@/hooks/examsQueries";
 import { useQueryIndexGrades } from "@/hooks/gradesQueries";
 import { useDynamicSearchParams } from "@/hooks/useDynamicSearchParams";
+import { formatDateToDDMMYYYY } from "@/utilities/utils";
 import type { UseQueryResult } from "@tanstack/react-query";
 import { Navigation, X } from "lucide-react";
 import {
@@ -107,7 +108,10 @@ const GradesList = ({ grades }: { grades: Grade[] }) => {
             </div>
             {/* exams */}
             {grades?.map((grade) => (
-                <div key={grade.id} className="grid grid-cols-5 [&>div]:p-2 text-center">
+                <div
+                    key={grade.id}
+                    className="grid grid-cols-5 [&>div]:p-2 text-center"
+                >
                     <div className="border-b col-span-1">
                         {grade.student_id}
                     </div>
@@ -142,7 +146,7 @@ const ExamsList = ({
     };
 
     return (
-        <div className=" bg-zinc-800 lg:w-3/5 mx-auto rounded-sm border">
+        <div className=" bg-zinc-800 w-11/12 lg:w-3/5 mx-auto rounded-sm border">
             {/* head */}
             <div className="grid grid-cols-5 capitalize [&>div]:p-2 text-center font-semibold">
                 <div className="border-b col-span-2">date</div>
@@ -160,7 +164,7 @@ const ExamsList = ({
                     } grid grid-cols-5 [&>div]:p-2`}
                 >
                     <div className="border-b col-span-2">
-                        {exam.date.split(" ")[0]}
+                        {formatDateToDDMMYYYY(exam.date.split(" ")[0])}
                     </div>
                     <div className="border-x border-b col-span-2">
                         {exam.topic} {exam.id}
