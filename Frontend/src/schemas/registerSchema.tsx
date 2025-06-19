@@ -15,7 +15,7 @@ export const retrieveTempUserSchema = z.object({
 export const enableUserSchema = z.object({
   name: z.string(),
   email: z.string(),
-  type: z.string(),
+  // type: z.string(),
   password: z.string().min(8, "Password's field is required"),
   password_confirmation: z.string().min(8, "Password's field is required"),
 });

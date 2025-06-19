@@ -56,27 +56,32 @@ export default function RegistrationPage() {
     try {
       console.log("Sono nel retrieve temp user");
       const res = await api.post("/api/retrieve-temp-user", formData);
-      let tempUser: TempUser = res.data;
-      tempUser = { ...tempUser, type: res.data.type };
+      //   let tempUser: TempUser = res.data;
+      console.log(res.data);
+      const tempUser: TempUser = {
+        first_name: res.data.first_name,
+        last_name: res.data.last_name,
+        email: formData.email,
+        type: formData.type as UserType,
+      };
       setTempUser(tempUser);
       setIsEmailVerified(true);
+      console.log(formData);
     } catch (err: unknown) {
       console.error(err);
     }
   };
-
   const enableUser = async (formData: EnableUserFormData) => {
     try {
       console.log("sono nell'enable user");
-      formData = {
+      const data = {
         ...formData,
-        email: tempUser?.email as string,
-        name: `${tempUser?.first_name} ${tempUser?.last_name}`,
         type: tempUser?.type as string,
       };
-      console.log(formData, "form data");
-      const res = await api.post("/register");
-      console.log(res.data, "res data di register");
+
+      await api.post("/register", data);
+      const res = await api.get("/api/user");
+      console.log(res.data, "user");
       setAuthUser(res.data as User);
       navigate("/");
     } catch (err: unknown) {
@@ -101,7 +106,7 @@ export default function RegistrationPage() {
   //   } catch (err: unknown) {
   //     console.error(err);
   //   }
-
+  console.log(tempUser);
   return (
     !authUser && (
       <div className="h-full flex justify-center items-center">
@@ -109,56 +114,31 @@ export default function RegistrationPage() {
           <h2 className="text-3xl text-center capitalize">
             <span>{tempUser?.type}</span> <span>registration</span>
           </h2>
-          <form>
-            {isEmailVerified && (
+
+          {!isEmailVerified ? (
+            <form onSubmit={handleTempUserSubmit(retrieveTempUser)}>
               <div className="flex flex-col space-y-0.5">
-                <label htmlFor="name">Name</label>
+                <label htmlFor="email">Email</label>
                 <input
                   disabled={isEmailVerified}
                   className={`${isEmailVerified && "cursor-not-allowed"}`}
-                  type="name"
-                  {...registerEnableUser("name")}
-                  defaultValue={
-                    tempUser?.first_name &&
-                    tempUser?.last_name &&
-                    `${tempUser.first_name} ${tempUser.last_name}`
-                  }
-                  id="name"
-                  //   name="name"
-                  required
-                  autoFocus
+                  type="email"
+                  placeholder="example@example.com"
+                  defaultValue={tempUser?.email ? tempUser.email : ""}
+                  id="email"
+                  // name="email"
+
+                  {...registerTempUser("email")}
                 />
+                {tempUserErrors.email?.message}
               </div>
-            )}
-
-            <div className="flex flex-col space-y-0.5">
-              <label htmlFor="email">Email</label>
-              <input
-                disabled={isEmailVerified}
-                className={`${isEmailVerified && "cursor-not-allowed"}`}
-                type="email"
-                placeholder="example@example.com"
-                defaultValue={tempUser?.email ? tempUser.email : ""}
-                id="email"
-                // name="email"
-                {...(!isEmailVerified
-                  ? { ...registerTempUser("email") }
-                  : { ...registerEnableUser("email") })}
-                required
-              />
-            </div>
-
-            {!isEmailVerified && (
               <div className="flex flex-col space-y-0.5">
                 <label htmlFor="type">Role</label>
-
                 <select
                   id="type"
                   /*name="type"*/
-                  {...(!isEmailVerified
-                    ? { ...registerTempUser("type") }
-                    : { ...registerEnableUser("type") })}
-                  required
+
+                  {...registerTempUser("type")}
                 >
                   <option value="" selected disabled hidden>
                     Select your role
@@ -166,68 +146,84 @@ export default function RegistrationPage() {
                   <option value={UserType.STUDENT}>Student</option>
                   <option value={UserType.TEACHER}>Teacher</option>
                 </select>
+                {tempUserErrors.type?.message}
               </div>
-            )}
-
-            {isEmailVerified && (
-              <>
-                <div className="flex flex-col space-y-0.5">
-                  <label htmlFor="password">Password</label>
-                  <input
-                    type="password"
-                    placeholder="password"
-                    // defaultValue="ciaociao"
-                    // name="password"
-                    {...registerEnableUser("password")}
-                    required
-                  />
-                </div>
-                <div className="flex flex-col space-y-0.5">
-                  <label htmlFor="password_confirmation">
-                    Confirm password
-                  </label>
-                  <input
-                    type="password"
-                    placeholder="password_confirmation"
-                    // defaultValue="ciaociao"
-                    // name="password_confirmation"
-                    {...registerEnableUser("password_confirmation")}
-                    required
-                  />
-                </div>
-              </>
-            )}
-            {!isEmailVerified ? (
-              <input
-                type="submit"
-                value="verify"
-                onSubmit={(e) => {
-                    
-                    handleTempUserSubmit(retrieveTempUser)}}
-              ></input>
-            ) : (
-              <>
-                <div className="flex items-center space-x-1">
-                  <input id="terms" type="checkbox" required />
-                  <label htmlFor="terms" className="text-xs italic">
-                    <span>Accept</span>{" "}
-                    <a
-                      href="https://google.com"
-                      target="_blank"
-                      className="  underline underline-offset-2 hover:text-blue-400"
-                    >
-                      Terms and Condition
-                    </a>
-                  </label>
-                </div>
+              <button type="submit">Verify</button>
+            </form>
+          ) : (
+            <form onSubmit={handleEnableUserSubmit(enableUser)}>
+              <div className="flex flex-col space-y-0.5">
+                <label htmlFor="email">Email</label>
                 <input
-                  type="submit"
-                  value="Enable"
-                  onSubmit={handleEnableUserSubmit(enableUser)}
-                ></input>
-              </>
-            )}
-          </form>
+                  disabled={isEmailVerified}
+                  className={`${isEmailVerified && "cursor-not-allowed"}`}
+                  type="email"
+                  placeholder="example@example.com"
+                  value={tempUser?.email ? tempUser.email : ""}
+                  id="email"
+                  // name="email"
+
+                  {...registerEnableUser("email")}
+                />
+                {enableUserErrors.email?.message}
+              </div>
+              <div className="flex flex-col space-y-0.5">
+                <label htmlFor="name">Name</label>
+                <input
+                  disabled={isEmailVerified}
+                  className={`${isEmailVerified && "cursor-not-allowed"}`}
+                  type="name"
+                  {...registerEnableUser("name")}
+                  value={
+                    tempUser?.first_name &&
+                    tempUser?.last_name &&
+                    `${tempUser.first_name} ${tempUser.last_name}`
+                  }
+                  id="name"
+                  //   name="name"
+
+                  autoFocus
+                />
+                {enableUserErrors.name?.message}
+              </div>
+              <div className="flex flex-col space-y-0.5">
+                <label htmlFor="password">Password</label>
+                <input
+                  type="password"
+                  placeholder="password"
+                  // defaultValue="ciaociao"
+                  // name="password"
+                  {...registerEnableUser("password")}
+                />
+                {enableUserErrors.password?.message}
+              </div>
+              <div className="flex flex-col space-y-0.5">
+                <label htmlFor="password_confirmation">Confirm password</label>
+                <input
+                  type="password"
+                  placeholder="password_confirmation"
+                  // defaultValue="ciaociao"
+                  // name="password_confirmation"
+                  {...registerEnableUser("password_confirmation")}
+                />
+                {enableUserErrors.password_confirmation?.message}
+              </div>
+              <div className="flex items-center space-x-1">
+                <input id="terms" type="checkbox" />
+                <label htmlFor="terms" className="text-xs italic">
+                  <span>Accept</span>{" "}
+                  <a
+                    href="https://google.com"
+                    target="_blank"
+                    className="  underline underline-offset-2 hover:text-blue-400"
+                  >
+                    Terms and Condition
+                  </a>
+                </label>
+              </div>
+              <button type="submit">Enable</button>
+            </form>
+          )}
         </div>
       </div>
     )
