@@ -59,11 +59,6 @@ export const AssignmentsPage = () => {
   } = useMutationDestroyAssignment(queryParams);
 
   // * actions
-  const handleCourseSelected = async (e: ChangeEvent<HTMLSelectElement>) => {
-    const key = "course_id";
-    const selectedCourseId = e.target.value;
-    updateSearchParams([{ key, value: selectedCourseId }]);
-  };
 
   const handleForm = () => setIsFormShowing(!isFormShowing);
 
@@ -125,7 +120,7 @@ export const AssignmentsPage = () => {
                     <CourseSelect
                       courses={courses}
                       queryParams={queryParams}
-                      onChange={handleCourseSelected}
+                      updateSearchParams={updateSearchParams}
                     />
                   </>
                 )}
