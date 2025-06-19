@@ -39,8 +39,18 @@ export const QuickActions = ({
                                 "hidden"
                             }
                             ${
+                                authUser?.type === UserType.STUDENT &&
+                                action.path === "/teacher-exams" &&
+                                "hidden"
+                            }
+                            ${
                                 authUser?.type === UserType.TEACHER &&
                                 action.path === "/subjects" &&
+                                "hidden"
+                            }
+                            ${
+                                authUser?.type === UserType.TEACHER &&
+                                action.path === "/student-exams" &&
                                 "hidden"
                             }
                             max-md:aspect-square max-md:h-24 rounded-md bg-slate-900 hover:bg-slate-950 active:bg-black p-2 flex flex-col justify-center items-center text-center text-xs 3xl:text-lg gap-1`}
@@ -102,7 +112,13 @@ const quickActions = [
         label: "Students list",
     },
     {
-        path: "/exams",
+        path: "/teacher-exams",
+        icon: <BarChart3 />,
+        iconColor: "bg-teal-500",
+        label: "Exams",
+    },
+    {
+        path: "/student-exams",
         icon: <BarChart3 />,
         iconColor: "bg-teal-500",
         label: "Exams",

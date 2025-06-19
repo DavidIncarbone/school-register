@@ -35,8 +35,8 @@ export type User = {
 };
 
 export type LoginUser = {
-  email: string;
-  password: string;
+    email: string;
+    password: string;
 };
 
 export type Teacher = {
@@ -111,6 +111,14 @@ export type Assignment = {
     deadline: string;
     subject: Subject;
     course: Course;
+};
+
+export type Exam = {
+    id: number;
+    course_id: number;
+    subject_id: number;
+    topic: string;
+    date: string;
 };
 
 export type IndexStudentParams = {

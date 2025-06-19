@@ -203,7 +203,7 @@ export default function RegistrationPage() {
                 value="verify"
                 onSubmit={(e) => {
                     
-                    handleTempUserSubmit(retrieveTempUser)}
+                    handleTempUserSubmit(retrieveTempUser)}}
               ></input>
             ) : (
               <>

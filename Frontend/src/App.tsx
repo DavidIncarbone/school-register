@@ -19,20 +19,20 @@ import { SubjectsPage } from "./pages/student/SubjectsPage";
 import { Unauthorized } from "./pages/Unauthorized";
 import { RequireRole } from "./components/RequireRole";
 import { UserType } from "./config/types";
-import { ExamsPage } from "./pages/ExamsPage";
+import { TeacherExamsPage } from "./pages/TeacherExamsPage";
 
 function App() {
-  // collaterals effect
-  useEffect(() => {
-    const fetchCsrfCookie = async () => {
-      try {
-        await api.get("/sanctum/csrf-cookie");
-      } catch (err) {
-        console.error(err);
-      }
-    };
-    fetchCsrfCookie();
-  }, []);
+    // collaterals effect
+    useEffect(() => {
+        const fetchCsrfCookie = async () => {
+            try {
+                await api.get("/sanctum/csrf-cookie");
+            } catch (err) {
+                console.error(err);
+            }
+        };
+        fetchCsrfCookie();
+    }, []);
 
     return (
         <>
@@ -58,10 +58,7 @@ function App() {
                             path="/assignments"
                             Component={AssignmentsPage}
                         />
-                        <Route
-                            path="/exams"
-                            Component={ExamsPage}
-                        />
+                        <Route path="/teacher-exams" Component={TeacherExamsPage} />
                         <Route
                             path="/search-students"
                             element={
@@ -88,17 +85,17 @@ function App() {
                         />
                     </Route>
 
-          {/* pagine senza auth */}
-          <Route Component={PublicRoutes}>
-            <Route path="/login" Component={LoginPage} />
-            <Route path="/register" Component={RegistrationPage} />
-            <Route path="/unauthorized" Component={Unauthorized} />
-          </Route>
-        </Route>
-      </Routes>
-      <Toaster position="top-right" reverseOrder={false} />
-    </>
-  );
+                    {/* pagine senza auth */}
+                    <Route Component={PublicRoutes}>
+                        <Route path="/login" Component={LoginPage} />
+                        <Route path="/register" Component={RegistrationPage} />
+                        <Route path="/unauthorized" Component={Unauthorized} />
+                    </Route>
+                </Route>
+            </Routes>
+            <Toaster position="top-right" reverseOrder={false} />
+        </>
+    );
 }
 
 export default App;

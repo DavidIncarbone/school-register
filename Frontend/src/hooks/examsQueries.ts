@@ -7,7 +7,7 @@ export const useQueryIndexExams = (params: ExamsParams, enabled = true) => {
         queryKey: ["exams", params],
         queryFn: async () => {
             const res = await api.get(examsEndpoint, { params });
-            return res.data;
+            return res.data.data;
         },
         enabled,
     });
