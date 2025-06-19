@@ -19,19 +19,18 @@ export default function Header() {
 
   // * actions
   const handleLogout = async () => {
+    setAuthUser(null);
+    setProfile(null);
+    navigate("/login");
     try {
       setIsLoading(true);
       await api.post("/logout");
       toast.success(`See you later ${user?.name}`);
-      setAuthUser(null);
-      setProfile(null);
-      navigate("/login");
     } catch (err) {
       console.error(err);
-      toast.error(`You can't go away ${user?.name}`);
     } finally {
-      queryClient.clear();
-      setIsLoading(false); // elimina tutte le cache e tutte le queries
+      queryClient.clear(); // elimina tutte le cache e tutte le queries
+      setIsLoading(false);
     }
   };
 
@@ -65,7 +64,7 @@ export default function Header() {
       )}
 
       <div className="flex items-center gap-3 md:gap-4 px-4">
-        {authUser && profile ? (
+        {authUser ? (
           isLoading ? (
             <Loader isContained={true} />
           ) : (
@@ -88,13 +87,15 @@ export default function Header() {
               <div className="max-md:hidden flex items-center gap-3">
                 <div className="flex flex-col">
                   <span className="capitalize">
-                    {profile.first_name} {profile.last_name}
+                    {profile?.first_name} {profile?.last_name}
                   </span>
                   {authUser.type === "student" ? (
                     <span className="text-xs">student</span>
                   ) : (
                     <span className="text-xs">
-                      <span className="capitalize">{profile.subject_name}</span>
+                      <span className="capitalize">
+                        {profile?.subject_name}
+                      </span>
                       <span> teacher</span>
                     </span>
                   )}
