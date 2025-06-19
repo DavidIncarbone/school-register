@@ -27,13 +27,24 @@ export const AddOrUpdateExamForm = ({
 
     // * vars
     const [isLoading, setIsLoading] = useState(false);
+    const defaultValues = updatingExam
+        ? {
+              date: updatingExam?.date,
+              topic: updatingExam?.topic,
+          }
+        : {
+              date: "",
+              topic: "",
+          };
 
     const {
         register,
         handleSubmit,
         formState: { errors },
+        reset,
     } = useForm({
         resolver: zodResolver(examSchema),
+        defaultValues,
     });
 
     // * actions
@@ -55,8 +66,13 @@ export const AddOrUpdateExamForm = ({
                 queryKey: ["exams", queryParams],
                 exact: true,
             });
-            toast.success("Assignment added successfully");
+            if (updatingExam) {
+                toast.success("Exam updated successfully");
+            } else {
+                toast.success("Exam added successfully");
+            }
             closeForm();
+            reset(defaultValues);
         } catch (err: unknown) {
             console.error(err);
         } finally {
@@ -97,7 +113,6 @@ export const AddOrUpdateExamForm = ({
                         <label htmlFor="date">Date*</label>
                         <input
                             type="date"
-                            defaultValue={updatingExam?.date}
                             {...register("date")}
                             id="date"
                             className="border border-white p-3"
@@ -117,7 +132,6 @@ export const AddOrUpdateExamForm = ({
                     </label>
                     <textarea
                         id="topic"
-                        defaultValue={updatingExam?.topic}
                         {...register("topic")}
                         className="w-full border border-white p-3"
                         rows={2}

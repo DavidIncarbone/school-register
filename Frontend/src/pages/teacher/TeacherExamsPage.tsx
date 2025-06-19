@@ -20,7 +20,9 @@ export const TeacherExamsPage = () => {
     // * vars
     const [examIdShowed, setExamIdShowed] = useState(0);
     const [isAddExamFormOpen, setIsAddExamFormOpen] = useState(false);
-    const [updatingExam, setUpdatingExam] = useState<Record<string, string>>();
+    const [updatingExam, setUpdatingExam] = useState<
+        Record<string, string> | undefined
+    >();
     const activeCourseId = queryParams?.course_id
         ? Number(queryParams.course_id)
         : 0;
@@ -73,7 +75,10 @@ export const TeacherExamsPage = () => {
                         />
                     ) : (
                         <SquarePlus
-                            onClick={() => setIsAddExamFormOpen(true)}
+                            onClick={() => {
+                                setIsAddExamFormOpen(true);
+                                setUpdatingExam(undefined);
+                            }}
                             className="size-8 scale-90 hover:scale-100 transition-transform cursor-pointer"
                         />
                     )}

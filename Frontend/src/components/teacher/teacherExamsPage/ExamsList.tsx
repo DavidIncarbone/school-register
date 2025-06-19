@@ -67,7 +67,7 @@ export const ExamsList = ({
                         {formatDateToDDMMYYYY(exam.date.split(" ")[0])}
                     </div>
                     <div className="border-x border-b col-span-2">
-                        {exam.topic} {exam.id}
+                        {exam.topic}
                     </div>
                     <div className="border-r border-b col-span-1 flex justify-center items-center">
                         <button
@@ -92,7 +92,6 @@ export const ExamsList = ({
                         >
                             <Pencil
                                 onClick={() => {
-                                    console.log(exam.date);
                                     setUpdatingExam({
                                         id: String(exam.id),
                                         course_id: String(exam.course_id),
