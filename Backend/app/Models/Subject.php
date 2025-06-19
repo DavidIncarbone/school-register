@@ -35,6 +35,6 @@ class Subject extends Model
 
     public function exams()
     {
-        return $this->belongsToMany(Course::class, 'exams')->using(Exam::class)->withPivot(['topic', 'date']);
+        return $this->hasMany(Exam::class);
     }
 }

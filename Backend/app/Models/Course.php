@@ -42,6 +42,6 @@ class Course extends Model
 
     public function exams()
     {
-        return $this->belongsToMany(Subject::class, 'exams')->using(Exam::class)->withPivot(['topic', 'date']);
+        return $this->hasMany(Exam::class);
     }
 }

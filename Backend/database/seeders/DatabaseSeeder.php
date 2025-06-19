@@ -82,7 +82,6 @@ class DatabaseSeeder extends Seeder
                     ]);
                 }
 
-                // fixme: examId non viene stampato correttamente
                 // - crea un voto per ogni esame del corso
                 $course->exams()->each(function ($exam) use ($student) {
                     Grade::create([
