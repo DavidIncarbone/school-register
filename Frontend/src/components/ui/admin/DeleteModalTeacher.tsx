@@ -1,19 +1,19 @@
 import { useState, type Dispatch, type SetStateAction } from "react";
-import Loader from "./Loader";
+import Loader from "../Loader";
 
-export default function DeleteModalAssignment({
+export default function DeleteModalTeacher({
   isOpen,
   setIsOpen,
-  destroyAssignment,
-  assignmentId,
-  assignmentBody,
+  destroyTeacher,
+  teacherId,
+  teacherEmail,
   isDestroyPending,
 }: {
   isOpen: boolean;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
-  destroyAssignment: (assignmentId: number) => void;
-  assignmentId: number;
-  assignmentBody: string;
+  destroyTeacher: (teacherId: number) => void;
+  teacherId: number;
+  teacherEmail: string;
   isDestroyPending: boolean;
 }) {
   return (
@@ -23,14 +23,14 @@ export default function DeleteModalAssignment({
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
           <div className="bg-white rounded-lg shadow-lg w-full max-w-sm p-6 ">
             <h5 className="text-lg text-black font-semibold mb-4">
-              Do you really want to delete this assignment?
+              Do you really want to delete this teacher?
             </h5>
             <div className="flex justify-between">
               <div></div>
               <div></div>
             </div>
             <p className="mb-6 text-sm text-gray-600 clamped-text">
-              {assignmentBody}
+              {teacherEmail}
             </p>
             {isDestroyPending ? (
               <Loader isContained={true} />
@@ -43,7 +43,7 @@ export default function DeleteModalAssignment({
                   Cancel
                 </button>
                 <button
-                  onClick={() => destroyAssignment(assignmentId)}
+                  onClick={() => destroyTeacher(teacherId)}
                   className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
                 >
                   Delete

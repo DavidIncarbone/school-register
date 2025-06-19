@@ -167,6 +167,7 @@ class TeacherController extends Controller
     public function destroy(Teacher $teacher)
     {
         $teacher->courses()->detach();
+        $teacher->notes()->detach();
         $teacher->deleteOrFail();
         return response()->json([], 204);
     }
