@@ -86,7 +86,7 @@ export const AssignmentRecord = ({
       <form
         className={`${
           isModifying && "italic"
-        } flex odd:bg-zinc-800 even:bg-zinc-950 3xl:h-40`}
+        } flex  odd:bg-zinc-800 even:bg-zinc-950 3xl:h-40`}
         onSubmit={handleSubmit(updateAssignment)}
       >
         <input
@@ -94,7 +94,7 @@ export const AssignmentRecord = ({
           disabled={!isModifying}
           {...register("assignment_date")}
           defaultValue={assignment.assignment_date.split(" ")[0]}
-          className=" border px-4 w-40 flex justify-center items-center"
+          className=" border px-4 w-40 flex justify-center"
         />
         <input
           type="date"

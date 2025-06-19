@@ -25,6 +25,8 @@ class AssignmentController extends Controller
             "dir" => ['string', 'in:asc,desc'],
         ]);
 
+        Log::info("assignments");
+
         $dir = request()->dir ?? 'desc';
         $sort = request()->sort ?? 'by_assignment_date';
 

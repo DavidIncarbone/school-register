@@ -34,6 +34,11 @@ export type User = {
     type: UserType;
 };
 
+export type LoginUser = {
+  email: string;
+  password: string;
+};
+
 export type Teacher = {
     id: number;
     subject_id: number;

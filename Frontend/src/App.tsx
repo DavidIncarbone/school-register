@@ -12,7 +12,7 @@ import { CourseDetailPage } from "./pages/CourseDetailPage";
 import { StudentDetailPage } from "./pages/StudentDetailPage";
 import { AttendanceFormPage } from "./pages/teacher/AttendanceFormPage";
 import { WeeklySchedulePage } from "./pages/WeeklySchedulePage";
-import { Debug } from "./components/Debug";
+// import { Debug } from "./components/Debug";
 import { AssignmentsPage } from "./pages/AssignmentsPage";
 import { Toaster } from "react-hot-toast";
 import { SubjectsPage } from "./pages/student/SubjectsPage";
@@ -22,17 +22,17 @@ import { UserType } from "./config/types";
 import { ExamsPage } from "./pages/ExamsPage";
 
 function App() {
-    // collaterals effect
-    useEffect(() => {
-        const fetchCsrfCookie = async () => {
-            try {
-                await api.get("/sanctum/csrf-cookie");
-            } catch (err) {
-                console.error(err);
-            }
-        };
-        fetchCsrfCookie();
-    }, []);
+  // collaterals effect
+  useEffect(() => {
+    const fetchCsrfCookie = async () => {
+      try {
+        await api.get("/sanctum/csrf-cookie");
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    fetchCsrfCookie();
+  }, []);
 
     return (
         <>
@@ -88,17 +88,17 @@ function App() {
                         />
                     </Route>
 
-                    {/* pagine senza auth */}
-                    <Route Component={PublicRoutes}>
-                        <Route path="/login" Component={LoginPage} />
-                        <Route path="/register" Component={RegistrationPage} />
-                        <Route path="/unauthorized" Component={Unauthorized} />
-                    </Route>
-                </Route>
-            </Routes>
-            <Toaster position="top-right" reverseOrder={false} />
-        </>
-    );
+          {/* pagine senza auth */}
+          <Route Component={PublicRoutes}>
+            <Route path="/login" Component={LoginPage} />
+            <Route path="/register" Component={RegistrationPage} />
+            <Route path="/unauthorized" Component={Unauthorized} />
+          </Route>
+        </Route>
+      </Routes>
+      <Toaster position="top-right" reverseOrder={false} />
+    </>
+  );
 }
 
 export default App;
