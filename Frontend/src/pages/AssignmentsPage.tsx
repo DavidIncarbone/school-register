@@ -17,6 +17,7 @@ import { useQueryIndexCourse } from "@/hooks/coursesQueries";
 import { useDynamicSearchParams } from "@/hooks/useDynamicSearchParams";
 import { useGlobalStore } from "@/store/useGlobalStore";
 import type { UseQueryResult } from "@tanstack/react-query";
+import { SquareMinus, SquarePlus } from "lucide-react";
 import { useEffect, useState, type MouseEvent } from "react";
 import toast from "react-hot-toast";
 
@@ -143,45 +144,39 @@ export const AssignmentsPage = () => {
     if (isAssigmentsError) return <pre>assignment error - da gestire</pre>;
     return (
         <>
-            <div className="px-5 py-2">
-                <div className="flex flex-col items-start mb-2">
-                    <h1 className="title_h1 self-center">assignments</h1>
-                    <div className="text-lg sm:text-2xl flex flex-wrap justify-center items-center gap-2 font-bold w-full ">
-                        <div className="flex justify-between items-center w-full ">
-                            <div>
-                                {authUser?.type === UserType.TEACHER && (
-                                    <>
-                                        <p>Selected course:</p>
-                                        <CourseSelect
-                                            courses={courses}
-                                            queryParams={queryParams}
-                                            updateSearchParams={
-                                                updateSearchParams
-                                            }
-                                        />
-                                    </>
-                                )}
-                            </div>
-
-                            {authUser?.type === UserType.TEACHER &&
-                                (!isFormShowing ? (
-                                    <button
-                                        className="btn-pretty"
-                                        onClick={handleForm}
-                                    >
-                                        +
-                                    </button>
-                                ) : (
-                                    <button
-                                        className="btn-pretty"
-                                        onClick={handleForm}
-                                    >
-                                        -
-                                    </button>
-                                ))}
+            <div className="px-5 py-2 lg:w-4/5 mx-auto">
+                {/* headings */}
+                <h1 className="title_h1 text-center">assignments</h1>
+                <div className="flex justify-between items-center w-full ">
+                    {authUser?.type === UserType.TEACHER && (
+                        <div className="title_h1 max-md:!text-lg flex gap-1 items-center justify-center">
+                            <p>Selected course:</p>
+                            <CourseSelect
+                                courses={courses}
+                                queryParams={queryParams}
+                                updateSearchParams={updateSearchParams}
+                            />
                         </div>
-                    </div>
+                    )}
+
+                    {authUser?.type === UserType.TEACHER && (
+                        <button title="Add an assignment">
+                            {isFormShowing ? (
+                                <SquareMinus
+                                    onClick={handleForm}
+                                    className="size-8 scale-90 hover:scale-100 transition-transform cursor-pointer"
+                                />
+                            ) : (
+                                <SquarePlus
+                                    onClick={handleForm}
+                                    className="size-8 scale-90 hover:scale-100 transition-transform cursor-pointer"
+                                />
+                            )}
+                        </button>
+                    )}
                 </div>
+
+                {/* add assignment form */}
                 {isFormShowing && (
                     <section id="formSection" className="mb-5">
                         <AddAssignment
@@ -193,6 +188,7 @@ export const AssignmentsPage = () => {
                         />
                     </section>
                 )}
+
                 {/* assignments list (per corso) */}
                 <div className="max-lg:w-[92dvw] mx-auto overflow-auto">
                     <div className="min-w-fit">
@@ -244,7 +240,8 @@ export const AssignmentsPage = () => {
                     </button>
                 </div>
 
-                <p className="mt-2 landscape:hidden">
+                {/* ux mobile */}
+                <p className="mt-6 text-xs landscape:hidden">
                     Rotate the device for better visualization
                 </p>
             </div>

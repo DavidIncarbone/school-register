@@ -42,10 +42,10 @@ export default function Header() {
         >
             <Link
                 to="/"
-                className="md:hidden flex items-center gap-4 capitalize font-bold text-xl tracking-wider font-serif px-3"
+                className="lg:hidden flex items-center gap-4 capitalize font-bold text-xl tracking-wider font-serif px-3"
             >
                 <Bot className={`scale-150`} />
-                <span>achsios</span>
+                <span className="max-lg:hidden">achsios</span>
             </Link>
             {authUser && (
                 <>
@@ -56,7 +56,7 @@ export default function Header() {
                     >
                         <input
                             type="text"
-                            className="w-full md:w-[300px] lg:w-[350px]"
+                            className="w-full md:w-[250px] lg:w-[350px]"
                             placeholder="Search for something..."
                         />
                     </div>

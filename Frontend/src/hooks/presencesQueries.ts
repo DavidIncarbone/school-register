@@ -13,7 +13,7 @@ export const useQueryIndexPresence = (
             // console.log(res.data.data)
             return res.data;
         },
-        // staleTime: 60 * 60 * 1000, // ms
+        staleTime: 60 * 60 * 1000, // ms
         refetchInterval: 60 * 60 * 1000,
         refetchOnWindowFocus: false,
         enabled,
