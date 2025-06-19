@@ -2,24 +2,18 @@ import { useState, type FormEvent } from "react";
 import { useGlobalStore } from "../store/useGlobalStore";
 import { api } from "../services/api";
 import { Link, useNavigate } from "react-router";
-import type { User } from "../config/types";
+import type { LoginUser, User } from "../config/types";
 import Loader from "../components/ui/Loader";
-import { useMutationLoginUser, useQueryGetUser } from "@/hooks/userQueries";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema } from "@/schemas/loginSchema";
+import toast from "react-hot-toast";
 
 export default function LoginPage() {
   // * vars
   const navigate = useNavigate();
   const { authUser, setAuthUser } = useGlobalStore();
   const [isLoading, setIsLoading] = useState(false);
-
-  const {
-    mutate: loginMutate,
-    isPending: isLoginPending,
-    isSuccess: isLoginSuccess,
-  } = useMutationLoginUser();
 
   // * actions
 
@@ -31,13 +25,14 @@ export default function LoginPage() {
     resolver: zodResolver(loginSchema),
   });
 
-  const { data: user } = useQueryGetUser();
-
   const fetchAndSetUser = async () => {
     try {
       const res = await api.get("/api/user");
-      setAuthUser(res.data as User);
+      const user = res.data as User;
+
+      setAuthUser(user);
       navigate("/");
+      toast.success(`Benvenuto ${user.name}`);
     } catch (err) {
       console.error(err);
     } finally {
@@ -45,13 +40,10 @@ export default function LoginPage() {
     }
   };
 
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    const data = Object.fromEntries(formData.entries());
+  const handleSubmit = async (formData: LoginUser) => {
     setIsLoading(true);
     try {
-      await api.post("/login", data);
+      await api.post("/login", formData);
       fetchAndSetUser();
     } catch (err: unknown) {
       console.error(err);
@@ -65,7 +57,7 @@ export default function LoginPage() {
       <div className="h-full flex justify-center items-center">
         <div className="auth-form">
           <h2 className="capitalize text-3xl  text-center">login</h2>
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={loginSubmit(handleSubmit)}>
             <div className="flex flex-col space-y-0.5">
               <label htmlFor="email">Email</label>
               <input
@@ -73,20 +65,20 @@ export default function LoginPage() {
                 placeholder="mario@example.com"
                 defaultValue="mosca@example.com"
                 id="email"
-                name="email"
-                required
+                {...register("email")}
                 autoFocus
               />
+              <span className="text-red-500">{errors?.email?.message}</span>
             </div>
-            <div className="flex flex-col space-y-0.5">
+            <div className="flex flex-col gap-1">
               <label htmlFor="password">Password</label>
               <input
                 type="password"
                 placeholder="password"
                 defaultValue="ciaociao"
-                name="password"
-                required
+                {...register("password")}
               />
+              <span className="text-red-500">{errors?.password?.message}</span>
             </div>
             <button
               disabled={isLoading}
