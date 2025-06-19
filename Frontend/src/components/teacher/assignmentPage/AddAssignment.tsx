@@ -83,19 +83,21 @@ AddAssignmentProps) => {
 
   return (
     <section className="mt-5">
-      <h2 className="text-white text-2xl">
-        Add Assignment for{" "}
-        <span className="underline capitalize">{currentCourse?.name}</span>
-      </h2>
       <form
         action=""
         id="AssignmentForm"
         className="w-full"
         onSubmit={handleSubmit(createNewAssignment)}
       >
-        <p className="text-gray-400 text-sm mb-3">
-          The fields marked with * are required
-        </p>
+        <div className="pl-3">
+          <h2 className="text-white text-2xl">
+            Add Assignment for{" "}
+            <span className="underline capitalize">{currentCourse?.name}</span>
+          </h2>
+          <p className="text-gray-400 text-sm mb-3">
+            The fields marked with * are required
+          </p>
+        </div>
         <div className="grid grid-cols-3 gap-4 mb-3 max-[640px]:grid-cols-1">
           <div className="flex flex-col gap-2 p-3">
             <div className="flex flex-col gap-0.5">
