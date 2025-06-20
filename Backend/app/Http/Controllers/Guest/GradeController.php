@@ -21,7 +21,12 @@ class GradeController extends Controller
         $user = request()->user();
 
         if ($user->type === "teacher") {
-            $grades = Grade::where('exam_id', $examId)->with(['exam', 'student'])->get();
+            $grades = Grade::where('exam_id', $examId)
+                ->with(['exam', 'student'])
+                ->join('students', 'grades.student_id', '=', 'students.id')
+                ->orderBy('students.last_name')
+                ->select('grades.*') // Per evitare conflitti di colonne
+                ->get();
             return response()->json([
                 'success' => true,
                 'message' => "Operazione effettuata con successo",

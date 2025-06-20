@@ -1,5 +1,3 @@
-import { number } from "zod";
-
 export enum UserType {
   STUDENT = "student",
   TEACHER = "teacher",
@@ -121,6 +119,15 @@ export type Exam = {
   date: string;
 };
 
+export type Grade = {
+    id: number;
+    exam_id: number;
+    student_id: number;
+    grade: string;
+    exam: Exam;
+    student: Student;
+};
+
 export type IndexStudentParams = {
   course_id?: number;
   first_name?: string;
@@ -138,6 +145,7 @@ export type IndexPresenceParams = {
 export type IndexLessonScheduleParams = {
   show_week?: number;
 };
+
 export type IndexAssignmentsParams = {
   course_id?: number;
   subject_id?: number;
@@ -150,6 +158,10 @@ export type ExamsParams = {
   topic?: string;
   date?: string;
   dir?: "asc" | "desc";
+};
+
+export type GradesParams = {
+    exam_id?: number;
 };
 
 // ***** ADMIN *****

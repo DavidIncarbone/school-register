@@ -1,6 +1,6 @@
 export const SkeleExamsList = () => {
     return (
-        <div className=" bg-zinc-900 border-white lg:w-4/5 mx-auto rounded-sm border animate-pulse text-transparent">
+        <div className=" bg-zinc-900 border-white w-11/12 lg:w-3/5 mx-auto rounded-sm border animate-pulse text-transparent">
             {/* head */}
             <div className="grid grid-cols-5 capitalize [&>div]:p-2 text-center font-semibold [&>div]:border-white">
                 <div className="border-b col-span-2">date</div>

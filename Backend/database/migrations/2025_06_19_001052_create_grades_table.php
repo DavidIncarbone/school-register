@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('grades', function (Blueprint $table) {
             $table->id();
 
-            $table->foreignId('exam_id')->constrained();
-            $table->foreignId('student_id')->constrained();
+            $table->foreignId('exam_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('student_id')->constrained()->cascadeOnDelete();
 
             $table->tinyInteger('grade');
 
