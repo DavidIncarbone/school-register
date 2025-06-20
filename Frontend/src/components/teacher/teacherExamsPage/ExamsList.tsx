@@ -38,7 +38,12 @@ export const ExamsList = ({
     const handleShowGrades = async (e: MouseEvent<SVGSVGElement>) => {
         const button = e.currentTarget;
         const examId = button.id;
-        setExamIdShowed(Number(examId));
+        button.classList.toggle("rotate-180");
+        if (Number(examId) === examIdShowed) {
+            setExamIdShowed(0);
+        } else {
+            setExamIdShowed(Number(examId));
+        }
     };
 
     const btnDisabled =
@@ -71,10 +76,8 @@ export const ExamsList = ({
                     </div>
                     <div className="border-r border-b col-span-1 flex justify-center items-center">
                         <button
-                            disabled={btnDisabled}
-                            className={`${
-                                btnDisabled && "!cursor-not-allowed"
-                            } cursor-pointer`}
+                            // disabled={btnDisabled}
+                            className={`} cursor-pointer`}
                         >
                             <Navigation
                                 id={String(exam.id)}

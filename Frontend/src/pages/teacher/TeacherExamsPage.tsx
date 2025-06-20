@@ -124,15 +124,7 @@ export const TeacherExamsPage = () => {
                                 <SkeleGradesList />
                             </div>
                         ) : (
-                            <div className="flex flex-col lg:w-1/2 mx-auto gap-1">
-                                <div className="flex justify-end">
-                                    <X
-                                        onClick={() => {
-                                            setExamIdShowed(0);
-                                        }}
-                                        className="scale-90 hover:scale-100 rounded-full border transition-transform cursor-pointer"
-                                    />
-                                </div>
+                            <div className=" lg:w-1/2 mx-auto">
                                 <GradesList grades={grades} />
                             </div>
                         )}
