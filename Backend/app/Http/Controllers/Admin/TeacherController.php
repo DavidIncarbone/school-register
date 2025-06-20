@@ -75,6 +75,8 @@ class TeacherController extends Controller
 
         $teachers = $query->paginate(30);
 
+        $teachers->load("courses");
+
         return response()->json(
             $teachers
         );

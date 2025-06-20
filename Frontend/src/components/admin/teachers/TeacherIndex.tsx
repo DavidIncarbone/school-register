@@ -61,6 +61,10 @@ export const TeacherIndex = () => {
     total: number;
   }>;
 
+  const teacherToUpdate = teachers?.data?.find(
+    (teacher) => teacher?.id == teacherId
+  );
+
   const {
     mutate: destroyMutate,
     isSuccess: isDestroySuccess,
@@ -113,6 +117,8 @@ export const TeacherIndex = () => {
     }
   }, [isDestroySuccess]);
 
+  console.log(teachers);
+
   // * views
   if (isAssigmentsError) return <pre>teacher error - da gestire</pre>;
   return (
@@ -157,6 +163,8 @@ export const TeacherIndex = () => {
               isLoading={isLoading}
               setIsLoading={setIsLoading}
               setIsFormShowing={setIsFormShowing}
+              teacherId={teacherId}
+              teacherToUpdate={teacherToUpdate}
             />
           </section>
         )}
@@ -173,15 +181,17 @@ export const TeacherIndex = () => {
               {isAssigmentsLoading ? (
                 <div className="h-[425px] animate-pulse bg-zinc-800"></div>
               ) : (
-                teachers?.data.map((as) => (
+                teachers?.data.map((teacher) => (
                   <TeacherRecord
-                    key={as.id}
-                    teacher={as}
+                    key={teacher.id}
+                    teacher={teacher}
                     // destroyTeacher={destroyTeacher}
                     // isDestroyPending={isDestroyPending}
                     setIsOpen={setIsOpen}
                     setTeacherId={setTeacherId}
                     setTeacherEmail={setTeacherEmail}
+                    isFormShowing={isFormShowing}
+                    setIsFormShowing={setIsFormShowing}
                     queryParams={queryParams}
                     width="w-80"
                   />

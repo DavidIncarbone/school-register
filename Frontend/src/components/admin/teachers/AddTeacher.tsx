@@ -1,5 +1,10 @@
 import { useEffect, type Dispatch, type SetStateAction } from "react";
-import type { Course, IndexTeachersParams, Subject } from "@/config/types";
+import type {
+  Course,
+  IndexTeachersParams,
+  Subject,
+  Teacher,
+} from "@/config/types";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "react-hot-toast";
@@ -22,6 +27,8 @@ type AddTeacherProps = {
   // tipizzazione speciale per useState
   setIsFormShowing: Dispatch<SetStateAction<boolean>>;
   setIsLoading: Dispatch<SetStateAction<boolean>>;
+  teacherId: number;
+  teacherToUpdate: Teacher | undefined;
 };
 
 export const AddTeacher = ({
@@ -29,6 +36,8 @@ export const AddTeacher = ({
   subjects,
   queryParams,
   setIsFormShowing,
+  teacherId,
+  teacherToUpdate,
 }: // isLoading,
 // setIsLoading,
 AddTeacherProps) => {
@@ -51,6 +60,12 @@ AddTeacherProps) => {
     resolver: zodResolver(teachersSchema),
     defaultValues,
   });
+
+  const teacherCourses: number[] | undefined = teacherToUpdate?.courses?.map(
+    (course) => course.id
+  );
+
+  console.log(teacherCourses);
 
   //   queries
   const {
@@ -108,11 +123,12 @@ AddTeacherProps) => {
                   {...register("first_name")}
                   id="first_name"
                   className="border border-white "
+                  value={teacherToUpdate?.first_name}
                 />
               </div>
               {errors.last_name && (
                 <p className="text-red-500 text-sm">
-                  {errors.last_name?.message}
+                  {errors.first_name?.message}
                 </p>
               )}
             </div>
@@ -127,6 +143,7 @@ AddTeacherProps) => {
                   {...register("last_name")}
                   id="last_name"
                   className="border border-white "
+                  value={teacherToUpdate?.last_name}
                 />
               </div>
               {errors.last_name && (
@@ -145,6 +162,7 @@ AddTeacherProps) => {
                   id="email"
                   {...register("email")} // name assegnato tramite useForm
                   className="w-full border border-white "
+                  value={teacherToUpdate?.email}
                 ></input>
               </div>
               {errors.email && (
@@ -158,7 +176,11 @@ AddTeacherProps) => {
               <select {...register("subject_id")} id="subject_id">
                 <option value="">Select Subject</option>
                 {subjects?.map((subject, i) => (
-                  <option key={i} value={subject.id}>
+                  <option
+                    key={i}
+                    value={subject.id}
+                    selected={teacherToUpdate?.subject_id == subject?.id}
+                  >
                     {subject.name}
                   </option>
                 ))}
@@ -180,6 +202,7 @@ AddTeacherProps) => {
                       type="checkbox"
                       {...register("courses_ids")}
                       value={course.id}
+                      checked={teacherCourses?.includes(course.id)}
                     />
                     <span className="checkmark"></span>
                     {course.name}
