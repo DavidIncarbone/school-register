@@ -18,8 +18,8 @@ class StudentSeeder extends Seeder
         Student::factory()->create([
             "course_id" => 5,
             "first_name" => "Danilo",
-            "last_name" => "Raciti",
-            "email" => "raciti@example.com"
+            "last_name" => "Insegno",
+            "email" => "insegno@example.com"
         ]);
         Student::factory(200)->create();
     }

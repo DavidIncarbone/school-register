@@ -24,13 +24,13 @@ class UserSeeder extends Seeder
             'type' => 'admin',
             'password' => 'ciaociao'
         ], [
-            'name' => 'Danilo',
-            'email' => 'mosca@example.com',
+            'name' => 'Pippo',
+            'email' => 'baudo@example.com',
             'type' => 'teacher',
             'password' => 'ciaociao'
         ], [
-            'name' => 'Luigi',
-            'email' => 'raciti@example.com',
+            'name' => 'Pino',
+            'email' => 'insegno@example.com',
             'type' => 'student',
             'password' => 'ciaociao'
         ]],);

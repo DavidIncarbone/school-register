@@ -68,7 +68,7 @@ export default function LoginPage() {
               <input
                 type="email"
                 placeholder="mario@example.com"
-                defaultValue="mosca@example.com"
+                defaultValue="baudo@example.com"
                 id="email"
                 {...register("email")}
                 autoFocus
