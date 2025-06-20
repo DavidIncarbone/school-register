@@ -19,6 +19,8 @@ return new class extends Migration
 
             $table->tinyInteger('grade');
 
+            $table->unique(['exam_id', 'student_id']);
+
             $table->timestamps();
         });
     }

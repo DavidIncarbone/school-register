@@ -61,10 +61,10 @@ Route::middleware(["auth:sanctum"])->group(function () {
 
     // grades
     Route::get("/grades", [GradeController::class, 'index']);
-    Route::get("/grades/{grade}", [TeacherController::class, 'show']);
-    Route::post("/grades", [TeacherController::class, 'store'])->middleware(['teacher-access']);
-    Route::patch("/grades/{grade}", [TeacherController::class, 'update'])->middleware(['teacher-access']);
-    Route::delete("/grades/{grade}", [TeacherController::class, 'destroy'])->middleware(['teacher-access']);
+    Route::get("/grades/{grade}", [GradeController::class, 'show']);
+    Route::post("/grades", [GradeController::class, 'store'])->middleware(['teacher-access']);
+    Route::patch("/grades/{grade}", [GradeController::class, 'update'])->middleware(['teacher-access']);
+    Route::delete("/grades/{grade}", [GradeController::class, 'destroy'])->middleware(['teacher-access']);
 
     // profile
     Route::get("/profile", function () {

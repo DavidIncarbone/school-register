@@ -38,7 +38,7 @@ export const ExamsList = ({
     const handleShowGrades = async (e: MouseEvent<SVGSVGElement>) => {
         const button = e.currentTarget;
         const examId = button.id;
-        button.classList.toggle("rotate-180");
+        // button.classList.toggle("rotate-180");
         if (Number(examId) === examIdShowed) {
             setExamIdShowed(0);
         } else {
@@ -82,7 +82,7 @@ export const ExamsList = ({
                             <Navigation
                                 id={String(exam.id)}
                                 onClick={handleShowGrades}
-                                className="scale-75 hover:scale-100 text-blue-500 transition-transform"
+                                className={`${examIdShowed && "rotate-180"} scale-75 hover:scale-100 text-blue-500 transition-transform`}
                             />
                         </button>
                     </div>

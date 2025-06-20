@@ -9,6 +9,7 @@ export const useQueryIndexExams = (params: ExamsParams, enabled = true) => {
             const res = await api.get(examsEndpoint, { params });
             return res.data.data;
         },
+        staleTime: Infinity,
         enabled,
     });
 };

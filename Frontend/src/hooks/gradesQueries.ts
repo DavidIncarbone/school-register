@@ -9,6 +9,7 @@ export const useQueryIndexGrades = (params: GradesParams, enabled = true) => {
             const res = await api.get(gradesEndpoint, { params });
             return res.data.data;
         },
+        staleTime: Infinity,
         enabled,
     });
 };

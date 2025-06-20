@@ -3,8 +3,11 @@
 namespace App\Http\Controllers\Guest;
 
 use App\Http\Controllers\Controller;
+use App\Models\Exam;
 use App\Models\Grade;
+use App\Models\Teacher;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class GradeController extends Controller
 {
@@ -41,7 +44,33 @@ class GradeController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate(
+            [
+                "exam_id" => ["required", "integer", "min:1"],
+                "students_ids" => ["required", "array"],
+                "grades" => ["required", "array"]
+            ]
+        );
+        $examId = $request->exam_id;
+        $studentsIds = $request->students_ids;
+        $grades = $request->grades;
+
+        $exam = Exam::findOrFail($examId);
+        $this->checkExam($exam);
+
+        $i = 0;
+        foreach ($studentsIds as $studentId) {
+            Grade::create([
+                'exam_id' => $examId,
+                'student_id' => $studentId,
+                'grade' => $grades[$i],
+            ]);
+            $i++;
+        }
+        return response()->json([
+            "success" => true,
+            "message" => "Voti aggiunti con successo",
+        ], 201);
     }
 
     /**
@@ -55,9 +84,22 @@ class GradeController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Grade $grade)
     {
-        //
+        Log::info('test update');
+        $this->checkGrade($grade);
+
+        $request->validate(['grade' => 'required|integer|min:1|max:30']);
+
+        $grade->updateOrFail([
+            'grade' => $request->grade
+        ]);
+
+        return response()->json([
+            "success" => true,
+            "message" => "Voto modificato con successo",
+            'data' => $grade
+        ]);
     }
 
     /**
@@ -66,5 +108,44 @@ class GradeController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    private function getTeacher()
+    {
+        $user = request()->user();
+        $teacher = Teacher::where("email", $user->email)->firstOrFail();
+        return $teacher;
+    }
+
+    private function checkGrade(Grade $grade)
+    {
+        $teacher = $this->getTeacher();
+
+        $examId = $grade->exam_id;
+        $exam = Exam::findOrFail($examId);
+
+
+        $teacher->courses()->findOrFail($exam->course_id);
+
+        if ($exam->subject_id != $teacher->subject_id) {
+            return response()->json([
+                "success" => false,
+                "message" => "Operazione non autorizzata",
+            ], 401);
+        }
+    }
+
+    private function checkExam(Exam $exam)
+    {
+        $teacher = $this->getTeacher();
+
+        $teacher->courses()->findOrFail($exam->course_id);
+
+        if ($exam->subject_id != $teacher->subject_id) {
+            return response()->json([
+                "success" => false,
+                "message" => "Operazione non autorizzata",
+            ], 401);
+        }
     }
 }

@@ -129,7 +129,6 @@ class ExamController extends Controller
 
     private function checkExam(Exam $exam)
     {
-
         $teacher = $this->getTeacher();
 
         $teacher->courses()->findOrFail($exam->course_id);

@@ -25,7 +25,6 @@ import { useGlobalStore } from "./store/useGlobalStore";
 import { useQueryClient } from "@tanstack/react-query";
 
 function App() {
-    console.log("app render");
     const { setQueryClient } = useGlobalStore();
 
     const queryClient = useQueryClient();

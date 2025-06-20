@@ -11,7 +11,7 @@ import { useQueryIndexGrades } from "@/hooks/gradesQueries";
 import { useQueryIndexStudent } from "@/hooks/studentsQueries";
 import { useDynamicSearchParams } from "@/hooks/useDynamicSearchParams";
 import type { UseQueryResult } from "@tanstack/react-query";
-import { SquareMinus, SquarePlus, X } from "lucide-react";
+import { SquareMinus, SquarePlus } from "lucide-react";
 import { useEffect, useState } from "react";
 
 export const TeacherExamsPage = () => {
@@ -46,7 +46,7 @@ export const TeacherExamsPage = () => {
     const { data: activeStudents } = useQueryIndexStudent(
         { course_id: activeCourseId },
         Boolean(grades && !grades.length)
-    ) as UseQueryResult<{data: Student[]}, Error>;
+    ) as UseQueryResult<{ data: Student[] }, Error>;
 
     // * side effects
     useEffect(() => {
@@ -126,12 +126,17 @@ export const TeacherExamsPage = () => {
                 {examIdShowed ? (
                     <>
                         {isGradesLoading ? (
-                            <div className="lg:w-1/2 mx-auto">
+                            <div className="w-full md:w-3/4 lg:w-1/2 mx-auto">
                                 <SkeleGradesList />
                             </div>
                         ) : (
-                            <div className=" lg:w-1/2 mx-auto">
-                                <GradesList grades={grades} students={activeStudents?.data} />
+                            <div className="w-full md:w-3/4 lg:w-1/2 mx-auto">
+                                <GradesList
+                                    examIdShowed={examIdShowed}
+                                    setExamIdShowed={setExamIdShowed}
+                                    grades={grades}
+                                    students={activeStudents?.data}
+                                />
                             </div>
                         )}
                     </>
