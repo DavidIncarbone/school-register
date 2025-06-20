@@ -21,6 +21,7 @@ import { useEffect, useState, type ChangeEvent, type MouseEvent } from "react";
 import toast from "react-hot-toast";
 import DeleteModalTeacher from "@/components/ui/admin/DeleteModalTeacher";
 import { useQueryAdminIndexCourse } from "@/hooks/admin/coursesQueries";
+import { useQueryAdminIndexSubject } from "@/hooks/admin/subjectsQueries";
 
 export const TeacherIndex = () => {
   // * global store
@@ -39,11 +40,14 @@ export const TeacherIndex = () => {
   const activeDir = queryParams.dir;
 
   // * queries
-  const { data: courses } = useQueryAdminIndexCourse(
-    queryParams
-  ) as UseQueryResult<Course[], Error>;
-
-  console.log(courses);
+  const { data: courses } = useQueryAdminIndexCourse() as UseQueryResult<
+    Course[],
+    Error
+  >;
+  const { data: subjects } = useQueryAdminIndexSubject() as UseQueryResult<
+    Course[],
+    Error
+  >;
 
   const {
     data: teachers,
@@ -148,6 +152,7 @@ export const TeacherIndex = () => {
           <section id="formSection" className="mb-5">
             <AddTeacher
               courses={courses}
+              subjects={subjects}
               queryParams={queryParams}
               isLoading={isLoading}
               setIsLoading={setIsLoading}

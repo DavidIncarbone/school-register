@@ -56,6 +56,7 @@ export const TeacherRecord = ({
   };
 
   const updateTeacher = async (formData: TeacherFormData) => {
+    console.log("try to update");
     formData = { ...formData, id: 0 };
     updateMutate(formData as Teacher);
   };

@@ -90,7 +90,8 @@ class TeacherController extends Controller
             "last_name" => ["required", "string", "max:100", "min:1"],
             "email" => ["required", "string", "max:100", "min:1", "lowercase"],
             "subject_id" => ["required", "integer", "min:1"],
-            "course_id" => ["required", "integer", "min:1"]
+            "courses_ids" => ["required", "array"],
+            "courses_ids.*" => ["required", "integer", "min:1"]
 
         ]);
 
@@ -116,8 +117,8 @@ class TeacherController extends Controller
 
         $newTeacher->save();
 
-        if (isset(request()->course_id)) {
-            $newTeacher->courses()->attach(request()->course_id);
+        if (isset(request()->courses_ids)) {
+            $newTeacher->courses()->attach(request()->courses_ids);
         }
 
         return response()->json([
@@ -145,11 +146,11 @@ class TeacherController extends Controller
     public function update(Request $request, Teacher $teacher)
     {
         $request->validate([
-            "first_name" => ["required", "string", "max:100", "min:1"],
-            "last_name" => ["required", "string", "max:100", "min:1"],
-            "email" => ["required", "string", "max:100", "min:1", "lowercase"],
-            "subject_id" => ["required", "integer", "min:1"],
-            "course_id" => ["required", "integer", "min:1"]
+            "first_name" => ["string", "max:100", "min:1"],
+            "last_name" => ["string", "max:100", "min:1"],
+            "email" => ["string", "max:100", "min:1", "lowercase"],
+            "subject_id" => ["integer", "min:1"],
+            "course_id" => ["integer", "min:1"]
 
         ]);
 
@@ -159,7 +160,7 @@ class TeacherController extends Controller
         $teacher->first_name = $data["first_name"];
         $teacher->last_name = $data["last_name"];
         $teacher->email = $data["email"];
-        $teacher->subject_id = $data["subject_id"];
+        // $teacher->subject_id = $data["subject_id"];
 
         $teacher->update();
 

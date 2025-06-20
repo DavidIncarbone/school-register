@@ -22,3 +22,4 @@ export const gradesEndpoint = "/api/grades";
 
 export const adminTeachersEndpoint = "/api/admin/teachers";
 export const adminCoursesEndpoint = "/api/admin/courses";
+export const adminSubjectsEndpoint = "/api/admin/subjects";

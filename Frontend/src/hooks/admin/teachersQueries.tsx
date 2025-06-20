@@ -28,8 +28,9 @@ export const useMutationStoreTeacher = (params: IndexTeachersParams) => {
       const res = await api.post(adminTeachersEndpoint, newTeacher);
       return res.data;
     },
+
     onSuccess: () => {
-      console.log("settled");
+      console.log("stored");
       queryClient.invalidateQueries({
         queryKey: ["teachers", params],
         exact: true,

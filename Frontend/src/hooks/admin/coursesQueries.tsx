@@ -1,11 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
 import { api, adminCoursesEndpoint } from "@/services/api";
 
-export const useQueryAdminIndexCourse = (params: unknown, enabled = true) => {
+export const useQueryAdminIndexCourse = (enabled = true) => {
   return useQuery({
-    queryKey: ["courses", params],
+    queryKey: ["courses"],
     queryFn: async () => {
-      const res = await api.get(adminCoursesEndpoint, { params });
+      const res = await api.get(adminCoursesEndpoint);
       return res.data.data;
     },
     staleTime: Infinity,
