@@ -4,10 +4,11 @@ import { ExamsList } from "@/components/teacher/teacherExamsPage/ExamsList";
 import { GradesList } from "@/components/teacher/teacherExamsPage/GradesList";
 import { SkeleExamsList } from "@/components/ui/SkeleExamsList";
 import { SkeleGradesList } from "@/components/ui/SkeleGradesList";
-import type { Course, Exam } from "@/config/types";
+import type { Course, Exam, Grade, Student } from "@/config/types";
 import { useQueryIndexCourse } from "@/hooks/coursesQueries";
 import { useQueryIndexExams } from "@/hooks/examsQueries";
 import { useQueryIndexGrades } from "@/hooks/gradesQueries";
+import { useQueryIndexStudent } from "@/hooks/studentsQueries";
 import { useDynamicSearchParams } from "@/hooks/useDynamicSearchParams";
 import type { UseQueryResult } from "@tanstack/react-query";
 import { SquareMinus, SquarePlus, X } from "lucide-react";
@@ -40,7 +41,12 @@ export const TeacherExamsPage = () => {
     const { data: grades, isLoading: isGradesLoading } = useQueryIndexGrades(
         { exam_id: examIdShowed },
         Boolean(examIdShowed)
-    );
+    ) as UseQueryResult<Grade[], Error>;
+
+    const { data: activeStudents } = useQueryIndexStudent(
+        { course_id: activeCourseId },
+        Boolean(grades && !grades.length)
+    ) as UseQueryResult<{data: Student[]}, Error>;
 
     // * side effects
     useEffect(() => {
@@ -124,16 +130,8 @@ export const TeacherExamsPage = () => {
                                 <SkeleGradesList />
                             </div>
                         ) : (
-                            <div className="flex flex-col lg:w-1/2 mx-auto gap-1">
-                                <div className="flex justify-end">
-                                    <X
-                                        onClick={() => {
-                                            setExamIdShowed(0);
-                                        }}
-                                        className="scale-90 hover:scale-100 rounded-full border transition-transform cursor-pointer"
-                                    />
-                                </div>
-                                <GradesList grades={grades} />
+                            <div className=" lg:w-1/2 mx-auto">
+                                <GradesList grades={grades} students={activeStudents?.data} />
                             </div>
                         )}
                     </>
