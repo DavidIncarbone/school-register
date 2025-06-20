@@ -115,7 +115,7 @@ export const TeacherRecord = ({
         />
 
         <div className="border w-32 flex justify-center items-center gap-2 [&>*]:cursor-pointer [&>*]:scale-90 [&>*]:hover:scale-100 [&>*]:transition-transform">
-          {authUser?.type === UserType.TEACHER && isModifying ? (
+          {authUser?.type === UserType.ADMIN && isModifying ? (
             isUpdatePending ? (
               <Loader isContained={true} />
             ) : (

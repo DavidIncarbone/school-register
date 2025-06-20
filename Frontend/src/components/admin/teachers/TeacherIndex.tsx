@@ -12,15 +12,15 @@ import {
 } from "@/config/types";
 import {
   useMutationDestroyTeacher,
-  useQueryIndexTeacher,
+  useQueryAdminIndexTeacher,
 } from "@/hooks/admin/teachersQueries";
-import { useQueryIndexCourse } from "@/hooks/coursesQueries";
 import { useDynamicSearchParams } from "@/hooks/useDynamicSearchParams";
 import { useGlobalStore } from "@/store/useGlobalStore";
 import type { UseQueryResult } from "@tanstack/react-query";
 import { useEffect, useState, type ChangeEvent, type MouseEvent } from "react";
 import toast from "react-hot-toast";
 import DeleteModalTeacher from "@/components/ui/admin/DeleteModalTeacher";
+import { useQueryAdminIndexCourse } from "@/hooks/admin/coursesQueries";
 
 export const TeacherIndex = () => {
   // * global store
@@ -39,19 +39,23 @@ export const TeacherIndex = () => {
   const activeDir = queryParams.dir;
 
   // * queries
-  const { data: courses } = useQueryIndexCourse({}) as UseQueryResult<
-    Course[],
-    Error
-  >;
+  const { data: courses } = useQueryAdminIndexCourse(
+    queryParams
+  ) as UseQueryResult<Course[], Error>;
+
+  console.log(courses);
 
   const {
     data: teachers,
     isLoading: isAssigmentsLoading,
     isError: isAssigmentsError,
-  } = useQueryIndexTeacher(
-    queryParams
-    // "course_id" in queryParams
-  ) as UseQueryResult<{ data: Teacher[]; total: number }>;
+  } = useQueryAdminIndexTeacher(
+    queryParams,
+    "course_id" in queryParams
+  ) as UseQueryResult<{
+    data: Teacher[];
+    total: number;
+  }>;
 
   const {
     mutate: destroyMutate,

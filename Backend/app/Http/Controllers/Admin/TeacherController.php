@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Course;
 use App\Models\Teacher;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -19,9 +20,11 @@ class TeacherController extends Controller
             "email" => ["string", "max:100", "min:1", "lowercase"],
             "sort" => ["string", "in:by_first_name,by_last_name,by_email,by_created_at,by_updated_at", "max:255"],
             "dir" => ["string", "in:asc,desc"],
+            "course_id" => ["integer", "min:1"]
         ]);
 
         $query = Teacher::query();
+
 
         if (request()->name) {
             $name = request()->name;
@@ -59,6 +62,16 @@ class TeacherController extends Controller
                 $query->orderBy("updated_at", $dir);
             }
         }
+
+
+        if (request()->course_id) {
+            $courseId = request()->course_id;
+            $query->whereHas('courses', function ($q) use ($courseId) {
+                $q->where('course_id', $courseId);
+            });
+        }
+
+
 
         $teachers = $query->paginate(30);
 

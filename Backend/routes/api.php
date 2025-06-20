@@ -14,6 +14,7 @@ use App\Http\Controllers\Guest\LessonScheduleController;
 use App\Http\Controllers\Guest\PresenceController;
 use App\Http\Controllers\Guest\StudentController;
 use App\Http\Controllers\Guest\TeacherController;
+use App\Models\Admin;
 use App\Models\Course;
 use App\Models\Student;
 use App\Models\Subject;
@@ -91,6 +92,14 @@ Route::middleware(["auth:sanctum"])->group(function () {
                 "success" => true,
                 'message' => 'Operazione effettuata con successo',
                 'data' => $teacher
+            ]);
+        } else if (request()->type === "admin") {
+            $admin = Admin::where('email', request()->email)->firstOrFail();
+
+            return response()->json([
+                "success" => true,
+                'message' => 'Operazione effettuata con successo',
+                'data' => $admin
             ]);
         } else {
             return response()->json([

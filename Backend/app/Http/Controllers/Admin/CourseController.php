@@ -48,11 +48,14 @@ class CourseController extends Controller
             }
         }
 
-        $courses = $query->paginate(30);
+        $courses = $query->get();
 
         return response()->json([
-            $courses
-        ]);
+            'success' => true,
+            'message' => 'Richiesta effettuata con successo',
+            'total_count' => count($courses),
+            'data' => $courses,
+        ], 200);
     }
 
     public function create()

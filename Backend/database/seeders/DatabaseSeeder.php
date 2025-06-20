@@ -24,6 +24,9 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+
+
+
         // crea materie, per ogni materia 
         $subjectsCount = 4;
         Subject::factory($subjectsCount)->create()->each(function ($subject) {
@@ -109,6 +112,8 @@ class DatabaseSeeder extends Seeder
         // creazione profili abilitati
         $this->call([
             UserSeeder::class,
+            AdminSeeder::class
+
         ]);
 
         // teacher prova
