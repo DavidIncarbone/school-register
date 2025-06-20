@@ -115,7 +115,7 @@ export const TeacherIndex = () => {
           <div className="text-lg sm:text-2xl flex flex-wrap justify-center items-center gap-2 font-bold w-full ">
             <div className="flex justify-between items-center w-full ">
               <div>
-                {authUser?.type === UserType.TEACHER && (
+                {authUser?.type === UserType.ADMIN && (
                   <>
                     <p>Selected course:</p>
                     <CourseSelect
@@ -127,7 +127,7 @@ export const TeacherIndex = () => {
                 )}
               </div>
 
-              {authUser?.type === UserType.TEACHER &&
+              {authUser?.type === UserType.ADMIN &&
                 (!isFormShowing ? (
                   <button className="btn-pretty" onClick={handleForm}>
                     +
@@ -174,6 +174,7 @@ export const TeacherIndex = () => {
                     setTeacherId={setTeacherId}
                     setTeacherEmail={setTeacherEmail}
                     queryParams={queryParams}
+                    width="w-80"
                   />
                 ))
               )}
@@ -202,24 +203,25 @@ const initialSortingCols = [
     label: "First Name",
     sort: SortOptionAdminTeacher.BY_FIRST_NAME,
     dir: "asc",
-    className: "border w-40 flex justify-center items-center py-3",
+    className:
+      "border w-80 flex justify-center items-center py-3 cursor-pointer",
   },
   {
     label: "Last Name",
     sort: SortOptionAdminTeacher.BY_LAST_NAME,
     dir: "asc",
-    className: "border w-40 flex justify-center items-center",
+    className: "border w-80 flex justify-center items-center cursor-pointer",
   },
   {
     label: "Email",
     sort: SortOptionAdminTeacher.BY_LAST_NAME,
     dir: "asc",
-    className: "grow border flex justify-center items-center",
+    className: "grow border flex justify-center items-center cursor-pointer",
   },
   {
     label: "Actions",
     sort: SortOptionAdminTeacher.BY_LAST_NAME,
     dir: "asc",
-    className: "grow border flex justify-center items-center",
+    className: " border w-32 flex justify-center items-center cursor-pointer",
   },
 ];

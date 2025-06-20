@@ -22,12 +22,14 @@ export const TeacherRecord = ({
   setTeacherId,
   setTeacherEmail,
   queryParams,
+  width,
 }: {
   teacher: Teacher;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
   setTeacherId: Dispatch<SetStateAction<number>>;
   setTeacherEmail: Dispatch<SetStateAction<string>>;
   queryParams: IndexTeachersParams;
+  width: string;
 }) => {
   // * vars
   const { authUser } = useGlobalStore();
@@ -95,21 +97,21 @@ export const TeacherRecord = ({
           disabled={!isModifying}
           {...register("first_name")}
           defaultValue={teacher.first_name}
-          className=" border px-4 w-40 flex justify-center"
+          className={`border px-4 ${width} text-center`}
         />
         <input
           type="input"
           disabled={!isModifying}
           {...register("last_name")}
           defaultValue={teacher.last_name}
-          className=" border px-4 w-40 flex justify-center items-center"
+          className={`border px-4 ${width} text-center`}
         />
         <input
           type="email"
           disabled={!isModifying}
           {...register("email")}
           defaultValue={teacher.email}
-          className="grow border min-w-92 p-3 tracking-wider leading-7 flex justify-center items-center"
+          className="grow border min-w-92 p-3 tracking-wider leading-7 flex text-center"
         />
 
         <div className="border w-32 flex justify-center items-center gap-2 [&>*]:cursor-pointer [&>*]:scale-90 [&>*]:hover:scale-100 [&>*]:transition-transform">
