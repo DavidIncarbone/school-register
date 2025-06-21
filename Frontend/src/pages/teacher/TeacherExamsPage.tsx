@@ -45,9 +45,9 @@ export const TeacherExamsPage = () => {
     }, [courses, queryParams, updateSearchParams]);
 
     return (
-        <div className="px-5 pt-2 pb-6">
+        <div className="px-5 pt-2 pb-6 text-sm md:text-base">
             {/* headings */}
-            <div className="flex items-center justify-between w-11/12 lg:w-3/5 mx-auto">
+            <div className="flex items-center justify-between md:w-11/12 lg:w-3/5 mx-auto">
                 <div className="title_h1 flex gap-1 items-center justify-center">
                     <p>Exams for:</p>
                     <CourseSelect
@@ -79,7 +79,7 @@ export const TeacherExamsPage = () => {
             </div>
             {/* add exam form */}
             {isAddExamFormOpen && (
-                <div className="w-11/12 lg:w-3/5 mx-auto mt-4 mb-8">
+                <div className="md:w-11/12 lg:w-3/5 mx-auto mt-4 mb-8">
                     <AddOrUpdateExamForm
                         queryParams={queryParams}
                         course_name={

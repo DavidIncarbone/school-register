@@ -47,7 +47,7 @@ export const AddGradesTable = ({
             {students.map((student, i) => (
                 <div
                     key={student.id}
-                    className="grid grid-cols-4 [&>div]:p-2 text-center"
+                    className="grid grid-cols-4 [&>div]:p-2 text-center border-x"
                 >
                     <div className="border-b">{student.id}</div>
                     <div className="border-x border-b col-span-2">
@@ -62,15 +62,15 @@ export const AddGradesTable = ({
                         defaultValue={1}
                         min={1}
                         max={30}
-                        className="border-b text-center rounded-none bg-zinc-700 ring-2 ring-blue-500"
+                        className="text-center rounded-none bg-zinc-700 ring-2 !ring-blue-500"
                     />
                 </div>
             ))}
-            <div className="flex justify-end gap-4 p-6 bg-[#2a2d33]">
-                <button className="btn-pretty text-red-500" type="reset">
+            <div className="flex justify-end gap-4 py-3 bg-[#2a2d33]">
+                <button className="btn text-red-500" type="reset">
                     Reset
                 </button>
-                <button className="btn-pretty text-green-400" type="submit">
+                <button className="btn text-green-400" type="submit">
                     Add grades
                 </button>
             </div>

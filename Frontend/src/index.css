@@ -124,7 +124,7 @@ body {
     @apply text-xl font-semibold mb-2;
   }
   .title_h1 {
-    @apply text-2xl mb-1 font-bold capitalize;
+    @apply text-lg lg:text-2xl mb-1 font-bold capitalize;
   }
 
   /* HTML: <div class="loader"></div> */

@@ -83,7 +83,7 @@ export const ExamsList = ({
     };
 
     return (
-        <div className=" bg-zinc-800 w-11/12 lg:w-3/5 mx-auto rounded-sm border">
+        <div className=" bg-zinc-800 md:w-11/12 lg:w-3/5 mx-auto rounded-sm border">
             {/* head */}
             <div className="grid grid-cols-6 capitalize [&>div]:p-2 text-center font-semibold">
                 <div className="border-b col-span-2">date</div>
