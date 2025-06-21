@@ -8,10 +8,33 @@ use App\Models\Grade;
 use App\Models\Student;
 use App\Models\Teacher;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class GradeController extends Controller
 {
+
+    public function gradesAverages()
+    {
+        $user = request()->user();
+
+        if ($user->type === "student") {
+            $student = Student::where('email', $user->email)->first();
+
+            $averages = Grade::join('exams', 'grades.exam_id', '=', 'exams.id')
+                ->join('subjects', 'exams.subject_id', '=', 'subjects.id')
+                ->select('subjects.name as subject_name', DB::raw('AVG(grades.grade) as average_grade'))
+                ->where('grades.student_id', $student->id)
+                ->groupBy('exams.subject_id')
+                ->get();
+
+            return response()->json([
+                'success' => true,
+                'message' => "Operazione effettuata con successo",
+                'data' =>  $averages,
+            ]);
+        }
+    }
     /**
      * Display a listing of the resource.
      */

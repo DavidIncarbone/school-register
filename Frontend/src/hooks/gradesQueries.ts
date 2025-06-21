@@ -13,3 +13,14 @@ export const useQueryIndexGrades = (params: GradesParams, enabled = true) => {
         enabled,
     });
 };
+
+export const useQueryGetGradesAverages = () => {
+    return useQuery({
+        queryKey: ["grades-averages"],
+        queryFn: async () => {
+            const res = await api.get("/api/grades-averages");
+            return res.data.data;
+        },
+        staleTime: Infinity,
+    });
+};

@@ -66,6 +66,7 @@ Route::middleware(["auth:sanctum"])->group(function () {
     Route::apiResource("/exams", ExamController::class)->middleware(['teacher-access']);
 
     // grades
+    Route::get("/grades-averages", [GradeController::class, 'gradesAverages']);
     Route::get("/grades", [GradeController::class, 'index']);
     Route::post("/grades", [GradeController::class, 'store'])->middleware(['teacher-access']);
     Route::patch("/grades/{grade}", [GradeController::class, 'update'])->middleware(['teacher-access']);

@@ -1,5 +1,5 @@
 import { SubjectSelect } from "@/components/student/SubjectSelect";
-import type { Grade, GradesParams } from "@/config/types";
+import type { Grade } from "@/config/types";
 import { useQueryIndexGrades } from "@/hooks/gradesQueries";
 import { useQueryIndexSubjects } from "@/hooks/subjectsQueries";
 import { useDynamicSearchParams } from "@/hooks/useDynamicSearchParams";
@@ -32,7 +32,7 @@ export const StudentExamsPage = () => {
     return (
         <div className="px-5 py-2 lg:max-w-3/5 mx-auto flex flex-col">
             {/* headings */}
-            <h1 className="title_h1 text-center">Grades overview</h1>
+            <h1 className="title_h1 text-center">Exams overview</h1>
             <div className="space-x-1 font-semibold">
                 <span>Select subject:</span>
                 <SubjectSelect

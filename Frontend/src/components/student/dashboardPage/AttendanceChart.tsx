@@ -1,7 +1,7 @@
 import type { EChartsOption } from "echarts-for-react";
 import ReactECharts from "echarts-for-react";
 
-export const StudentAttendanceChart = ({
+export const AttendanceChart = ({
     total_days,
     total_presences,
 }: {
@@ -64,7 +64,7 @@ export const StudentAttendanceChart = ({
 
     return (
         <div className="flex flex-col h-full relative max-md:h-[300px]">
-            <h3 className="dashboard_h3 absolute top-1 left-1">Attendance</h3>
+            <h3 className="dashboard_h3 absolute top-1 left-1 z-10">Attendance</h3>
             <ReactECharts option={option} style={{ height: "100%" }} />
         </div>
     );

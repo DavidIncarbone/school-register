@@ -5,9 +5,10 @@ import { useQueryIndexPresence } from "@/hooks/presencesQueries";
 import { useGlobalStore } from "@/store/useGlobalStore";
 import type { UseQueryResult } from "@tanstack/react-query";
 import Loader from "@/components/ui/Loader";
-import { StudentAttendanceChart } from "./StudentAttendanceChart";
+import { AttendanceChart } from "./AttendanceChart";
 import { GeneralAnnouncements } from "@/components/GeneralAnnouncements";
 import { LatestAssignments } from "./LatestAssignments";
+import { GradesChart } from "./GradesChart";
 
 export const StudentDashboard = () => {
     // * global store
@@ -39,7 +40,7 @@ export const StudentDashboard = () => {
                     {!presences ? (
                         <Loader />
                     ) : (
-                        <StudentAttendanceChart
+                        <AttendanceChart
                             total_days={presences.total_days}
                             total_presences={presences.total_presences}
                         />
@@ -49,7 +50,9 @@ export const StudentDashboard = () => {
             <div className="assignments !bg-fuchsia-900/50">
                 <LatestAssignments />
             </div>
-            <div className="grades">grades</div>
+            <div className="grades">
+                <GradesChart />
+            </div>
             <div className="announcements !bg-yellow-700/50 h-fit">
                 <GeneralAnnouncements />
             </div>

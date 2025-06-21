@@ -130,6 +130,11 @@ export type Grade = {
     student?: Student;
 };
 
+export type GradesAvg = {
+    subject_name: string;
+    average_grade: number;
+};
+
 export type IndexStudentParams = {
     course_id?: number;
     first_name?: string;
