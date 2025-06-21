@@ -6,13 +6,14 @@ import { examSchema, type ExamFormData } from "@/schemas/examSchema";
 import { useGlobalStore } from "@/store/useGlobalStore";
 import { api, examsEndpoint } from "@/services/api";
 import { useState } from "react";
+import type { Exam } from "@/config/types";
 
 type AddOrUpdateExamFormProps = {
     course_name: string | undefined;
     course_id: number | undefined;
     queryParams: Record<string, string>;
     closeForm: () => void;
-    updatingExam?: Record<string, string>;
+    updatingExam?: Exam;
 };
 
 export const AddOrUpdateExamForm = ({
@@ -29,7 +30,7 @@ export const AddOrUpdateExamForm = ({
     const [isLoading, setIsLoading] = useState(false);
     const defaultValues = updatingExam
         ? {
-              date: updatingExam?.date,
+              date: updatingExam?.date.split(" ")[0],
               topic: updatingExam?.topic,
           }
         : {
@@ -83,12 +84,10 @@ export const AddOrUpdateExamForm = ({
     // * views
     return (
         <form
-            action=""
-            id="AssignmentForm"
-            className="w-full"
+            className="w-full bg-zinc-800 p-4 rounded-md shadow-lg"
             onSubmit={handleSubmit(createNewExam)}
         >
-            <div className="pl-3">
+            <div>
                 <h2 className="text-white text-2xl">
                     {updatingExam ? (
                         <span>Updating {updatingExam?.topic}</span>
@@ -125,7 +124,7 @@ export const AddOrUpdateExamForm = ({
                     <label className="flex flex-col" htmlFor="topic">
                         <span>Topic*</span>
                         <span className="text-xs text-white/80 pb-1">
-                            Max. 50 charachters
+                            Max. 50 characters
                         </span>
                     </label>
                     <textarea

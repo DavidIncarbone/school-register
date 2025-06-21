@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Guest;
 use App\Http\Controllers\Controller;
 use App\Models\Exam;
 use App\Models\Grade;
+use App\Models\Student;
 use App\Models\Teacher;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -16,14 +17,14 @@ class GradeController extends Controller
      */
     public function index()
     {
-        request()->validate([
-            'exam_id' => 'required|integer|min:1'
-        ]);
-        $examId = request()->exam_id;
 
         $user = request()->user();
 
         if ($user->type === "teacher") {
+            request()->validate([
+                'exam_id' => 'required|integer|min:1'
+            ]);
+            $examId = request()->exam_id;
             $grades = Grade::where('exam_id', $examId)
                 ->with(['exam', 'student'])
                 ->join('students', 'grades.student_id', '=', 'students.id')
@@ -36,6 +37,28 @@ class GradeController extends Controller
                 'data' =>  $grades,
             ]);
         } elseif ($user->type === "student") {
+            request()->validate([
+                'subject_id' => 'required|integer|min:1'
+            ]);
+            $student = Student::where('email', $user->email)->first();
+
+            $courseId = $student->course_id;
+            $subjectId = request()->subject_id;
+
+            $examsIds = Exam::where('course_id', $courseId)->where('subject_id', $subjectId)->get()->pluck('id')->toArray();
+
+            $grades = Grade::where('student_id', $student->id)
+                ->whereIn('exam_id', $examsIds)->with(['exam'])
+                ->join('exams', 'grades.exam_id', '=', 'exams.id')
+                ->orderBy('exams.date', 'desc')
+                ->select('grades.*')
+                ->get();
+
+            return response()->json([
+                'success' => true,
+                'message' => "Operazione effettuata con successo",
+                'data' =>  $grades,
+            ]);
         }
     }
 
@@ -78,8 +101,10 @@ class GradeController extends Controller
      */
     public function update(Request $request, Grade $grade)
     {
-        Log::info('test update');
-        $this->checkGrade($grade);
+        $examId = $grade->exam_id;
+        $exam = Exam::findOrFail($examId);
+
+        $this->checkExam($exam);
 
         $request->validate(['grade' => 'required|integer|min:1|max:30']);
 
@@ -99,24 +124,6 @@ class GradeController extends Controller
         $user = request()->user();
         $teacher = Teacher::where("email", $user->email)->firstOrFail();
         return $teacher;
-    }
-
-    private function checkGrade(Grade $grade)
-    {
-        $teacher = $this->getTeacher();
-
-        $examId = $grade->exam_id;
-        $exam = Exam::findOrFail($examId);
-
-
-        $teacher->courses()->findOrFail($exam->course_id);
-
-        if ($exam->subject_id != $teacher->subject_id) {
-            return response()->json([
-                "success" => false,
-                "message" => "Operazione non autorizzata",
-            ], 401);
-        }
     }
 
     private function checkExam(Exam $exam)

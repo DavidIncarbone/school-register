@@ -19,7 +19,7 @@ export const TeacherExamsPage = () => {
     const [examIdShowed, setExamIdShowed] = useState(0);
     const [isAddExamFormOpen, setIsAddExamFormOpen] = useState(false);
     const [updatingExam, setUpdatingExam] = useState<
-        Record<string, string> | undefined
+        Exam | undefined
     >();
     const activeCourseId = queryParams?.course_id
         ? Number(queryParams.course_id)

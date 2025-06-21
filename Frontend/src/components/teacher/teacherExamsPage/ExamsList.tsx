@@ -26,7 +26,7 @@ export const ExamsList = ({
     isAddExamFormOpen: boolean;
     setExamIdShowed: Dispatch<SetStateAction<number>>;
     setUpdatingExam: Dispatch<
-        SetStateAction<Record<string, string> | undefined>
+        SetStateAction<Exam | undefined>
     >;
     setIsAddExamFormOpen: Dispatch<SetStateAction<boolean>>;
 }) => {
@@ -50,12 +50,13 @@ export const ExamsList = ({
     };
 
     const handleUpdateExam = (_: MouseEvent<SVGSVGElement>, exam: Exam) => {
-        setUpdatingExam({
-            id: String(exam.id),
-            course_id: String(exam.course_id),
-            date: exam.date.split(" ")[0],
-            topic: exam.topic,
-        });
+        // setUpdatingExam({
+        //     id: String(exam.id),
+        //     course_id: String(exam.course_id),
+        //     date: exam.date.split(" ")[0],
+        //     topic: exam.topic,
+        // });
+        setUpdatingExam(exam);
         setIsAddExamFormOpen(true);
     };
 

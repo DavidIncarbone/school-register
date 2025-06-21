@@ -13,6 +13,7 @@ use App\Http\Controllers\Guest\GradeController;
 use App\Http\Controllers\Guest\LessonScheduleController;
 use App\Http\Controllers\Guest\PresenceController;
 use App\Http\Controllers\Guest\StudentController;
+use App\Http\Controllers\Guest\SubjectController;
 use App\Http\Controllers\Guest\TeacherController;
 use App\Models\Admin;
 use App\Models\Course;
@@ -37,6 +38,10 @@ Route::middleware(["auth:sanctum"])->group(function () {
     // courses
     Route::get("/courses", [CourseController::class, 'index']);
     Route::get("/courses/{course}", [CourseController::class, 'show']);
+
+    // subjects
+    Route::get("/subjects", [SubjectController::class, 'index']);
+    Route::get("/subjects/{subject}", [SubjectController::class, 'show']);
 
     // presences
     Route::get("/presences", [PresenceController::class, 'index']);

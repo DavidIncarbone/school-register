@@ -23,6 +23,7 @@ import { TeacherExamsPage } from "./pages/teacher/TeacherExamsPage";
 import { TeacherIndex } from "./components/admin/teachers/TeacherIndex";
 import { useGlobalStore } from "./store/useGlobalStore";
 import { useQueryClient } from "@tanstack/react-query";
+import { StudentExamsPage } from "./pages/student/StudentExamsPage";
 
 function App() {
     const { setQueryClient } = useGlobalStore();
@@ -68,7 +69,11 @@ function App() {
                         />
                         <Route
                             path="/teacher-exams"
-                            Component={TeacherExamsPage}
+                            element={
+                                <RequireRole role={UserType.TEACHER}>
+                                    <TeacherExamsPage />
+                                </RequireRole>
+                            }
                         />
                         <Route
                             path="/search-students"
@@ -91,6 +96,14 @@ function App() {
                             element={
                                 <RequireRole role={UserType.STUDENT}>
                                     <SubjectsPage />
+                                </RequireRole>
+                            }
+                        />
+                        <Route
+                            path="/student-exams"
+                            element={
+                                <RequireRole role={UserType.STUDENT}>
+                                    <StudentExamsPage />
                                 </RequireRole>
                             }
                         />
