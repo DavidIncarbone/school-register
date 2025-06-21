@@ -1,3 +1,4 @@
+import { TitleAndNavigation } from "@/components/TitleAndNavigation";
 import type { GradesAvg } from "@/config/types";
 import { useQueryGetGradesAverages } from "@/hooks/gradesQueries";
 import type { UseQueryResult } from "@tanstack/react-query";
@@ -43,10 +44,13 @@ export const GradesChart = () => {
         : {};
     return (
         <div className="flex flex-col h-full relative">
-            <h3 className="dashboard_h3 absolute top-1 left-1 z-10">
-                Average Grades
-            </h3>
-            <ReactECharts option={option} />
+            <div className="dashboard_h3 w-full absolute top-1 z-10">
+                <TitleAndNavigation
+                    title="Average Grades"
+                    path="/student-exams"
+                />
+            </div>
+            <ReactECharts option={option} style={{ height: "100%" }} />
         </div>
     );
 };

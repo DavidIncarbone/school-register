@@ -24,7 +24,7 @@ export const LatestAssignments = () => {
             />
             <div className="grid grid-cols-3 border rounded-t-sm text-center !bg-fuchsia-900">
                 <div className="border-r p-1">Subject</div>
-                <div className="col-span-2">Body</div>
+                <div className="col-span-2 p-1">Body</div>
             </div>
             {!assignments
                 ? [1, 2, 3, 4].map((_, i) => (

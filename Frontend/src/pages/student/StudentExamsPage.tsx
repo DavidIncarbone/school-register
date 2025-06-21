@@ -59,7 +59,7 @@ const GradesList = ({ subjectId }: { subjectId: number }) => {
 
     return (
         <div>
-            {isGradesLoading ? (
+            {(isGradesLoading || !grades) ? (
                 <>
                     {[1, 2, 3].map((_, i) => (
                         <div
@@ -81,7 +81,7 @@ const GradesList = ({ subjectId }: { subjectId: number }) => {
                         <div className="border-x col-span-2">topic</div>
                         <div>grade</div>
                     </div>
-                    {grades?.map((grade) => (
+                    {grades.map((grade) => (
                         <div
                             key={grade.id}
                             className="even:bg-zinc-800 odd:bg-zinc-900 grid grid-cols-4 text-center border-x border-b last:rounded-b-sm [&>div]:px-2 [&>div]:py-2"
