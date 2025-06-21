@@ -74,14 +74,6 @@ class GradeController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      */
     public function update(Request $request, Grade $grade)
@@ -100,14 +92,6 @@ class GradeController extends Controller
             "message" => "Voto modificato con successo",
             'data' => $grade
         ]);
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
     }
 
     private function getTeacher()
