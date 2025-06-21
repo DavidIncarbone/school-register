@@ -18,9 +18,9 @@ class TeacherSeeder extends Seeder
         $subjectsCount = Subject::all()->count();
         Teacher::factory()->create([
             "subject_id" => rand(1, $subjectsCount),
-            "first_name" => "Luigi",
-            "last_name" => "Mosca",
-            "email" => "mosca@example.com"
+            "first_name" => "pippo",
+            "last_name" => "baudo",
+            "email" => "baudo@example.com"
         ]);
 
         Teacher::factory(20)->create();/*->each(function ($t) use ($courseCount) {

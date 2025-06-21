@@ -1,47 +1,54 @@
 import { useEffect, type Dispatch, type SetStateAction } from "react";
-import { useMutationStoreAssignment } from "@/hooks/assignmentsQueries";
-import type { Course, IndexAssignmentsParams } from "@/config/types";
+import type {
+  Course,
+  IndexTeachersParams,
+  Subject,
+  Teacher,
+} from "@/config/types";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "react-hot-toast";
 import Loader from "@/components/ui/Loader";
 import {
-  assignmentsSchema,
-  type AssignmentFormData,
-} from "@/schemas/assignmentsSchema";
+  teachersSchema,
+  type TeacherFormData,
+} from "@/schemas/admin/teachersSchema";
+import { useMutationStoreTeacher } from "@/hooks/admin/teachersQueries";
 
 // TYPES
 
-type AddAssignmentProps = {
+// TIPIZZAZIONE DELLE PROPS
+type AddTeacherProps = {
   courses: Course[] | undefined;
-  queryParams: IndexAssignmentsParams;
+  subjects: Subject[] | undefined;
+  queryParams: IndexTeachersParams;
   isLoading: boolean;
+  // isLoading: boolean;
   // tipizzazione speciale per useState
   setIsFormShowing: Dispatch<SetStateAction<boolean>>;
   setIsLoading: Dispatch<SetStateAction<boolean>>;
+  teacherId: number;
+  teacherToUpdate: Teacher | undefined;
 };
 
 export const AddTeacher = ({
   courses,
+  subjects,
   queryParams,
   setIsFormShowing,
+  teacherId,
+  teacherToUpdate,
 }: // isLoading,
 // setIsLoading,
-AddAssignmentProps) => {
-  console.log(courses);
-
+AddTeacherProps) => {
   // vars
-  const startDate = new Date().toISOString().split("T")[0];
-  const deadlineDate = new Date("2025/06/31").toISOString().split("T")[0];
-  const currentCourse = courses?.find(
-    (course) => course.id == queryParams.course_id
-  );
-
   const defaultValues = {
-    course_id: queryParams?.course_id,
-    assignment_date: "",
-    deadline: "",
-    body: "",
+    id: 0,
+    first_name: "",
+    last_name: "",
+    email: "",
+    courses_ids: [],
+    subject_id: "",
   };
 
   const {
@@ -50,20 +57,26 @@ AddAssignmentProps) => {
     formState: { errors },
     reset,
   } = useForm({
-    resolver: zodResolver(assignmentsSchema),
+    resolver: zodResolver(teachersSchema),
     defaultValues,
   });
+
+  const teacherCourses: number[] | undefined = teacherToUpdate?.courses?.map(
+    (course) => course.id
+  );
+
+  console.log(teacherCourses);
 
   //   queries
   const {
     mutate: storeMutate,
     isSuccess: isStoreSuccess,
     isPending: isStorePending,
-  } = useMutationStoreAssignment(queryParams);
+  } = useMutationStoreTeacher(queryParams);
 
   // actions
 
-  const createNewAssignment = async (formData: AssignmentFormData) => {
+  const createNewTeacher = async (formData: TeacherFormData) => {
     console.log(formData);
     console.log(typeof queryParams?.course_id);
     storeMutate(formData);
@@ -73,7 +86,7 @@ AddAssignmentProps) => {
 
   useEffect(() => {
     if (isStoreSuccess) {
-      toast.success("Assignment added successfully");
+      toast.success("Teacher added successfully");
       reset(defaultValues);
       setIsFormShowing(false);
     }
@@ -81,78 +94,126 @@ AddAssignmentProps) => {
 
   // views
 
+  console.log(errors);
+
   return (
     <section className="mt-5">
       <form
         action=""
-        id="AssignmentForm"
-        className="w-full"
-        onSubmit={handleSubmit(createNewAssignment)}
+        id="TeacherForm"
+        className="w-full p-3"
+        onSubmit={handleSubmit(createNewTeacher)}
       >
-        <div className="pl-3">
-          <h2 className="text-white text-2xl">
-            Add Assignment for{" "}
-            <span className="underline capitalize">{currentCourse?.name}</span>
-          </h2>
+        <div className="">
+          <h2 className="text-white text-2xl">Add Teacher for</h2>
           <p className="text-gray-400 text-sm mb-3">
             The fields marked with * are required
           </p>
         </div>
-        <div className="grid grid-cols-3 gap-4 mb-3 max-[640px]:grid-cols-1">
-          <div className="flex flex-col gap-2 p-3">
-            <div className="flex flex-col gap-0.5">
-              <label htmlFor="start">Start*</label>
-              <input
-                type="date"
-                // name="assignment_date"
-                {...register("assignment_date")}
-                // value={startDate}
-                id="start"
-                max={startDate}
-                className="border border-white p-3"
-              />
+        <div className="flex flex-col">
+          <div className="grid grid-cols-3 gap-7 mb-3 max-[640px]:grid-cols-1">
+            <div className="flex flex-col gap-2">
+              <div className="flex flex-col gap-0.5">
+                <label htmlFor="first_name">First Name*</label>
+                <p className="text-xs text-white/80 pb-1">
+                  Min. 1 Max. 255 characters
+                </p>
+                <input
+                  type="input"
+                  {...register("first_name")}
+                  id="first_name"
+                  className="border border-white "
+                  value={teacherToUpdate?.first_name}
+                />
+              </div>
+              {errors.last_name && (
+                <p className="text-red-500 text-sm">
+                  {errors.first_name?.message}
+                </p>
+              )}
             </div>
-            {errors.body && (
+            <div className="flex flex-col gap-2">
+              <div className="flex flex-col gap-0.5">
+                <label htmlFor="last_name">Last Name*</label>
+                <p className="text-xs text-white/80 pb-1">
+                  Min. 1 Max. 255 characters
+                </p>
+                <input
+                  type="input"
+                  {...register("last_name")}
+                  id="last_name"
+                  className="border border-white "
+                  value={teacherToUpdate?.last_name}
+                />
+              </div>
+              {errors.last_name && (
+                <p className="text-red-500 text-sm">
+                  {errors.last_name?.message}
+                </p>
+              )}
+            </div>
+            <div className="flex flex-col gap-2">
+              <div className="flex flex-col gap-0.5 ">
+                <label htmlFor="email">Email*</label>
+                <p className="text-xs text-white/80 pb-1">
+                  Only email format is accepted
+                </p>
+                <input
+                  id="email"
+                  {...register("email")} // name assegnato tramite useForm
+                  className="w-full border border-white "
+                  value={teacherToUpdate?.email}
+                ></input>
+              </div>
+              {errors.email && (
+                <p className="text-red-500 text-sm">{errors.email?.message}</p>
+              )}
+            </div>
+          </div>
+          <div className="grid grid-cols-3">
+            <div className="flex flex-col gap-2 my-3">
+              <p>Select Subject*</p>
+              <select {...register("subject_id")} id="subject_id">
+                <option value="">Select Subject</option>
+                {subjects?.map((subject, i) => (
+                  <option
+                    key={i}
+                    value={subject.id}
+                    selected={teacherToUpdate?.subject_id == subject?.id}
+                  >
+                    {subject.name}
+                  </option>
+                ))}
+              </select>
+              {errors.subject_id && (
+                <p className="text-red-500 text-sm">
+                  {errors.subject_id?.message}
+                </p>
+              )}
+            </div>
+          </div>
+          <p>Select courses*:</p>
+          <div className="grid grid-cols-6 max-[640px]:grid-cols-2 my-3">
+            {courses?.map((course, i) => {
+              return (
+                <div key={i} className="flex gap-2">
+                  <label className="custom-checkbox capitalize">
+                    <input
+                      type="checkbox"
+                      {...register("courses_ids")}
+                      value={course.id}
+                      checked={teacherCourses?.includes(course.id)}
+                    />
+                    <span className="checkmark"></span>
+                    {course.name}
+                  </label>
+                </div>
+              );
+            })}
+            {errors.courses_ids && (
               <p className="text-red-500 text-sm">
-                {errors.assignment_date?.message}
+                {errors.courses_ids?.message}
               </p>
-            )}
-          </div>
-          <div className="flex flex-col gap-2  p-3">
-            <div className="flex flex-col gap-0.5 ">
-              <label htmlFor="deadline">Deadline*</label>
-              <input
-                type="date"
-                // name="deadline"
-                {...register("deadline")}
-                // value={startDate}
-                id="deadline"
-                max={deadlineDate}
-                className="border border-white p-3 "
-              />
-            </div>
-            {errors.deadline && (
-              <p className="text-red-500 text-sm">{errors.deadline.message}</p>
-            )}
-          </div>
-        </div>
-        <div>
-          <label htmlFor="body">Body*</label>
-          <p className="text-xs text-white/80 pb-1">
-            Max. 10 rows | Max. 255 charachters
-          </p>
-          <textarea
-            // name="body"
-            id="body"
-            {...register("body")} // name assegnato tramite useForm
-            className="w-full border border-white p-3"
-            // value="prova"
-            rows={10}
-            maxLength={255}
-          ></textarea>
-          <div className="h-[20px]">
-            {errors.body && (
-              <p className="text-red-500 text-sm">{errors.body?.message}</p>
             )}
           </div>
         </div>
@@ -167,27 +228,21 @@ AddAssignmentProps) => {
                 <div className="absolute inset-0">
                   <Loader isContained={true} />
                 </div>
-                <span className="text-transparent">Add Assignment</span>
+                <span className="text-transparent">Add Teacher</span>
               </>
             ) : (
-              "Add Assignment"
+              "Add Teacher"
             )}
           </button>
           <button
-            type="reset"
             className={`${
               isStorePending && "!cursor-not-allowed opacity-50"
             } btn-pretty`}
+            onClick={() => reset()}
           >
             Reset
           </button>
         </div>
-        {/* HIDDEN INPUT */}
-        <input
-          type="hidden"
-          {...register("course_id")}
-          value={queryParams.course_id}
-        />
       </form>
     </section>
   );

@@ -47,11 +47,14 @@ class SubjectController extends Controller
             }
         }
 
-        $subjects = $query->paginate(30);
+        $subjects = $query->get();
 
         return response()->json([
-            $subjects
-        ]);
+            'success' => true,
+            'message' => 'Richiesta effettuata con successo',
+            'total_count' => count($subjects),
+            'data' => $subjects,
+        ], 200);
     }
 
     public function create()

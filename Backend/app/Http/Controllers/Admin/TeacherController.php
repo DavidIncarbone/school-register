@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Course;
 use App\Models\Teacher;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -19,9 +20,11 @@ class TeacherController extends Controller
             "email" => ["string", "max:100", "min:1", "lowercase"],
             "sort" => ["string", "in:by_first_name,by_last_name,by_email,by_created_at,by_updated_at", "max:255"],
             "dir" => ["string", "in:asc,desc"],
+            "course_id" => ["integer", "min:1"]
         ]);
 
         $query = Teacher::query();
+
 
         if (request()->name) {
             $name = request()->name;
@@ -60,7 +63,19 @@ class TeacherController extends Controller
             }
         }
 
+
+        if (request()->course_id) {
+            $courseId = request()->course_id;
+            $query->whereHas('courses', function ($q) use ($courseId) {
+                $q->where('course_id', $courseId);
+            });
+        }
+
+
+
         $teachers = $query->paginate(30);
+
+        $teachers->load("courses");
 
         return response()->json(
             $teachers
@@ -77,7 +92,8 @@ class TeacherController extends Controller
             "last_name" => ["required", "string", "max:100", "min:1"],
             "email" => ["required", "string", "max:100", "min:1", "lowercase"],
             "subject_id" => ["required", "integer", "min:1"],
-            "course_id" => ["required", "integer", "min:1"]
+            "courses_ids" => ["required", "array"],
+            "courses_ids.*" => ["required", "integer", "min:1"]
 
         ]);
 
@@ -103,8 +119,8 @@ class TeacherController extends Controller
 
         $newTeacher->save();
 
-        if (isset(request()->course_id)) {
-            $newTeacher->courses()->attach(request()->course_id);
+        if (isset(request()->courses_ids)) {
+            $newTeacher->courses()->attach(request()->courses_ids);
         }
 
         return response()->json([
@@ -132,11 +148,11 @@ class TeacherController extends Controller
     public function update(Request $request, Teacher $teacher)
     {
         $request->validate([
-            "first_name" => ["required", "string", "max:100", "min:1"],
-            "last_name" => ["required", "string", "max:100", "min:1"],
-            "email" => ["required", "string", "max:100", "min:1", "lowercase"],
-            "subject_id" => ["required", "integer", "min:1"],
-            "course_id" => ["required", "integer", "min:1"]
+            "first_name" => ["string", "max:100", "min:1"],
+            "last_name" => ["string", "max:100", "min:1"],
+            "email" => ["string", "max:100", "min:1", "lowercase"],
+            "subject_id" => ["integer", "min:1"],
+            "course_id" => ["integer", "min:1"]
 
         ]);
 
@@ -146,7 +162,7 @@ class TeacherController extends Controller
         $teacher->first_name = $data["first_name"];
         $teacher->last_name = $data["last_name"];
         $teacher->email = $data["email"];
-        $teacher->subject_id = $data["subject_id"];
+        // $teacher->subject_id = $data["subject_id"];
 
         $teacher->update();
 

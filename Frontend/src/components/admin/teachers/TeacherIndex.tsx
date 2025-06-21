@@ -12,15 +12,16 @@ import {
 } from "@/config/types";
 import {
   useMutationDestroyTeacher,
-  useQueryIndexTeacher,
+  useQueryAdminIndexTeacher,
 } from "@/hooks/admin/teachersQueries";
-import { useQueryIndexCourse } from "@/hooks/coursesQueries";
 import { useDynamicSearchParams } from "@/hooks/useDynamicSearchParams";
 import { useGlobalStore } from "@/store/useGlobalStore";
 import type { UseQueryResult } from "@tanstack/react-query";
 import { useEffect, useState, type ChangeEvent, type MouseEvent } from "react";
 import toast from "react-hot-toast";
 import DeleteModalTeacher from "@/components/ui/admin/DeleteModalTeacher";
+import { useQueryAdminIndexCourse } from "@/hooks/admin/coursesQueries";
+import { useQueryAdminIndexSubject } from "@/hooks/admin/subjectsQueries";
 
 export const TeacherIndex = () => {
   // * global store
@@ -39,7 +40,11 @@ export const TeacherIndex = () => {
   const activeDir = queryParams.dir;
 
   // * queries
-  const { data: courses } = useQueryIndexCourse({}) as UseQueryResult<
+  const { data: courses } = useQueryAdminIndexCourse() as UseQueryResult<
+    Course[],
+    Error
+  >;
+  const { data: subjects } = useQueryAdminIndexSubject() as UseQueryResult<
     Course[],
     Error
   >;
@@ -48,10 +53,17 @@ export const TeacherIndex = () => {
     data: teachers,
     isLoading: isAssigmentsLoading,
     isError: isAssigmentsError,
-  } = useQueryIndexTeacher(
-    queryParams
-    // "course_id" in queryParams
-  ) as UseQueryResult<{ data: Teacher[]; total: number }>;
+  } = useQueryAdminIndexTeacher(
+    queryParams,
+    "course_id" in queryParams
+  ) as UseQueryResult<{
+    data: Teacher[];
+    total: number;
+  }>;
+
+  const teacherToUpdate = teachers?.data?.find(
+    (teacher) => teacher?.id == teacherId
+  );
 
   const {
     mutate: destroyMutate,
@@ -105,6 +117,8 @@ export const TeacherIndex = () => {
     }
   }, [isDestroySuccess]);
 
+  console.log(teachers);
+
   // * views
   if (isAssigmentsError) return <pre>teacher error - da gestire</pre>;
   return (
@@ -115,7 +129,7 @@ export const TeacherIndex = () => {
           <div className="text-lg sm:text-2xl flex flex-wrap justify-center items-center gap-2 font-bold w-full ">
             <div className="flex justify-between items-center w-full ">
               <div>
-                {authUser?.type === UserType.TEACHER && (
+                {authUser?.type === UserType.ADMIN && (
                   <>
                     <p>Selected course:</p>
                     <CourseSelect
@@ -127,7 +141,7 @@ export const TeacherIndex = () => {
                 )}
               </div>
 
-              {authUser?.type === UserType.TEACHER &&
+              {authUser?.type === UserType.ADMIN &&
                 (!isFormShowing ? (
                   <button className="btn-pretty" onClick={handleForm}>
                     +
@@ -144,10 +158,13 @@ export const TeacherIndex = () => {
           <section id="formSection" className="mb-5">
             <AddTeacher
               courses={courses}
+              subjects={subjects}
               queryParams={queryParams}
               isLoading={isLoading}
               setIsLoading={setIsLoading}
               setIsFormShowing={setIsFormShowing}
+              teacherId={teacherId}
+              teacherToUpdate={teacherToUpdate}
             />
           </section>
         )}
@@ -164,16 +181,19 @@ export const TeacherIndex = () => {
               {isAssigmentsLoading ? (
                 <div className="h-[425px] animate-pulse bg-zinc-800"></div>
               ) : (
-                teachers?.data.map((as) => (
+                teachers?.data.map((teacher) => (
                   <TeacherRecord
-                    key={as.id}
-                    teacher={as}
+                    key={teacher.id}
+                    teacher={teacher}
                     // destroyTeacher={destroyTeacher}
                     // isDestroyPending={isDestroyPending}
                     setIsOpen={setIsOpen}
                     setTeacherId={setTeacherId}
                     setTeacherEmail={setTeacherEmail}
+                    isFormShowing={isFormShowing}
+                    setIsFormShowing={setIsFormShowing}
                     queryParams={queryParams}
+                    width="w-80"
                   />
                 ))
               )}
@@ -202,24 +222,25 @@ const initialSortingCols = [
     label: "First Name",
     sort: SortOptionAdminTeacher.BY_FIRST_NAME,
     dir: "asc",
-    className: "border w-40 flex justify-center items-center py-3",
+    className:
+      "border w-80 flex justify-center items-center py-3 cursor-pointer",
   },
   {
     label: "Last Name",
     sort: SortOptionAdminTeacher.BY_LAST_NAME,
     dir: "asc",
-    className: "border w-40 flex justify-center items-center",
+    className: "border w-80 flex justify-center items-center cursor-pointer",
   },
   {
     label: "Email",
     sort: SortOptionAdminTeacher.BY_LAST_NAME,
     dir: "asc",
-    className: "grow border flex justify-center items-center",
+    className: "grow border flex justify-center items-center cursor-pointer",
   },
   {
     label: "Actions",
     sort: SortOptionAdminTeacher.BY_LAST_NAME,
     dir: "asc",
-    className: "grow border flex justify-center items-center",
+    className: " border w-32 flex justify-center items-center cursor-pointer",
   },
 ];

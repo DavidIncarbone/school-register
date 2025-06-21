@@ -39,10 +39,12 @@ export type LoginUser = {
 
 export type Teacher = {
   id?: number;
-  subject_id: number;
+  subject_id: string;
+  courses_ids: string[];
   first_name: string;
   last_name: string;
   email: string;
+  courses?: Course[];
 };
 
 export type Student = {
@@ -120,12 +122,12 @@ export type Exam = {
 };
 
 export type Grade = {
-    id: number;
-    exam_id: number;
-    student_id: number;
-    grade: string;
-    exam: Exam;
-    student: Student;
+  id: number;
+  exam_id: number;
+  student_id: number;
+  grade: string;
+  exam: Exam;
+  student: Student;
 };
 
 export type IndexStudentParams = {
@@ -161,7 +163,7 @@ export type ExamsParams = {
 };
 
 export type GradesParams = {
-    exam_id?: number;
+  exam_id?: number;
 };
 
 // ***** ADMIN *****

@@ -16,7 +16,12 @@ export default function DashboardPage() {
   return (
     <div className="flex flex-col min-h-full py-2">
       <h1 className="title_h1 px-5 py-1">
-        {authUser.type === UserType.STUDENT ? "Student" : "Teacher"} Dashboard
+        {authUser.type === UserType.STUDENT
+          ? "Student"
+          : authUser.type === UserType.TEACHER
+          ? "Teacher"
+          : "Admin"}{" "}
+        Dashboard
       </h1>
       {authUser.type === UserType.STUDENT ? (
         <StudentDashboard />

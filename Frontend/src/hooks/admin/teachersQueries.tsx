@@ -2,7 +2,7 @@ import type { Teacher, IndexTeachersParams } from "@/config/types";
 import { api, adminTeachersEndpoint } from "@/services/api";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-export const useQueryIndexTeacher = (
+export const useQueryAdminIndexTeacher = (
   params: IndexTeachersParams,
   enabled = true
 ) => {
@@ -28,8 +28,9 @@ export const useMutationStoreTeacher = (params: IndexTeachersParams) => {
       const res = await api.post(adminTeachersEndpoint, newTeacher);
       return res.data;
     },
+
     onSuccess: () => {
-      console.log("settled");
+      console.log("stored");
       queryClient.invalidateQueries({
         queryKey: ["teachers", params],
         exact: true,

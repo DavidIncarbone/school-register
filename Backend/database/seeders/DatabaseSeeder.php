@@ -24,6 +24,9 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+
+
+
         // crea materie, per ogni materia 
         $subjectsCount = 4;
         Subject::factory($subjectsCount)->create()->each(function ($subject) {
@@ -109,15 +112,17 @@ class DatabaseSeeder extends Seeder
         // creazione profili abilitati
         $this->call([
             UserSeeder::class,
+            AdminSeeder::class
+
         ]);
 
         // teacher prova
         $subject = Subject::inRandomOrder()->first();
         $subjectId = $subject->id;
         $teacherExample = Teacher::create([
-            'first_name' => 'danilo',
-            'last_name' => 'mosca',
-            'email' => 'mosca@example.com',
+            'first_name' => 'pippo',
+            'last_name' => 'baudo',
+            'email' => 'baudo@example.com',
             'subject_id' => $subjectId,
         ]);
         $coursesIds = $subject->courses()->inRandomOrder()->limit(6)->get()->pluck('id')->toArray();
@@ -129,9 +134,9 @@ class DatabaseSeeder extends Seeder
         $course = Course::inRandomOrder()->first();
         $courseId = $course->id;
         $studentExample = Student::create([
-            'first_name' => 'luigi',
-            'last_name' => 'raciti',
-            'email' => 'raciti@example.com',
+            'first_name' => 'pino',
+            'last_name' => 'insegno',
+            'email' => 'insegno@example.com',
             'course_id' => $courseId,
         ]);
         // - crea delle presenze a partire da una settimana fa ad oggi

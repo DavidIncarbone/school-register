@@ -6,6 +6,8 @@ export const api = axios.create({
   withCredentials: true,
   withXSRFToken: true,
 });
+
+// ***** GUEST *****
 export const userEndpoint = "/api/user";
 export const courseEndpoint = "/api/courses";
 export const studentsEndpoint = "/api/students";
@@ -19,3 +21,5 @@ export const gradesEndpoint = "/api/grades";
 // ***** ADMIN *****
 
 export const adminTeachersEndpoint = "/api/admin/teachers";
+export const adminCoursesEndpoint = "/api/admin/courses";
+export const adminSubjectsEndpoint = "/api/admin/subjects";

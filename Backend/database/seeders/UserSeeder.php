@@ -14,23 +14,23 @@ class UserSeeder extends Seeder
     public function run(): void
     {
         User::factory()->createMany([[
-            'name' => 'AJ',
-            'email' => 'aj@example.com',
+            'name' => 'Ajhay',
+            'email' => 'herrera@example.com',
             'type' => 'admin',
             'password' => 'ciaociao'
         ], [
             'name' => 'David',
-            'email' => 'david@example.com',
+            'email' => 'incarbone@example.com',
             'type' => 'admin',
             'password' => 'ciaociao'
         ], [
-            'name' => 'Danilo',
-            'email' => 'mosca@example.com',
+            'name' => 'Pippo',
+            'email' => 'baudo@example.com',
             'type' => 'teacher',
             'password' => 'ciaociao'
         ], [
-            'name' => 'Luigi',
-            'email' => 'raciti@example.com',
+            'name' => 'Pino',
+            'email' => 'insegno@example.com',
             'type' => 'student',
             'password' => 'ciaociao'
         ]],);

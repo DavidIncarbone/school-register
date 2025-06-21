@@ -21,13 +21,19 @@ export const TeacherRecord = ({
   setIsOpen,
   setTeacherId,
   setTeacherEmail,
+  isFormShowing,
+  setIsFormShowing,
   queryParams,
+  width,
 }: {
   teacher: Teacher;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
   setTeacherId: Dispatch<SetStateAction<number>>;
   setTeacherEmail: Dispatch<SetStateAction<string>>;
+  isFormShowing: boolean;
+  setIsFormShowing: Dispatch<SetStateAction<boolean>>;
   queryParams: IndexTeachersParams;
+  width: string;
 }) => {
   // * vars
   const { authUser } = useGlobalStore();
@@ -51,9 +57,12 @@ export const TeacherRecord = ({
   } = useMutationUpdateTeacher(queryParams, teacher.id as number); // * actions
   const onModifyClick = () => {
     setIsModifying(true);
+    setIsFormShowing(true);
+    setTeacherId(teacher.id as number);
   };
 
   const updateTeacher = async (formData: TeacherFormData) => {
+    console.log("try to update");
     formData = { ...formData, id: 0 };
     updateMutate(formData as Teacher);
   };
@@ -92,36 +101,35 @@ export const TeacherRecord = ({
       >
         <input
           type="input"
-          disabled={!isModifying}
+          disabled
           {...register("first_name")}
           defaultValue={teacher.first_name}
-          className=" border px-4 w-40 flex justify-center"
+          className={`border px-4 ${width} text-center`}
         />
         <input
           type="input"
-          disabled={!isModifying}
+          disabled
           {...register("last_name")}
           defaultValue={teacher.last_name}
-          className=" border px-4 w-40 flex justify-center items-center"
+          className={`border px-4 ${width} text-center`}
         />
         <input
           type="email"
-          disabled={!isModifying}
+          disabled
           {...register("email")}
           defaultValue={teacher.email}
-          className="grow border min-w-92 p-3 tracking-wider leading-7 flex justify-center items-center"
+          className="grow border min-w-92 p-3 tracking-wider leading-7 flex text-center"
         />
 
         <div className="border w-32 flex justify-center items-center gap-2 [&>*]:cursor-pointer [&>*]:scale-90 [&>*]:hover:scale-100 [&>*]:transition-transform">
-          {authUser?.type === UserType.TEACHER && isModifying ? (
-            isUpdatePending ? (
-              <Loader isContained={true} />
-            ) : (
-              <button type="submit">
-                <Save className="text-blue-400" />
-              </button>
-            )
-          ) : (
+          {authUser?.type === UserType.ADMIN && (
+            //   isUpdatePending && <Loader isContained={true} />
+            // ) : (
+            //     : (
+            //      <button type="submit">
+            //        <Save className="text-blue-400" />
+            //      </button>
+            //    )
             <>
               <Pencil onClick={onModifyClick} className="text-yellow-500" />
               <Trash2
