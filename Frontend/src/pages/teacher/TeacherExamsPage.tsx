@@ -3,12 +3,9 @@ import { AddOrUpdateExamForm } from "@/components/teacher/teacherExamsPage/AddOr
 import { ExamsList } from "@/components/teacher/teacherExamsPage/ExamsList";
 import { GradesList } from "@/components/teacher/teacherExamsPage/GradesList";
 import { SkeleExamsList } from "@/components/ui/SkeleExamsList";
-import { SkeleGradesList } from "@/components/ui/SkeleGradesList";
-import type { Course, Exam, Grade, Student } from "@/config/types";
+import type { Course, Exam } from "@/config/types";
 import { useQueryIndexCourse } from "@/hooks/coursesQueries";
 import { useQueryIndexExams } from "@/hooks/examsQueries";
-import { useQueryIndexGrades } from "@/hooks/gradesQueries";
-import { useQueryIndexStudent } from "@/hooks/studentsQueries";
 import { useDynamicSearchParams } from "@/hooks/useDynamicSearchParams";
 import type { UseQueryResult } from "@tanstack/react-query";
 import { SquareMinus, SquarePlus } from "lucide-react";
@@ -38,16 +35,6 @@ export const TeacherExamsPage = () => {
         "course_id" in queryParams
     ) as UseQueryResult<Exam[], Error>;
 
-    const { data: grades, isLoading: isGradesLoading } = useQueryIndexGrades(
-        { exam_id: examIdShowed },
-        Boolean(examIdShowed)
-    ) as UseQueryResult<Grade[], Error>;
-
-    const { data: activeStudents } = useQueryIndexStudent(
-        { course_id: activeCourseId },
-        Boolean(grades && !grades.length)
-    ) as UseQueryResult<{ data: Student[] }, Error>;
-
     // * side effects
     useEffect(() => {
         if (courses && !("course_id" in queryParams)) {
@@ -58,7 +45,7 @@ export const TeacherExamsPage = () => {
     }, [courses, queryParams, updateSearchParams]);
 
     return (
-        <div className="px-5 py-2">
+        <div className="px-5 pt-2 pb-6">
             {/* headings */}
             <div className="flex items-center justify-between w-11/12 lg:w-3/5 mx-auto">
                 <div className="title_h1 flex gap-1 items-center justify-center">
@@ -106,42 +93,30 @@ export const TeacherExamsPage = () => {
                     />
                 </div>
             )}
-            <div></div>
             {/* exams list */}
-            <div className="flex flex-col gap-4">
-                {isExamsLoading ? (
-                    <SkeleExamsList />
-                ) : (
-                    <ExamsList
-                        queryParams={queryParams}
-                        exams={exams}
+            {isExamsLoading ? (
+                <SkeleExamsList />
+            ) : (
+                <ExamsList
+                    queryParams={queryParams}
+                    exams={exams}
+                    examIdShowed={examIdShowed}
+                    isAddExamFormOpen={isAddExamFormOpen}
+                    setExamIdShowed={setExamIdShowed}
+                    setUpdatingExam={setUpdatingExam}
+                    setIsAddExamFormOpen={setIsAddExamFormOpen}
+                />
+            )}
+            {/* grades list */}
+            {examIdShowed ? (
+                <div className="w-full md:w-3/4 lg:w-1/2 mx-auto mt-8">
+                    <GradesList
+                        activeCourseId={activeCourseId}
                         examIdShowed={examIdShowed}
-                        isAddExamFormOpen={isAddExamFormOpen}
                         setExamIdShowed={setExamIdShowed}
-                        setUpdatingExam={setUpdatingExam}
-                        setIsAddExamFormOpen={setIsAddExamFormOpen}
                     />
-                )}
-                {/* grades list */}
-                {examIdShowed ? (
-                    <>
-                        {isGradesLoading ? (
-                            <div className="w-full md:w-3/4 lg:w-1/2 mx-auto">
-                                <SkeleGradesList />
-                            </div>
-                        ) : (
-                            <div className="w-full md:w-3/4 lg:w-1/2 mx-auto">
-                                <GradesList
-                                    examIdShowed={examIdShowed}
-                                    setExamIdShowed={setExamIdShowed}
-                                    grades={grades}
-                                    students={activeStudents?.data}
-                                />
-                            </div>
-                        )}
-                    </>
-                ) : null}
-            </div>
+                </div>
+            ) : null}
         </div>
     );
 };

@@ -1,7 +1,7 @@
 export const SkeleGradesList = ({
-    threeCols = false,
+    threeCols,
 }: {
-    threeCols?: boolean;
+    threeCols: boolean;
 }) => {
     return (
         <>
