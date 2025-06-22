@@ -59,7 +59,7 @@ const GradesList = ({ subjectId }: { subjectId: number }) => {
 
     return (
         <div>
-            {(isGradesLoading || !grades) ? (
+            {isGradesLoading || !grades ? (
                 <>
                     {[1, 2, 3].map((_, i) => (
                         <div

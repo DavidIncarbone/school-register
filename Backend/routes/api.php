@@ -83,6 +83,7 @@ Route::middleware(["auth:sanctum"])->group(function () {
             "type" => 'required|string|in:student,teacher,admin',
         ]);
         if (request()->type === "student") {
+            // todo: aggiungere un boolean che indica la presenza di esami futuri
             $student = Student::where('email', request()->email)->firstOrFail();
             $course = Course::findOrFail($student->course_id);
             $student->course_name = $course->name;

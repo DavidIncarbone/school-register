@@ -102,7 +102,7 @@ export default function PrivateRoutes() {
         return () => {
             if (authUser && echo) echo.leave(`room.1`);
         };
-    }, [echo, authUser, queryClient]);
+    }, [echo, authUser, queryClient, setIsGeneralNotifsOpen]);
 
     useEffect(() => {
         const fetchAndSetAuthUser = async () => {
