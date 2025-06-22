@@ -16,6 +16,9 @@ export const GradesChart = () => {
               xAxis: {
                   type: "category",
                   data: gradesAvgs.map((avg) => avg.subject_name),
+                  axisLabel: {
+                      interval: 0, // forza la visualizzazione di tutte le etichette
+                  },
               },
               yAxis: {
                   type: "value",
@@ -43,7 +46,7 @@ export const GradesChart = () => {
           }
         : {};
     return (
-        <div className="flex flex-col h-full relative min-h-[300px]">
+        <div className="flex flex-col h-full relative">
             <div className="dashboard_h3 w-full absolute top-1 z-10">
                 <TitleAndNavigation
                     title="Average Grades"

@@ -51,7 +51,7 @@ export const StudentDashboard = () => {
             <div className="assignments !bg-fuchsia-900/50">
                 <LatestAssignments />
             </div>
-            <div className="grades">
+            <div className="grades h-[300px]">
                 <GradesChart />
             </div>
             <div className="announcements !bg-yellow-700/50">
