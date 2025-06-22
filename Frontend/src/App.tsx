@@ -12,7 +12,7 @@ import { CourseDetailPage } from "./pages/CourseDetailPage";
 import { StudentDetailPage } from "./pages/StudentDetailPage";
 import { AttendanceFormPage } from "./pages/teacher/AttendanceFormPage";
 import { WeeklySchedulePage } from "./pages/WeeklySchedulePage";
-// import { Debug } from "./components/Debug";
+import { Debug } from "./components/Debug";
 import { AssignmentsPage } from "./pages/AssignmentsPage";
 import { Toaster } from "react-hot-toast";
 import { SubjectsPage } from "./pages/student/SubjectsPage";

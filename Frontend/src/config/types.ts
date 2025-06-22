@@ -130,6 +130,11 @@ export type Grade = {
     student?: Student;
 };
 
+export type Announcement = {
+    id: number;
+    body: string;
+};
+
 export type GradesAvg = {
     subject_name: string;
     average_grade: number;

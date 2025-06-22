@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\TeacherController as AdminTeacherController;
 use App\Http\Controllers\Admin\CourseController as AdminCourseController;
 use App\Http\Controllers\Admin\SubjectController as AdminSubjectController;
 use App\Http\Controllers\Admin\PresenceController as AdminPresenceController;
+use App\Http\Controllers\Guest\AnnouncementController;
 use App\Http\Controllers\Guest\AssignmentController;
 use App\Http\Controllers\Guest\CourseController;
 use App\Http\Controllers\Guest\ExamController;
@@ -70,6 +71,10 @@ Route::middleware(["auth:sanctum"])->group(function () {
     Route::get("/grades", [GradeController::class, 'index']);
     Route::post("/grades", [GradeController::class, 'store'])->middleware(['teacher-access']);
     Route::patch("/grades/{grade}", [GradeController::class, 'update'])->middleware(['teacher-access']);
+
+    // announcements
+    Route::get("/announcements", [AnnouncementController::class, 'example']);
+    Route::post("/announcements", [AnnouncementController::class, 'store']);
 
     // profile
     Route::get("/profile", function () {
