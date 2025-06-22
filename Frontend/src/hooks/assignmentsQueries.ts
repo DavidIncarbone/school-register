@@ -1,10 +1,6 @@
 import type { Assignment, IndexAssignmentsParams } from "@/config/types";
 import { api, assignmentEndpoint } from "@/services/api";
-import {
-    useMutation,
-    useQuery,
-    useQueryClient,
-} from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 export const useQueryIndexAssignment = (
     params: IndexAssignmentsParams,

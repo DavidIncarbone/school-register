@@ -14,7 +14,7 @@ export const AssignmentHead = ({
     onClick: (e: MouseEvent<HTMLDivElement>) => void;
 }) => {
     return (
-        <div className="flex text-center border border-b-0 rounded-t-sm overflow-hidden font-semibold bg-zinc-950">
+        <div className="grid grid-cols-7 w-full text-center  border-b-2 rounded-t-sm overflow-hidden font-semibold bg-zinc-900 [&>div]:hover:bg-zinc-950">
             {sortingCols.map((col, i, ar) => (
                 <div
                     key={i}

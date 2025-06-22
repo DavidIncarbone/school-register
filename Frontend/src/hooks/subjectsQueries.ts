@@ -1,7 +1,7 @@
 import { api, subjectsEndpoint } from "@/services/api";
 import { useQuery } from "@tanstack/react-query";
 
-export const useQueryIndexSubjects = () => {
+export const useQueryIndexSubjects = (enabled = true) => {
     return useQuery({
         queryKey: ["subjects"],
         queryFn: async () => {
@@ -9,5 +9,6 @@ export const useQueryIndexSubjects = () => {
             return res.data.data;
         },
         staleTime: Infinity,
+        enabled,
     });
 };

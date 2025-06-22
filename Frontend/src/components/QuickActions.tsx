@@ -45,11 +45,6 @@ export const QuickActions = ({
                             }
                             ${
                                 authUser?.type === UserType.TEACHER &&
-                                action.path === "/subjects" &&
-                                "hidden"
-                            }
-                            ${
-                                authUser?.type === UserType.TEACHER &&
                                 action.path === "/student-exams" &&
                                 "hidden"
                             }
@@ -100,16 +95,16 @@ const quickActions = [
         label: "Weekly schedule",
     },
     {
-        path: "/subjects",
-        icon: <LayoutList />,
-        iconColor: "bg-blue-500",
-        label: "Subjects",
-    },
-    {
         path: "/search-students",
         icon: <LayoutList />,
         iconColor: "bg-blue-500",
         label: "Students list",
+    },
+    {
+        path: "/assignments",
+        icon: <NotebookPen />,
+        iconColor: "bg-amber-500",
+        label: "Assignments",
     },
     {
         path: "/teacher-exams",
@@ -122,12 +117,6 @@ const quickActions = [
         icon: <BarChart3 />,
         iconColor: "bg-teal-500",
         label: "Exams",
-    },
-    {
-        path: "/assignments",
-        icon: <NotebookPen />,
-        iconColor: "bg-amber-500",
-        label: "Assignments",
     },
     {
         path: "/",

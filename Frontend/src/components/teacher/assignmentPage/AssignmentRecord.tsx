@@ -32,7 +32,6 @@ export const AssignmentRecord = ({
     // * vars
     const { authUser } = useGlobalStore();
     const [isModifying, setIsModifying] = useState(false);
-
     const {
         register,
         handleSubmit,
@@ -41,13 +40,11 @@ export const AssignmentRecord = ({
         resolver: zodResolver(assignmentsSchema),
     });
 
-    // queries
-
+    // * queries
     const {
         mutate: updateMutate,
         isSuccess: isUpdateSuccess,
         isPending: isUpdatePending,
-        data: updateData,
     } = useMutationUpdateAssignment(queryParams, assignment.id as number); // * actions
     const onModifyClick = () => {
         setIsModifying(true);
@@ -57,28 +54,13 @@ export const AssignmentRecord = ({
         updateMutate(formData as Assignment);
     };
 
-    // collaterals
-
+    // * side effects
     useEffect(() => {
         if (isUpdateSuccess) {
             setIsModifying(false);
-            // if (updateData?.isClean) {
-            //   toast.success("No changes made.", {
-            //     style: {
-            //       border: "1px solid blue",
-            //       padding: "16px",
-            //       color: "blue",
-            //     },
-            //     iconTheme: {
-            //       primary: "blue",
-            //       secondary: "#FFFAEE",
-            //     },
-            //   });
-            // } else {
             toast.success("Assignment updated succesfully");
-            // }
         }
-    }, [updateData]);
+    }, [isUpdateSuccess]); // updateData
 
     // * views
     return (
@@ -86,7 +68,7 @@ export const AssignmentRecord = ({
             <form
                 className={`${
                     isModifying && "italic"
-                } flex  odd:bg-zinc-800 even:bg-zinc-950 3xl:h-40`}
+                } grid grid-cols-7 w-full odd:bg-zinc-700 even:bg-zinc-800`}
                 onSubmit={handleSubmit(updateAssignment)}
             >
                 <input
@@ -94,24 +76,24 @@ export const AssignmentRecord = ({
                     disabled={!isModifying}
                     {...register("assignment_date")}
                     defaultValue={assignment.assignment_date.split(" ")[0]}
-                    className=" border px-4 w-40 flex justify-center"
+                    className="m-2 w-40  flex items-center"
                 />
                 <input
                     type="date"
                     disabled={!isModifying}
                     {...register("deadline")}
                     defaultValue={assignment.deadline.split(" ")[0]}
-                    className=" border px-4 w-40 flex justify-center items-center"
+                    className="m-2 flex items-center"
                 />
                 <textarea
                     disabled={!isModifying}
                     {...register("body")}
-                    rows={isModifying ? 10 : 3}
+                    rows={isModifying ? 10 : 2}
                     defaultValue={assignment.body}
-                    className="grow border min-w-92 p-3 tracking-wider leading-7 flex justify-center items-center"
+                    className="m-2 col-span-4 p-3 tracking-wider leading-7 flex justify-center items-center"
                 />
 
-                <div className="border w-32 flex justify-center items-center gap-2 [&>*]:cursor-pointer [&>*]:scale-90 [&>*]:hover:scale-100 [&>*]:transition-transform">
+                <div className="flex justify-center items-center gap-2 [&>*]:cursor-pointer [&>*]:scale-90 [&>*]:hover:scale-100 [&>*]:transition-transform">
                     {authUser?.type === UserType.TEACHER && isModifying ? (
                         isUpdatePending ? (
                             <Loader isContained={true} />
@@ -122,35 +104,40 @@ export const AssignmentRecord = ({
                         )
                     ) : (
                         <>
-                            <Pencil
-                                onClick={onModifyClick}
-                                className="text-yellow-500"
-                            />
-                            <Trash2
-                                className="text-red-600"
-                                onClick={() => {
-                                    setAssignmentId(assignment.id as number);
-                                    setAssignmentBody(
-                                        assignment.body as string
-                                    );
-                                    setIsOpen(true);
-                                }}
-                            />
-                            <div className="relative w-fit cursor-pointer text-slate-400">
-                                <input
-                                    className=" opacity-0 absolute inset-0"
-                                    type="file"
-                                    accept=".txt,.doc,.docx,.pdf"
-                                />
-                                <Paperclip />
-                            </div>
+                            {authUser?.type === UserType.TEACHER ? (
+                                <>
+                                    <Pencil
+                                        onClick={onModifyClick}
+                                        className="text-yellow-500"
+                                    />
+                                    <Trash2
+                                        className="text-red-600"
+                                        onClick={() => {
+                                            setAssignmentId(
+                                                assignment.id as number
+                                            );
+                                            setAssignmentBody(
+                                                assignment.body as string
+                                            );
+                                            setIsOpen(true);
+                                        }}
+                                    />
+                                    <div className="relative w-fit cursor-pointer text-slate-400">
+                                        <input
+                                            className=" opacity-0 absolute inset-0"
+                                            type="file"
+                                            accept=".txt,.doc,.docx,.pdf"
+                                        />
+                                        <Paperclip />
+                                    </div>
+                                </>
+                            ) : (
+                                <label className="custom-checkbox">
+                                    <input type="checkbox" id="myCheckbox" />
+                                    <span className="checkmark"></span>
+                                </label>
+                            )}
                         </>
-                    )}
-                    {authUser?.type === UserType.STUDENT && (
-                        <label className="custom-checkbox">
-                            <input type="checkbox" id="myCheckbox" />
-                            <span className="checkmark"></span>
-                        </label>
                     )}
                 </div>
             </form>

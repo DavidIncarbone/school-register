@@ -1,4 +1,5 @@
 import { PaginationComp } from "@/components/PaginationComp";
+import { SubjectSelect } from "@/components/student/SubjectSelect";
 import { AddAssignment } from "@/components/teacher/assignmentPage/AddAssignment";
 import { AssignmentHead } from "@/components/teacher/assignmentPage/AssignmentHead";
 import { AssignmentRecord } from "@/components/teacher/assignmentPage/AssignmentRecord";
@@ -10,12 +11,14 @@ import {
     UserType,
     type Assignment,
     type Course,
+    type Subject,
 } from "@/config/types";
 import {
     useMutationDestroyAssignment,
     useQueryIndexAssignment,
 } from "@/hooks/assignmentsQueries";
 import { useQueryIndexCourse } from "@/hooks/coursesQueries";
+import { useQueryIndexSubjects } from "@/hooks/subjectsQueries";
 import { useDynamicSearchParams } from "@/hooks/useDynamicSearchParams";
 import { useGlobalStore } from "@/store/useGlobalStore";
 import type { UseQueryResult } from "@tanstack/react-query";
@@ -40,10 +43,14 @@ export const AssignmentsPage = () => {
     const activeDir = queryParams.dir ?? "desc";
 
     // * queries
-    const { data: courses } = useQueryIndexCourse({}) as UseQueryResult<
-        Course[],
-        Error
-    >;
+    const { data: courses } = useQueryIndexCourse(
+        {},
+        Boolean(authUser && authUser.type === UserType.TEACHER)
+    ) as UseQueryResult<Course[], Error>;
+
+    const { data: subjects } = useQueryIndexSubjects(
+        Boolean(authUser && authUser.type === UserType.STUDENT)
+    ) as UseQueryResult<Subject[], Error>;
 
     const {
         data: assignments,
@@ -51,14 +58,12 @@ export const AssignmentsPage = () => {
         isError: isAssigmentsError,
     } = useQueryIndexAssignment(
         queryParams,
-        "course_id" in queryParams
+        "course_id" in queryParams || "subject_id" in queryParams
     ) as UseQueryResult<
         {
             data: Assignment[];
             current_page: number;
             last_page: number;
-            prev_page_url: string;
-            next_page_url: string;
         },
         Error
     >;
@@ -141,12 +146,26 @@ export const AssignmentsPage = () => {
 
     // * side effects
     useEffect(() => {
-        if (courses && !("course_id" in queryParams)) {
+        if (
+            authUser &&
+            authUser.type === UserType.TEACHER &&
+            courses &&
+            !("course_id" in queryParams)
+        ) {
             updateSearchParams([
                 { key: "course_id", value: String(courses[0].id) },
             ]);
+        } else if (
+            authUser &&
+            authUser.type === UserType.STUDENT &&
+            subjects &&
+            !("subject_id" in queryParams)
+        ) {
+            updateSearchParams([
+                { key: "subject_id", value: String(subjects[0].id) },
+            ]);
         }
-    }, [courses, queryParams, updateSearchParams]);
+    }, [authUser, courses, subjects, queryParams, updateSearchParams]);
 
     useEffect(() => {
         if (isFormShowing) {
@@ -169,17 +188,26 @@ export const AssignmentsPage = () => {
             <div className="px-5 py-2 lg:w-4/5 mx-auto">
                 {/* headings */}
                 <h1 className="title_h1 text-center">assignments</h1>
-                <div className="flex justify-between items-center w-full ">
-                    {authUser?.type === UserType.TEACHER && (
-                        <div className="title_h1 max-md:!text-lg flex gap-1 items-center justify-center">
-                            <p>Selected course:</p>
+                <div className="flex justify-between items-center w-full mb-1">
+                    {authUser?.type === UserType.TEACHER ? (
+                        <div className="space-x-1 font-semibold">
+                            <span>Select course:</span>
                             <CourseSelect
                                 courses={courses}
                                 queryParams={queryParams}
                                 updateSearchParams={updateSearchParams}
                             />
                         </div>
-                    )}
+                    ) : authUser?.type === UserType.STUDENT ? (
+                        <div className="space-x-1 font-semibold">
+                            <span>Select subject:</span>
+                            <SubjectSelect
+                                subjects={subjects}
+                                queryParams={queryParams}
+                                updateSearchParams={updateSearchParams}
+                            />
+                        </div>
+                    ) : null}
 
                     {authUser?.type === UserType.TEACHER && (
                         <button title="Add an assignment">
@@ -213,18 +241,18 @@ export const AssignmentsPage = () => {
 
                 {/* assignments list (per corso) */}
                 <div className="max-lg:w-[92dvw] mx-auto overflow-auto">
-                    <div className="min-w-fit">
+                    <div className="min-w-[1000px]">
                         <AssignmentHead
                             sortingCols={sortingCols}
                             activeDir={activeDir}
                             activeSort={activeSort}
                             onClick={handleSortingColClick}
                         />
-                        <div className="border rounded-b-sm overflow-hidden bg-zinc-900">
-                            {(!assignments || isAssigmentsLoading) ? (
-                                <SkeleAssignmentsList/>
-                            ) : (
-                                assignments.data.map((as) => (
+                        {!assignments || isAssigmentsLoading ? (
+                            <SkeleAssignmentsList />
+                        ) : (
+                            <div className="rounded-b-sm overflow-hidden">
+                                {assignments.data.map((as) => (
                                     <AssignmentRecord
                                         key={as.id}
                                         assignment={as}
@@ -235,9 +263,9 @@ export const AssignmentsPage = () => {
                                         setAssignmentBody={setAssignmentBody}
                                         queryParams={queryParams}
                                     />
-                                ))
-                            )}
-                        </div>
+                                ))}
+                            </div>
+                        )}
                     </div>
                 </div>
 
@@ -276,24 +304,24 @@ const initialSortingCols = [
         label: "Start",
         sort: SortOptionAssignment.BY_ASSIGNMENT_DATE,
         dir: "desc",
-        className: "border w-40 flex justify-center items-center py-3",
+        className: "w-40 flex justify-center items-center p-2",
     },
     {
         label: "Deadline",
         sort: SortOptionAssignment.BY_DEADLINE,
         dir: "desc",
-        className: "border w-40 flex justify-center items-center",
+        className: "flex justify-center items-center p-2",
     },
     {
         label: "Body",
         sort: SortOptionAssignment.BY_ASSIGNMENT_DATE,
         dir: "asc",
-        className: "grow border flex justify-center items-center",
+        className: "col-span-4 flex justify-center items-center p-2",
     },
     {
         label: "Actions",
         sort: SortOptionAssignment.BY_ASSIGNMENT_DATE,
         dir: "asc",
-        className: "border w-32 flex justify-center items-center gap-2",
+        className: "flex justify-center items-center p-2",
     },
 ];
