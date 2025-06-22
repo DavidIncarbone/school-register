@@ -18,6 +18,7 @@ export const assignmentEndpoint = "/api/assignments";
 export const profileEndpoint = "/api/profile";
 export const examsEndpoint = "/api/exams";
 export const gradesEndpoint = "/api/grades";
+export const announcementsEndpoint = "/api/announcements";
 
 // ***** ADMIN *****
 

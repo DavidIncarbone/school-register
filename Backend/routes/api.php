@@ -73,7 +73,7 @@ Route::middleware(["auth:sanctum"])->group(function () {
     Route::patch("/grades/{grade}", [GradeController::class, 'update'])->middleware(['teacher-access']);
 
     // announcements
-    Route::get("/announcements", [AnnouncementController::class, 'example']);
+    Route::get("/announcements", [AnnouncementController::class, 'index']);
     Route::post("/announcements", [AnnouncementController::class, 'store']);
 
     // profile

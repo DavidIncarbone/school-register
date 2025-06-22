@@ -13,20 +13,11 @@ export const TeacherDashboard = () => {
 
     useEffect(() => {
         if (takeAttendance) {
-            toast.custom(
-                (t) => (
-                    <div
-                        className={`transition-all duration-300 transform px-4 py-2 rounded shadow bg-yellow-100 text-yellow-800 ${
-                            t.visible
-                                ? "opacity-100 scale-100 translate-y-0"
-                                : "opacity-0 scale-70 -translate-y-2"
-                        }`}
-                    >
-                        ⚠️ Take attendance before class starts.
-                    </div>
-                ),
-                { position: "top-center" }
-            );
+            toast.success("Take attendance before class starts.", {
+                icon: "⚠️",
+                style: { background: "#fff4d4", color: "#c38521" },
+                position: "top-center",
+            });
         }
     }, [takeAttendance]);
 
@@ -43,7 +34,7 @@ export const TeacherDashboard = () => {
                 <CoursesList />
                 <CoursesCommunications />
             </div>
-            <div className="announcements !bg-yellow-700/50 h-fit">
+            <div className="announcements !bg-yellow-700/50">
                 <GeneralAnnouncements />
             </div>
         </div>

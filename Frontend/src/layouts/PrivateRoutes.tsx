@@ -1,13 +1,14 @@
 import { Outlet, useNavigate } from "react-router";
 import { useGlobalStore } from "../store/useGlobalStore";
 import { useEffect } from "react";
-import type { Announcement, User } from "../config/types";
+import type { User } from "../config/types";
 import { api } from "../services/api";
 import Loader from "../components/ui/Loader";
 import { useQueryIndexPersonalProfile } from "@/hooks/personalProfileQueries";
 
 import Echo from "laravel-echo";
 import Pusher from "pusher-js";
+import toast from "react-hot-toast";
 declare global {
     interface Window {
         Pusher: typeof Pusher;
@@ -24,6 +25,7 @@ export default function PrivateRoutes() {
         setProfile,
         echo,
         setEcho,
+        queryClient,
     } = useGlobalStore();
 
     // * vars
@@ -34,6 +36,7 @@ export default function PrivateRoutes() {
         Boolean(authUser)
     );
 
+    // * side effects
     useEffect(() => {
         if (authUser) {
             setEcho(
@@ -84,19 +87,22 @@ export default function PrivateRoutes() {
 
     useEffect(() => {
         if (authUser && echo) {
-            echo.join("room.1").listen(
-                "AnnouncementSent",
-                (ev: { announcement: Announcement }) =>
-                    console.log(ev.announcement)
-            );
+            echo.join("room.1").listen("AnnouncementSent", () => {
+                toast.success("New Announcement", {
+                    icon: "🔔",
+                    style: { background: "#fff4d4", color: "#c38521" },
+                    duration: 5000,
+                    
+                });
+                queryClient?.invalidateQueries({ queryKey: ["announcements"] });
+            });
         }
 
         return () => {
             if (authUser && echo) echo.leave(`room.1`);
         };
-    }, [echo, authUser]);
+    }, [echo, authUser, queryClient]);
 
-    // * side effects
     useEffect(() => {
         const fetchAndSetAuthUser = async () => {
             try {

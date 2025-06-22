@@ -12,12 +12,8 @@ class AnnouncementController extends Controller
 {
     public function index()
     {
-        $announcements = Announcement::all();
-        return response()->json([
-            "success" => true,
-            "message" => "Operazione effettuata con successo",
-            "data" => $announcements,
-        ]);
+        $announcements = Announcement::paginate(6);
+        return response()->json($announcements);
     }
 
     public function store()

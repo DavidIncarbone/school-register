@@ -27,6 +27,7 @@ export const StudentDashboard = () => {
         data: Presence[];
     }>;
 
+
     return (
         <div className="dashboard student-dashboard">
             <div className="info max-md:overflow-auto max-sm:flex sm:grid sm:grid-cols-3 lg:grid-cols-4  !px-4 gap-4 !bg-slate-800 max-lg:h-fit">
@@ -53,7 +54,7 @@ export const StudentDashboard = () => {
             <div className="grades">
                 <GradesChart />
             </div>
-            <div className="announcements !bg-yellow-700/50 h-fit">
+            <div className="announcements !bg-yellow-700/50">
                 <GeneralAnnouncements />
             </div>
         </div>
