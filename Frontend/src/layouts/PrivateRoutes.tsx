@@ -26,6 +26,7 @@ export default function PrivateRoutes() {
         echo,
         setEcho,
         queryClient,
+        setIsGeneralNotifsOpen,
     } = useGlobalStore();
 
     // * vars
@@ -92,9 +93,9 @@ export default function PrivateRoutes() {
                     icon: "🔔",
                     style: { background: "#fff4d4", color: "#c38521" },
                     duration: 5000,
-                    
                 });
                 queryClient?.invalidateQueries({ queryKey: ["announcements"] });
+                setIsGeneralNotifsOpen(true);
             });
         }
 

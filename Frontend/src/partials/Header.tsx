@@ -9,8 +9,15 @@ import { useState } from "react";
 
 export default function Header() {
     // * global store
-    const { authUser, setAuthUser, setProfile, sidebarHidden, profile } =
-        useGlobalStore();
+    const {
+        authUser,
+        setAuthUser,
+        setProfile,
+        sidebarHidden,
+        profile,
+        isGeneralNotifsOpen,
+        setIsGeneralNotifsOpen,
+    } = useGlobalStore();
     // * vars
     const [isLoading, setIsLoading] = useState(false);
     const queryClient = useQueryClient();
@@ -71,7 +78,17 @@ export default function Header() {
                         <>
                             <div className="flex items-center gap-4 md:gap-6 mr-2 md:mr-4">
                                 <Calendar className="size-6 scale-90 hover:scale-100 cursor-pointer opacity-70 hover:opacity-100 transition-all" />
-                                <Megaphone className="size-6 scale-90 hover:scale-100 cursor-pointer opacity-70 hover:opacity-100 transition-all" />
+                                <div
+                                    onClick={() =>
+                                        setIsGeneralNotifsOpen(false)
+                                    }
+                                    className="size-6 scale-90 hover:scale-100 cursor-pointer opacity-70 hover:opacity-100 transition-all relative"
+                                >
+                                    <Megaphone />
+                                    {isGeneralNotifsOpen && (
+                                        <div className="size-3 bg-sky-400 rounded-full absolute top-0 -right-1" />
+                                    )}
+                                </div>
                                 <Bell className="size-6 scale-90 hover:scale-100 cursor-pointer opacity-70 hover:opacity-100 transition-all" />
                             </div>
                             <div
