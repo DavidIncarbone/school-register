@@ -1,5 +1,4 @@
-import { SortOptionAssignment, type SortingCols } from "@/config/types";
-import { divide } from "lodash";
+import { type SortingCols } from "@/config/types";
 import { TriangleRight } from "lucide-react";
 import type { MouseEvent } from "react";
 
