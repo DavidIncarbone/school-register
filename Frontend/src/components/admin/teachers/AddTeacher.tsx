@@ -23,12 +23,14 @@ type AddTeacherProps = {
   subjects: Subject[] | undefined;
   queryParams: IndexTeachersParams;
   isLoading: boolean;
-  // isLoading: boolean;
-  // tipizzazione speciale per useState
   setIsFormShowing: Dispatch<SetStateAction<boolean>>;
   setIsLoading: Dispatch<SetStateAction<boolean>>;
   teacherId: number;
-  teacherToUpdate: Teacher | undefined;
+  teacherToUpdate?: Teacher;
+
+  setTeacherToUpdate: Dispatch<SetStateAction<Teacher | undefined>>;
+  isModifying: boolean;
+  setIsModifying: Dispatch<SetStateAction<boolean>>;
 };
 
 export const AddTeacher = ({
@@ -36,20 +38,37 @@ export const AddTeacher = ({
   subjects,
   queryParams,
   setIsFormShowing,
+  isModifying,
+  setIsModifying,
   teacherId,
   teacherToUpdate,
-}: // isLoading,
-// setIsLoading,
-AddTeacherProps) => {
+}: AddTeacherProps) => {
   // vars
-  const defaultValues = {
-    id: 0,
-    first_name: "",
-    last_name: "",
-    email: "",
-    courses_ids: [],
-    subject_id: "",
-  };
+
+  const teacherCourses: number[] | undefined = teacherToUpdate?.courses?.map(
+    (course) => course.id
+  );
+
+  console.log("ciao");
+  console.log(teacherCourses);
+
+  const defaultValues: Teacher | undefined = isModifying
+    ? {
+        id: 0,
+        first_name: teacherToUpdate?.first_name as string,
+        last_name: teacherToUpdate?.last_name as string,
+        email: teacherToUpdate?.email as string,
+        courses_ids: teacherCourses as number[] | undefined,
+        subject_id: teacherToUpdate?.subject_id as string,
+      }
+    : {
+        id: 0,
+        first_name: "",
+        last_name: "",
+        email: "",
+        courses_ids: [],
+        subject_id: "",
+      };
 
   const {
     register,
@@ -61,11 +80,8 @@ AddTeacherProps) => {
     defaultValues,
   });
 
-  const teacherCourses: number[] | undefined = teacherToUpdate?.courses?.map(
-    (course) => course.id
-  );
-
   console.log(teacherCourses);
+  console.log(teacherToUpdate, "update");
 
   //   queries
   const {
@@ -85,9 +101,13 @@ AddTeacherProps) => {
   // collaterals effects
 
   useEffect(() => {
+    console.log("ciao");
+  }, [teacherToUpdate]);
+
+  useEffect(() => {
     if (isStoreSuccess) {
       toast.success("Teacher added successfully");
-      reset(defaultValues);
+      // reset(defaultValues);
       setIsFormShowing(false);
     }
   }, [isStoreSuccess, reset]);
@@ -123,7 +143,7 @@ AddTeacherProps) => {
                   {...register("first_name")}
                   id="first_name"
                   className="border border-white "
-                  value={teacherToUpdate?.first_name}
+                  // value={isModifying ? teacherToUpdate?.first_name : ""}
                 />
               </div>
               {errors.last_name && (
@@ -143,7 +163,7 @@ AddTeacherProps) => {
                   {...register("last_name")}
                   id="last_name"
                   className="border border-white "
-                  value={teacherToUpdate?.last_name}
+                  // value={isModifying ? teacherToUpdate?.last_name : ""}
                 />
               </div>
               {errors.last_name && (
@@ -162,7 +182,7 @@ AddTeacherProps) => {
                   id="email"
                   {...register("email")} // name assegnato tramite useForm
                   className="w-full border border-white "
-                  value={teacherToUpdate?.email}
+                  // value={isModifying ? teacherToUpdate?.email : ""}
                 ></input>
               </div>
               {errors.email && (
@@ -174,14 +194,10 @@ AddTeacherProps) => {
             <div className="flex flex-col gap-2 my-3">
               <p>Select Subject*</p>
               <select {...register("subject_id")} id="subject_id">
-                <option value="">Select Subject</option>
+                {/* <option value="">Select Subject</option> */}
                 {subjects?.map((subject, i) => (
-                  <option
-                    key={i}
-                    value={subject.id}
-                    selected={teacherToUpdate?.subject_id == subject?.id}
-                  >
-                    {subject.name}
+                  <option key={i} defaultValue={subject?.id}>
+                    {subject?.name}
                   </option>
                 ))}
               </select>
@@ -201,8 +217,12 @@ AddTeacherProps) => {
                     <input
                       type="checkbox"
                       {...register("courses_ids")}
-                      value={course.id}
-                      checked={teacherCourses?.includes(course.id)}
+                      // value={course.id}
+                      defaultChecked={
+                        isModifying
+                          ? teacherCourses?.includes(course.id)
+                          : false
+                      }
                     />
                     <span className="checkmark"></span>
                     {course.name}

@@ -9,6 +9,7 @@ import {
   UserType,
   type Teacher,
   type Course,
+  type Subject,
 } from "@/config/types";
 import {
   useMutationDestroyTeacher,
@@ -22,6 +23,7 @@ import toast from "react-hot-toast";
 import DeleteModalTeacher from "@/components/ui/admin/DeleteModalTeacher";
 import { useQueryAdminIndexCourse } from "@/hooks/admin/coursesQueries";
 import { useQueryAdminIndexSubject } from "@/hooks/admin/subjectsQueries";
+import type { Subjects } from "react-hook-form";
 
 export const TeacherIndex = () => {
   // * global store
@@ -36,6 +38,8 @@ export const TeacherIndex = () => {
   const [teacherEmail, setTeacherEmail] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const [sortingCols, setSortingCols] = useState(initialSortingCols);
+  const [isModifying, setIsModifying] = useState(false);
+  const [teacherToUpdate, setTeacherToUpdate] = useState<Teacher | undefined>();
   const activeSort = queryParams.sort;
   const activeDir = queryParams.dir;
 
@@ -45,7 +49,7 @@ export const TeacherIndex = () => {
     Error
   >;
   const { data: subjects } = useQueryAdminIndexSubject() as UseQueryResult<
-    Course[],
+    Subject[],
     Error
   >;
 
@@ -61,10 +65,6 @@ export const TeacherIndex = () => {
     total: number;
   }>;
 
-  const teacherToUpdate = teachers?.data?.find(
-    (teacher) => teacher?.id == teacherId
-  );
-
   const {
     mutate: destroyMutate,
     isSuccess: isDestroySuccess,
@@ -73,7 +73,10 @@ export const TeacherIndex = () => {
 
   // * actions
 
-  const handleForm = () => setIsFormShowing(!isFormShowing);
+  const handleForm = () => {
+    setIsFormShowing(!isFormShowing);
+    isModifying && setIsModifying(false);
+  };
 
   const destroyTeacher = async (teacherId: number) => {
     console.log("destroy");
@@ -96,6 +99,9 @@ export const TeacherIndex = () => {
       )
     );
   };
+
+  const teacher = teachers?.data?.find((teacher) => teacher?.id == teacherId);
+  console.log(teacher);
 
   // * side effects
   useEffect(() => {
@@ -163,8 +169,11 @@ export const TeacherIndex = () => {
               isLoading={isLoading}
               setIsLoading={setIsLoading}
               setIsFormShowing={setIsFormShowing}
+              isModifying={isModifying}
+              setIsModifying={setIsModifying}
               teacherId={teacherId}
               teacherToUpdate={teacherToUpdate}
+              setTeacherToUpdate={setTeacherToUpdate}
             />
           </section>
         )}
@@ -185,15 +194,17 @@ export const TeacherIndex = () => {
                   <TeacherRecord
                     key={teacher.id}
                     teacher={teacher}
-                    // destroyTeacher={destroyTeacher}
-                    // isDestroyPending={isDestroyPending}
                     setIsOpen={setIsOpen}
                     setTeacherId={setTeacherId}
                     setTeacherEmail={setTeacherEmail}
                     isFormShowing={isFormShowing}
                     setIsFormShowing={setIsFormShowing}
+                    isModifying={isModifying}
+                    setIsModifying={setIsModifying}
                     queryParams={queryParams}
                     width="w-80"
+                    teacherToUpdate={teacherToUpdate}
+                    setTeacherToUpdate={setTeacherToUpdate}
                   />
                 ))
               )}

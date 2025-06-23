@@ -5,6 +5,7 @@ import {
   type IndexTeachersParams,
 } from "@/config/types";
 import { useMutationUpdateTeacher } from "@/hooks/admin/teachersQueries";
+
 import {
   teachersSchema,
   type TeacherFormData,
@@ -21,10 +22,14 @@ export const TeacherRecord = ({
   setIsOpen,
   setTeacherId,
   setTeacherEmail,
-  isFormShowing,
   setIsFormShowing,
+  isFormShowing,
+  isModifying,
+  setIsModifying,
   queryParams,
   width,
+  setTeacherToUpdate,
+  teacherToUpdate,
 }: {
   teacher: Teacher;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
@@ -32,12 +37,16 @@ export const TeacherRecord = ({
   setTeacherEmail: Dispatch<SetStateAction<string>>;
   isFormShowing: boolean;
   setIsFormShowing: Dispatch<SetStateAction<boolean>>;
+
+  isModifying: boolean;
+  setIsModifying: Dispatch<SetStateAction<boolean>>;
   queryParams: IndexTeachersParams;
   width: string;
+  setTeacherToUpdate: Dispatch<SetStateAction<Teacher | any>>;
+  teacherToUpdate?: Teacher;
 }) => {
   // * vars
   const { authUser } = useGlobalStore();
-  const [isModifying, setIsModifying] = useState(false);
 
   const {
     register,
@@ -55,16 +64,18 @@ export const TeacherRecord = ({
     isPending: isUpdatePending,
     data: updateData,
   } = useMutationUpdateTeacher(queryParams, teacher.id as number); // * actions
-  const onModifyClick = () => {
-    setIsModifying(true);
-    setIsFormShowing(true);
-    setTeacherId(teacher.id as number);
-  };
 
-  const updateTeacher = async (formData: TeacherFormData) => {
-    console.log("try to update");
-    formData = { ...formData, id: 0 };
-    updateMutate(formData as Teacher);
+  // const updateTeacher = async (formData: TeacherFormData) => {
+  //   console.log("try to update");
+  //   formData = { ...formData, id: 0 };
+  //   updateMutate(formData as Teacher);
+  // };
+
+  const onModifyClick = () => {
+    !isModifying && setIsModifying(true);
+    !isFormShowing && setIsFormShowing(true);
+    setTeacherToUpdate(teacher);
+    console.log(teacherToUpdate);
   };
 
   // collaterals
@@ -97,7 +108,7 @@ export const TeacherRecord = ({
         className={`${
           isModifying && "italic"
         } flex  odd:bg-zinc-800 even:bg-zinc-950 3xl:h-40`}
-        onSubmit={handleSubmit(updateTeacher)}
+        // onSubmit={handleSubmit(updateTeacher)}
       >
         <input
           type="input"
@@ -123,15 +134,13 @@ export const TeacherRecord = ({
 
         <div className="border w-32 flex justify-center items-center gap-2 [&>*]:cursor-pointer [&>*]:scale-90 [&>*]:hover:scale-100 [&>*]:transition-transform">
           {authUser?.type === UserType.ADMIN && (
-            //   isUpdatePending && <Loader isContained={true} />
-            // ) : (
-            //     : (
-            //      <button type="submit">
-            //        <Save className="text-blue-400" />
-            //      </button>
-            //    )
             <>
-              <Pencil onClick={onModifyClick} className="text-yellow-500" />
+              <Pencil
+                onClick={onModifyClick}
+                className={`text-yellow-500 ${
+                  isFormShowing && "!cursor-not-allowed"
+                }`}
+              />
               <Trash2
                 className="text-red-600"
                 onClick={() => {
