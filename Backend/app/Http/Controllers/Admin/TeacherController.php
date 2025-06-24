@@ -150,8 +150,7 @@ class TeacherController extends Controller
         ]);
 
         $data = $request->all();
-        $originalTeacher = Teacher::where("email", $data["email"])->findOrFail()->toArray();
-        $isSame = false;
+
 
         $teacher["first_name"] = $data["first_name"];
         $teacher->last_name = $data["last_name"];
@@ -159,19 +158,32 @@ class TeacherController extends Controller
         $teacher->subject_id = $data["subject_id"];
 
         $teacherUnchanged = $teacher->isClean();
+        $originalCoursesIds = $teacher->courses->pluck("id")->sort()->values()->toArray();
+        $newCoursesIds = collect($data['courses_ids'])->map(fn($id) => (int) $id)->sort()->values()->toArray();
+
+        $coursesIdsUnchanged = $originalCoursesIds === $newCoursesIds;
+
+        // Log::info($coursesUnchanged);
+
+        $unchanged = false;
+
+        if ($teacherUnchanged && $coursesIdsUnchanged) {
+            $unchanged = true;
+        }
 
 
         $teacher->update();
 
-        if (isset($data["course_id"])) {
-            $teacher->courses()->sync($data["course_id"]);
+        if (isset($data["courses_ids"])) {
+            $teacher->courses()->sync($data["courses_ids"]);
         }
 
         return response()->json([
             "success" => true,
             "message" => "Insegnante modificato con successo",
+            "unchanged" => $unchanged,
             "data" => $teacher,
-            "modified" => $isSame
+
         ]);
     }
 

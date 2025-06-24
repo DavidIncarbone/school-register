@@ -96,6 +96,7 @@ export const AddTeacher = ({
     mutate: updateMutate,
     isSuccess: isUpdateSuccess,
     isPending: isUpdatePending,
+    data: updateData,
   } = useMutationUpdateTeacher(
     queryParams,
     teacherToUpdate?.id as number,
@@ -129,22 +130,22 @@ export const AddTeacher = ({
   useEffect(() => {
     if (isUpdateSuccess) {
       setIsModifying(false);
-      // if (updateData?.isClean) {
-      //   toast.success("No changes made.", {
-      //     style: {
-      //       border: "1px solid blue",
-      //       padding: "16px",
-      //       color: "blue",
-      //     },
-      //     iconTheme: {
-      //       primary: "blue",
-      //       secondary: "#FFFAEE",
-      //     },
-      //   });
-      // } else {
-      toast.success("Teacher updated succesfully");
       setIsFormShowing(false);
-      // }
+      if (updateData?.unchanged) {
+        toast.success("No changes made.", {
+          style: {
+            border: "1px solid blue",
+            padding: "16px",
+            color: "blue",
+          },
+          iconTheme: {
+            primary: "blue",
+            secondary: "#FFFAEE",
+          },
+        });
+      } else {
+        toast.success("Teacher updated succesfully");
+      }
     }
   }, [isUpdateSuccess, reset]);
 
