@@ -34,7 +34,7 @@ class TeacherController extends Controller
             $last = $nameArr[1] ?? "";
 
             if (!$last) {
-                $query->where("first_name", "like", $name . "%")->orWhere("last_name", "like", $name . "%");
+                $query->where("first_name", "like", $name . "%")->orWhere("last_name", "like", $name . "%")->orWhere("email", "like", $name . "%");
             } else {
 
                 $queryCount = Teacher::where("first_name", 'like', $first . "%")->where("last_name", 'like', $last . '%')->count();
@@ -46,12 +46,6 @@ class TeacherController extends Controller
             }
         }
 
-
-        // if (request()->email) {
-        //     $query->where("email", "like", request()->email . "%");
-        // }
-
-        // Teacher::findOrFail(0);
         if (request()->sort) {
 
             $sort = substr(request()->sort, 3);
