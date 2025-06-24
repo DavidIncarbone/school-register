@@ -10,5 +10,11 @@ export const useDynamicSearchParams = () => {
     setSearchParams(newParams);
   };
 
-  return { queryParams, updateSearchParams };
+  const removeSearchParam = (key: string) => {
+    const newParams = new URLSearchParams(searchParams);
+    newParams.delete(key);
+    setSearchParams(newParams);
+  };
+
+  return { queryParams, updateSearchParams, removeSearchParam };
 };

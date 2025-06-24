@@ -9,6 +9,7 @@ import {
   UserType,
   type Teacher,
   type Course,
+  type Subject,
 } from "@/config/types";
 import {
   useMutationDestroyTeacher,
@@ -22,12 +23,15 @@ import toast from "react-hot-toast";
 import DeleteModalTeacher from "@/components/ui/admin/DeleteModalTeacher";
 import { useQueryAdminIndexCourse } from "@/hooks/admin/coursesQueries";
 import { useQueryAdminIndexSubject } from "@/hooks/admin/subjectsQueries";
+import type { Subjects } from "react-hook-form";
+import { SubjectSelect } from "@/components/student/SubjectSelect";
 
 export const TeacherIndex = () => {
   // * global store
   const { authUser } = useGlobalStore();
   // * custom hooks
-  const { queryParams, updateSearchParams } = useDynamicSearchParams();
+  const { queryParams, updateSearchParams, removeSearchParam } =
+    useDynamicSearchParams();
 
   // vars
   const [isFormShowing, setIsFormShowing] = useState(false);
@@ -36,6 +40,8 @@ export const TeacherIndex = () => {
   const [teacherEmail, setTeacherEmail] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const [sortingCols, setSortingCols] = useState(initialSortingCols);
+  const [isModifying, setIsModifying] = useState(false);
+  const [teacherToUpdate, setTeacherToUpdate] = useState<Teacher | undefined>();
   const activeSort = queryParams.sort;
   const activeDir = queryParams.dir;
 
@@ -45,7 +51,7 @@ export const TeacherIndex = () => {
     Error
   >;
   const { data: subjects } = useQueryAdminIndexSubject() as UseQueryResult<
-    Course[],
+    Subject[],
     Error
   >;
 
@@ -61,10 +67,6 @@ export const TeacherIndex = () => {
     total: number;
   }>;
 
-  const teacherToUpdate = teachers?.data?.find(
-    (teacher) => teacher?.id == teacherId
-  );
-
   const {
     mutate: destroyMutate,
     isSuccess: isDestroySuccess,
@@ -73,7 +75,10 @@ export const TeacherIndex = () => {
 
   // * actions
 
-  const handleForm = () => setIsFormShowing(!isFormShowing);
+  const handleForm = () => {
+    setIsFormShowing(!isFormShowing);
+    isModifying && setIsModifying(false);
+  };
 
   const destroyTeacher = async (teacherId: number) => {
     console.log("destroy");
@@ -97,6 +102,19 @@ export const TeacherIndex = () => {
     );
   };
 
+  const handleChange = (e: ChangeEvent<HTMLInputElement>): void => {
+    const key = "search";
+    const search = e.target.value;
+    if (search) {
+      updateSearchParams([{ key, value: search }]);
+    } else {
+      removeSearchParam(key);
+    }
+  };
+
+  const teacher = teachers?.data?.find((teacher) => teacher?.id == teacherId);
+  console.log(teacher);
+
   // * side effects
   useEffect(() => {
     if (courses && !("course_id" in queryParams)) {
@@ -117,7 +135,11 @@ export const TeacherIndex = () => {
     }
   }, [isDestroySuccess]);
 
-  console.log(teachers);
+  useEffect(() => {
+    console.log("isModifying:", isModifying);
+  }, [isModifying]);
+
+  console.log(subjects);
 
   // * views
   if (isAssigmentsError) return <pre>teacher error - da gestire</pre>;
@@ -125,32 +147,65 @@ export const TeacherIndex = () => {
     <>
       <div className="px-5 py-2">
         <div className="flex flex-col items-start mb-2">
-          <h1 className="title_h1 self-center">teachers</h1>
-          <div className="text-lg sm:text-2xl flex flex-wrap justify-center items-center gap-2 font-bold w-full ">
+          <h1 className="title_h1 self-center ">teachers</h1>
+          <div className="text-base sm:text-2xl flex flex-wrap justify-center items-center gap-2 font-bold w-full my-3">
             <div className="flex justify-between items-center w-full ">
-              <div>
+              <div className="w-full">
                 {authUser?.type === UserType.ADMIN && (
-                  <>
-                    <p>Selected course:</p>
-                    <CourseSelect
-                      courses={courses}
-                      queryParams={queryParams}
-                      updateSearchParams={updateSearchParams}
-                    />
-                  </>
+                  <div className="w-full flex flex-col gap-5 md:flex-row md:justify-between md:items-center">
+                    <div className="flex flex-col gap-3 text-sm lg:w-71">
+                      <label htmlFor="search">Search for name or email:</label>
+                      <input
+                        type="search"
+                        id="search"
+                        placeholder="Mario Rossi, example@mail.com"
+                        onChange={(e) => handleChange(e)}
+                        className="text-sm"
+                      />
+                    </div>
+                    <div className="flex justify-between">
+                      <div>
+                        <p className="text-base">Selected course:</p>
+                        <CourseSelect
+                          courses={courses}
+                          queryParams={queryParams}
+                          updateSearchParams={updateSearchParams}
+                        />
+                      </div>
+                      <div>
+                        <p className="text-base">Selected subject:</p>
+                        <SubjectSelect
+                          subjects={subjects}
+                          queryParams={queryParams}
+                          updateSearchParams={updateSearchParams}
+                          removeSearchParam={removeSearchParam}
+                        />
+                      </div>
+                    </div>
+                    <div className="self-center md:self-auto">
+                      {!isFormShowing ? (
+                        <button
+                          className="btn-pretty text-base "
+                          onClick={handleForm}
+                        >
+                          <span className="md:hidden lg:inline">
+                            Add Teacher
+                          </span>{" "}
+                          +
+                        </button>
+                      ) : (
+                        <button
+                          className="btn-pretty text-base"
+                          onClick={handleForm}
+                        >
+                          <span className="md:hidden lg:inline">Hide Form</span>{" "}
+                          -
+                        </button>
+                      )}
+                    </div>
+                  </div>
                 )}
               </div>
-
-              {authUser?.type === UserType.ADMIN &&
-                (!isFormShowing ? (
-                  <button className="btn-pretty" onClick={handleForm}>
-                    +
-                  </button>
-                ) : (
-                  <button className="btn-pretty" onClick={handleForm}>
-                    -
-                  </button>
-                ))}
             </div>
           </div>
         </div>
@@ -163,8 +218,10 @@ export const TeacherIndex = () => {
               isLoading={isLoading}
               setIsLoading={setIsLoading}
               setIsFormShowing={setIsFormShowing}
-              teacherId={teacherId}
+              isModifying={isModifying}
+              setIsModifying={setIsModifying}
               teacherToUpdate={teacherToUpdate}
+              setTeacherToUpdate={setTeacherToUpdate}
             />
           </section>
         )}
@@ -185,15 +242,17 @@ export const TeacherIndex = () => {
                   <TeacherRecord
                     key={teacher.id}
                     teacher={teacher}
-                    // destroyTeacher={destroyTeacher}
-                    // isDestroyPending={isDestroyPending}
                     setIsOpen={setIsOpen}
                     setTeacherId={setTeacherId}
                     setTeacherEmail={setTeacherEmail}
                     isFormShowing={isFormShowing}
                     setIsFormShowing={setIsFormShowing}
+                    isModifying={isModifying}
+                    setIsModifying={setIsModifying}
                     queryParams={queryParams}
                     width="w-80"
+                    teacherToUpdate={teacherToUpdate}
+                    setTeacherToUpdate={setTeacherToUpdate}
                   />
                 ))
               )}

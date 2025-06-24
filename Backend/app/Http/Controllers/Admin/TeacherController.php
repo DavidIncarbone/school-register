@@ -16,51 +16,41 @@ class TeacherController extends Controller
     public function index()
     {
         request()->validate([
-            "name" => ["string", "max:100", "min:1"],
-            "email" => ["string", "max:100", "min:1", "lowercase"],
+            "search" => ["string", "max:100", "min:1"],
             "sort" => ["string", "in:by_first_name,by_last_name,by_email,by_created_at,by_updated_at", "max:255"],
             "dir" => ["string", "in:asc,desc"],
-            "course_id" => ["integer", "min:1"]
+            "course_id" => ["integer", "min:1"],
+            "subject_id" => ["integer", "min:1"]
         ]);
 
         $query = Teacher::query();
 
-
-        if (request()->name) {
-            $name = request()->name;
+        if (request()->search) {
+            $name = request()->search;
 
             $name = trim($name);
             $nameArr = explode(" ", $name);
             $first = $nameArr[0] ?? "";
             $last = $nameArr[1] ?? "";
 
-            $queryCount = Teacher::where("first_name", 'like', $first . "%")->where("last_name", 'like', $last . '%')->count();
-            if ($queryCount == 0) {
-                $query->where("first_name", 'like',  $last . "%")->where("last_name", 'like',  $first . '%');
+            if (!$last) {
+                $query->where("first_name", "like", $name . "%")->orWhere("last_name", "like", $name . "%")->orWhere("email", "like", $name . "%");
             } else {
-                $query->where("first_name", 'like',  $first . "%")->where("last_name", 'like',  $last . '%');
+
+                $queryCount = Teacher::where("first_name", 'like', $first . "%")->where("last_name", 'like', $last . '%')->count();
+                if ($queryCount == 0) {
+                    $query->where("first_name", 'like',  $last . "%")->where("last_name", 'like',  $first . '%');
+                } else {
+                    $query->where("first_name", 'like',  $first . "%")->where("last_name", 'like',  $last . '%');
+                }
             }
         }
 
-        if (request()->email) {
-            $query->where("email", "like", request()->email . "%");
-        }
-
-        // Teacher::findOrFail(0);
         if (request()->sort) {
-            $sort = request()->sort;
+
+            $sort = substr(request()->sort, 3);
             $dir = request()->dir ?? "asc";
-            if ($sort == "by_first_name") {
-                $query->orderBy("first_name", $dir);
-            } elseif ($sort == "by_last_name") {
-                $query->orderBy("last_name", $dir);
-            } elseif ($sort == "by_email") {
-                $query->orderBy("email", $dir);
-            } elseif ($sort == "by_created_at") {
-                $query->orderBy("created_at", $dir);
-            } elseif ($sort == "by_updated_at") {
-                $query->orderBy("updated_at", $dir);
-            }
+            $query->orderBy($sort, $dir);
         }
 
 
@@ -71,7 +61,9 @@ class TeacherController extends Controller
             });
         }
 
-
+        if (request()->subject_id) {
+            $query->where("subject_id", request()->subject_id);
+        }
 
         $teachers = $query->paginate(30);
 
@@ -91,9 +83,9 @@ class TeacherController extends Controller
             "first_name" => ["required", "string", "max:100", "min:1"],
             "last_name" => ["required", "string", "max:100", "min:1"],
             "email" => ["required", "string", "max:100", "min:1", "lowercase"],
-            "subject_id" => ["required", "integer", "min:1"],
+            "subject_id" => ["required", "string", "min:1"],
             "courses_ids" => ["required", "array"],
-            "courses_ids.*" => ["required", "integer", "min:1"]
+            // "courses_ids.*" => ["required", "integer", "min:1"]
 
         ]);
 
@@ -105,6 +97,7 @@ class TeacherController extends Controller
         if (in_array($data["email"], $emailDB)) {
             return response()->json([
                 "error" => "conflict",
+                "field" => "email",
                 "message" => "Email già registrata"
             ], 409);
         }
@@ -156,13 +149,17 @@ class TeacherController extends Controller
 
         ]);
 
-
         $data = $request->all();
+        $originalTeacher = Teacher::where("email", $data["email"])->findOrFail()->toArray();
+        $isSame = false;
 
-        $teacher->first_name = $data["first_name"];
+        $teacher["first_name"] = $data["first_name"];
         $teacher->last_name = $data["last_name"];
         $teacher->email = $data["email"];
-        // $teacher->subject_id = $data["subject_id"];
+        $teacher->subject_id = $data["subject_id"];
+
+        $teacherUnchanged = $teacher->isClean();
+
 
         $teacher->update();
 
@@ -173,7 +170,8 @@ class TeacherController extends Controller
         return response()->json([
             "success" => true,
             "message" => "Insegnante modificato con successo",
-            "data" => $teacher
+            "data" => $teacher,
+            "modified" => $isSame
         ]);
     }
 

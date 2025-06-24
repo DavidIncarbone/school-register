@@ -13,7 +13,10 @@ import {
   teachersSchema,
   type TeacherFormData,
 } from "@/schemas/admin/teachersSchema";
-import { useMutationStoreTeacher } from "@/hooks/admin/teachersQueries";
+import {
+  useMutationStoreTeacher,
+  useMutationUpdateTeacher,
+} from "@/hooks/admin/teachersQueries";
 
 // TYPES
 
@@ -23,12 +26,13 @@ type AddTeacherProps = {
   subjects: Subject[] | undefined;
   queryParams: IndexTeachersParams;
   isLoading: boolean;
-  // isLoading: boolean;
-  // tipizzazione speciale per useState
   setIsFormShowing: Dispatch<SetStateAction<boolean>>;
   setIsLoading: Dispatch<SetStateAction<boolean>>;
-  teacherId: number;
-  teacherToUpdate: Teacher | undefined;
+  teacherToUpdate?: Teacher;
+
+  setTeacherToUpdate: Dispatch<SetStateAction<Teacher | undefined>>;
+  isModifying: boolean;
+  setIsModifying: Dispatch<SetStateAction<boolean>>;
 };
 
 export const AddTeacher = ({
@@ -36,43 +40,67 @@ export const AddTeacher = ({
   subjects,
   queryParams,
   setIsFormShowing,
-  teacherId,
+  isModifying,
+  setIsModifying,
   teacherToUpdate,
-}: // isLoading,
-// setIsLoading,
-AddTeacherProps) => {
+}: AddTeacherProps) => {
   // vars
-  const defaultValues = {
-    id: 0,
-    first_name: "",
-    last_name: "",
-    email: "",
-    courses_ids: [],
-    subject_id: "",
-  };
+
+  const teacherCourses = teacherToUpdate?.courses?.map((course) =>
+    String(course.id)
+  );
+
+  console.log("ciao");
+  console.log(teacherCourses);
+
+  const defaultValues = isModifying
+    ? {
+        id: 0,
+        first_name: teacherToUpdate?.first_name as string,
+        last_name: teacherToUpdate?.last_name as string,
+        email: teacherToUpdate?.email as string,
+        courses_ids: teacherCourses as string[],
+        subject_id: String(teacherToUpdate?.subject_id),
+      }
+    : {
+        id: 0,
+        first_name: "",
+        last_name: "",
+        email: "",
+        courses_ids: [],
+        subject_id: "",
+      };
 
   const {
     register,
     handleSubmit,
     formState: { errors },
+    setError,
     reset,
   } = useForm({
     resolver: zodResolver(teachersSchema),
     defaultValues,
   });
 
-  const teacherCourses: number[] | undefined = teacherToUpdate?.courses?.map(
-    (course) => course.id
-  );
-
   console.log(teacherCourses);
+  console.log(teacherToUpdate, "update");
 
   //   queries
   const {
     mutate: storeMutate,
     isSuccess: isStoreSuccess,
     isPending: isStorePending,
-  } = useMutationStoreTeacher(queryParams);
+  } = useMutationStoreTeacher(queryParams, setError);
+
+  const {
+    mutate: updateMutate,
+    isSuccess: isUpdateSuccess,
+    isPending: isUpdatePending,
+  } = useMutationUpdateTeacher(
+    queryParams,
+    teacherToUpdate?.id as number,
+    setError
+  );
 
   // actions
 
@@ -82,36 +110,70 @@ AddTeacherProps) => {
     storeMutate(formData);
   };
 
+  const updateTeacher = async (formData: TeacherFormData) => {
+    console.log("try to update");
+    formData = { ...formData, id: 0 };
+    updateMutate(formData);
+  };
+
   // collaterals effects
 
   useEffect(() => {
     if (isStoreSuccess) {
       toast.success("Teacher added successfully");
-      reset(defaultValues);
+      // reset(defaultValues);
       setIsFormShowing(false);
     }
   }, [isStoreSuccess, reset]);
 
+  useEffect(() => {
+    if (isUpdateSuccess) {
+      setIsModifying(false);
+      // if (updateData?.isClean) {
+      //   toast.success("No changes made.", {
+      //     style: {
+      //       border: "1px solid blue",
+      //       padding: "16px",
+      //       color: "blue",
+      //     },
+      //     iconTheme: {
+      //       primary: "blue",
+      //       secondary: "#FFFAEE",
+      //     },
+      //   });
+      // } else {
+      toast.success("Teacher updated succesfully");
+      setIsFormShowing(false);
+      // }
+    }
+  }, [isUpdateSuccess, reset]);
+
   // views
 
   console.log(errors);
+  console.log(isModifying);
 
   return (
     <section className="mt-5">
       <form
-        action=""
         id="TeacherForm"
-        className="w-full p-3"
-        onSubmit={handleSubmit(createNewTeacher)}
+        className="w-full p-3 bg-black drop-shadow-[0_0_10px_white]"
+        onSubmit={
+          isModifying
+            ? handleSubmit(updateTeacher)
+            : handleSubmit(createNewTeacher)
+        }
       >
-        <div className="">
-          <h2 className="text-white text-2xl">Add Teacher for</h2>
+        <div>
+          <h2 className="text-white text-2xl">
+            {isModifying ? "Update" : "Add"} Teacher
+          </h2>
           <p className="text-gray-400 text-sm mb-3">
             The fields marked with * are required
           </p>
         </div>
         <div className="flex flex-col">
-          <div className="grid grid-cols-3 gap-7 mb-3 max-[640px]:grid-cols-1">
+          <div className="grid lg:grid-cols-3 gap-7 mb-3 grid-cols-1">
             <div className="flex flex-col gap-2">
               <div className="flex flex-col gap-0.5">
                 <label htmlFor="first_name">First Name*</label>
@@ -123,7 +185,6 @@ AddTeacherProps) => {
                   {...register("first_name")}
                   id="first_name"
                   className="border border-white "
-                  value={teacherToUpdate?.first_name}
                 />
               </div>
               {errors.last_name && (
@@ -143,7 +204,6 @@ AddTeacherProps) => {
                   {...register("last_name")}
                   id="last_name"
                   className="border border-white "
-                  value={teacherToUpdate?.last_name}
                 />
               </div>
               {errors.last_name && (
@@ -162,7 +222,6 @@ AddTeacherProps) => {
                   id="email"
                   {...register("email")} // name assegnato tramite useForm
                   className="w-full border border-white "
-                  value={teacherToUpdate?.email}
                 ></input>
               </div>
               {errors.email && (
@@ -174,14 +233,12 @@ AddTeacherProps) => {
             <div className="flex flex-col gap-2 my-3">
               <p>Select Subject*</p>
               <select {...register("subject_id")} id="subject_id">
-                <option value="">Select Subject</option>
+                <option value="" selected>
+                  Select Subject
+                </option>
                 {subjects?.map((subject, i) => (
-                  <option
-                    key={i}
-                    value={subject.id}
-                    selected={teacherToUpdate?.subject_id == subject?.id}
-                  >
-                    {subject.name}
+                  <option key={i} value={subject?.id}>
+                    {subject?.name}
                   </option>
                 ))}
               </select>
@@ -193,7 +250,7 @@ AddTeacherProps) => {
             </div>
           </div>
           <p>Select courses*:</p>
-          <div className="grid grid-cols-6 max-[640px]:grid-cols-2 my-3">
+          <div className="grid lg:grid-cols-6 grid-cols-2 my-3">
             {courses?.map((course, i) => {
               return (
                 <div key={i} className="flex gap-2">
@@ -202,7 +259,11 @@ AddTeacherProps) => {
                       type="checkbox"
                       {...register("courses_ids")}
                       value={course.id}
-                      checked={teacherCourses?.includes(course.id)}
+                      defaultChecked={
+                        isModifying
+                          ? teacherCourses?.includes(String(course.id))
+                          : false
+                      }
                     />
                     <span className="checkmark"></span>
                     {course.name}
@@ -223,18 +284,26 @@ AddTeacherProps) => {
             className={`btn-pretty ${isStorePending && "!cursor-not-allowed"}`}
             disabled={isStorePending}
           >
-            {isStorePending ? (
+            {isStorePending || isUpdatePending ? (
               <>
                 <div className="absolute inset-0">
                   <Loader isContained={true} />
                 </div>
-                <span className="text-transparent">Add Teacher</span>
+                {isStorePending && (
+                  <span className="text-transparent">Add Teacher</span>
+                )}
+                {isUpdatePending && (
+                  <span className="text-transparent">Update Teacher</span>
+                )}
               </>
+            ) : isModifying ? (
+              "Update Teacher"
             ) : (
               "Add Teacher"
             )}
           </button>
           <button
+            type="button"
             className={`${
               isStorePending && "!cursor-not-allowed opacity-50"
             } btn-pretty`}

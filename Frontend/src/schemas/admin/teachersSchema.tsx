@@ -3,7 +3,7 @@ import { z } from "zod";
 export type TeacherFormData = z.infer<typeof teachersSchema>;
 
 export const teachersSchema = z.object({
-  id: z.number(),
+  id: z.any(),
   email: z
     .string()
     .email("Invalid email format")
@@ -16,7 +16,7 @@ export const teachersSchema = z.object({
     .max(255, "Max. characters are 255"),
   last_name: z
     .string()
-    .min(1, "First Name field is required")
+    .min(1, "Last Name field is required")
     .max(255, "Max. characters are 255"),
   courses_ids: z.array(z.string()).min(1, "Select courses is required"),
   subject_id: z.string().min(1, "Subject is required"),
