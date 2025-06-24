@@ -45,21 +45,21 @@ export const AddTeacher = ({
 }: AddTeacherProps) => {
   // vars
 
-  const teacherCourses: number[] | undefined = teacherToUpdate?.courses?.map(
-    (course) => course.id
+  const teacherCourses = teacherToUpdate?.courses?.map((course) =>
+    String(course.id)
   );
 
   console.log("ciao");
   console.log(teacherCourses);
 
-  const defaultValues: Teacher | undefined = isModifying
+  const defaultValues = isModifying
     ? {
         id: 0,
         first_name: teacherToUpdate?.first_name as string,
         last_name: teacherToUpdate?.last_name as string,
         email: teacherToUpdate?.email as string,
-        courses_ids: teacherCourses as number[] | undefined,
-        subject_id: teacherToUpdate?.subject_id as string,
+        courses_ids: teacherCourses as string[],
+        subject_id: String(teacherToUpdate?.subject_id),
       }
     : {
         id: 0,
@@ -196,7 +196,7 @@ export const AddTeacher = ({
               <select {...register("subject_id")} id="subject_id">
                 {/* <option value="">Select Subject</option> */}
                 {subjects?.map((subject, i) => (
-                  <option key={i} defaultValue={subject?.id}>
+                  <option key={i} value={subject?.id}>
                     {subject?.name}
                   </option>
                 ))}
@@ -217,10 +217,10 @@ export const AddTeacher = ({
                     <input
                       type="checkbox"
                       {...register("courses_ids")}
-                      // value={course.id}
+                      value={course.id}
                       defaultChecked={
                         isModifying
-                          ? teacherCourses?.includes(course.id)
+                          ? teacherCourses?.includes(String(course.id))
                           : false
                       }
                     />

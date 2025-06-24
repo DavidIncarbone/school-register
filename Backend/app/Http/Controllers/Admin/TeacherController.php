@@ -91,7 +91,7 @@ class TeacherController extends Controller
             "first_name" => ["required", "string", "max:100", "min:1"],
             "last_name" => ["required", "string", "max:100", "min:1"],
             "email" => ["required", "string", "max:100", "min:1", "lowercase"],
-            "subject_id" => ["required", "integer", "min:1"],
+            "subject_id" => ["required", "string", "min:1"],
             "courses_ids" => ["required", "array"],
             // "courses_ids.*" => ["required", "integer", "min:1"]
 
