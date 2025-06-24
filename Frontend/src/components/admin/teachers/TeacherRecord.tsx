@@ -101,12 +101,14 @@ export const TeacherRecord = ({
         <div className="border w-32 flex justify-center items-center gap-2 [&>*]:cursor-pointer [&>*]:scale-90 [&>*]:hover:scale-100 [&>*]:transition-transform">
           {authUser?.type === UserType.ADMIN && (
             <>
-              <Pencil
-                onClick={onModifyClick}
-                className={`text-yellow-500 ${
-                  isFormShowing && "!cursor-not-allowed"
-                }`}
-              />
+              <button disabled={isFormShowing}>
+                <Pencil
+                  onClick={onModifyClick}
+                  className={`text-yellow-500 ${
+                    isFormShowing && "!cursor-not-allowed"
+                  }`}
+                />
+              </button>
               <Trash2
                 className="text-red-600"
                 onClick={() => {

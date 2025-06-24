@@ -1,9 +1,8 @@
-import { AddTeacher } from "@/components/admin/teachers/AddTeacher";
+import { AddOrUpdateTeacher } from "@/components/admin/teachers/AddTeacher";
 import { TeacherHead } from "./TeacherHead";
 
 import { TeacherRecord } from "@/components/admin/teachers/TeacherRecord";
 import { CourseSelect } from "@/components/teacher/CourseSelect";
-import DeleteModalExample from "@/components/ui/modal";
 import {
   SortOptionAdminTeacher,
   UserType,
@@ -211,7 +210,7 @@ export const TeacherIndex = () => {
         </div>
         {isFormShowing && (
           <section id="formSection" className="mb-5">
-            <AddTeacher
+            <AddOrUpdateTeacher
               courses={courses}
               subjects={subjects}
               queryParams={queryParams}

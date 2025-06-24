@@ -34,7 +34,12 @@ class TeacherController extends Controller
             $last = $nameArr[1] ?? "";
 
             if (!$last) {
-                $query->where("first_name", "like", $name . "%")->orWhere("last_name", "like", $name . "%")->orWhere("email", "like", $name . "%");
+                // $query->where("first_name", "like", $name . "%")->orWhere("last_name", "like", $name . "%")->orWhere("email", "like", $name . "%");
+                $query->where(function ($q) use ($name) {
+                    $q->where("first_name", "like", $name . "%")->orWhere("last_name", "like", $name . "%")->orWhere("email", "like", $name . "%");
+                });
+
+                Log::info("sono qui");
             } else {
 
                 $queryCount = Teacher::where("first_name", 'like', $first . "%")->where("last_name", 'like', $last . '%')->count();
@@ -43,8 +48,9 @@ class TeacherController extends Controller
                 } else {
                     $query->where("first_name", 'like',  $first . "%")->where("last_name", 'like',  $last . '%');
                 }
-            }
+            };
         }
+
 
         if (request()->sort) {
 
@@ -68,6 +74,7 @@ class TeacherController extends Controller
         $teachers = $query->paginate(30);
 
         $teachers->load("courses");
+
 
         return response()->json(
             $teachers
@@ -145,7 +152,7 @@ class TeacherController extends Controller
             "last_name" => ["string", "max:100", "min:1"],
             "email" => ["string", "max:100", "min:1", "lowercase"],
             "subject_id" => ["integer", "min:1"],
-            "course_id" => ["integer", "min:1"]
+            "courses_ids" => ["integer", "min:1"]
 
         ]);
 

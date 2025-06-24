@@ -21,7 +21,7 @@ import {
 // TYPES
 
 // TIPIZZAZIONE DELLE PROPS
-type AddTeacherProps = {
+type AddOrUpdateTeacherProps = {
   courses: Course[] | undefined;
   subjects: Subject[] | undefined;
   queryParams: IndexTeachersParams;
@@ -35,7 +35,7 @@ type AddTeacherProps = {
   setIsModifying: Dispatch<SetStateAction<boolean>>;
 };
 
-export const AddTeacher = ({
+export const AddOrUpdateTeacher = ({
   courses,
   subjects,
   queryParams,
@@ -43,7 +43,7 @@ export const AddTeacher = ({
   isModifying,
   setIsModifying,
   teacherToUpdate,
-}: AddTeacherProps) => {
+}: AddOrUpdateTeacherProps) => {
   // vars
 
   const teacherCourses = teacherToUpdate?.courses?.map((course) =>
