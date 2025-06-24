@@ -147,46 +147,61 @@ export const TeacherIndex = () => {
     <>
       <div className="px-5 py-2">
         <div className="flex flex-col items-start mb-2">
-          <h1 className="title_h1 self-center">teachers</h1>
-          <div className="text-lg sm:text-2xl flex flex-wrap justify-center items-center gap-2 font-bold w-full ">
+          <h1 className="title_h1 self-center ">teachers</h1>
+          <div className="text-base sm:text-2xl flex flex-wrap justify-center items-center gap-2 font-bold w-full my-3">
             <div className="flex justify-between items-center w-full ">
-              <div>
+              <div className="w-full">
                 {authUser?.type === UserType.ADMIN && (
-                  <div className="flex items-start gap-5">
-                    <div className="flex ">
-                      <input type="search" onChange={(e) => handleChange(e)} />
-                    </div>
-                    <div>
-                      <p>Selected course:</p>
-                      <CourseSelect
-                        courses={courses}
-                        queryParams={queryParams}
-                        updateSearchParams={updateSearchParams}
+                  <div className="w-full flex flex-col gap-5 md:flex-row md:justify-between md:items-center">
+                    <div className="flex flex-col gap-3 text-sm lg:w-71">
+                      <label htmlFor="search">Search for name or email:</label>
+                      <input
+                        type="search"
+                        id="search"
+                        placeholder="Mario Rossi, example@mail.com"
+                        onChange={(e) => handleChange(e)}
+                        className="text-sm"
                       />
                     </div>
-                    <div>
-                      <p>Selected subject:</p>
-                      <SubjectSelect
-                        subjects={subjects}
-                        queryParams={queryParams}
-                        updateSearchParams={updateSearchParams}
-                        removeSearchParam={removeSearchParam}
-                      />
+                    <div className="flex justify-between">
+                      <div>
+                        <p className="text-base">Selected course:</p>
+                        <CourseSelect
+                          courses={courses}
+                          queryParams={queryParams}
+                          updateSearchParams={updateSearchParams}
+                        />
+                      </div>
+                      <div>
+                        <p className="text-base">Selected subject:</p>
+                        <SubjectSelect
+                          subjects={subjects}
+                          queryParams={queryParams}
+                          updateSearchParams={updateSearchParams}
+                          removeSearchParam={removeSearchParam}
+                        />
+                      </div>
+                    </div>
+                    <div className="self-center md:self-auto">
+                      {!isFormShowing ? (
+                        <button
+                          className="btn-pretty text-base "
+                          onClick={handleForm}
+                        >
+                          <span className="md:hidden lg:inline">
+                            Add Teacher
+                          </span>{" "}
+                          +
+                        </button>
+                      ) : (
+                        <button className="btn-pretty" onClick={handleForm}>
+                          -
+                        </button>
+                      )}
                     </div>
                   </div>
                 )}
               </div>
-
-              {authUser?.type === UserType.ADMIN &&
-                (!isFormShowing ? (
-                  <button className="btn-pretty" onClick={handleForm}>
-                    +
-                  </button>
-                ) : (
-                  <button className="btn-pretty" onClick={handleForm}>
-                    -
-                  </button>
-                ))}
             </div>
           </div>
         </div>
