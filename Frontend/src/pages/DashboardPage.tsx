@@ -14,7 +14,7 @@ export default function DashboardPage() {
   if (!authUser) return <Loader />;
 
   return (
-    <div className="flex flex-col min-h-full py-2">
+    <div className="flex flex-col min-h-full p-5">
       <h1 className="title_h1 px-5 py-1">
         {authUser.type === UserType.STUDENT
           ? "Student"

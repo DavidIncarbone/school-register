@@ -1,4 +1,4 @@
-import { AddOrUpdateTeacher } from "@/components/admin/teachers/AddTeacher";
+import { AddOrUpdateTeacher } from "@/components/admin/teachers/AddOrUpdateTeacher";
 import { TeacherHead } from "./TeacherHead";
 
 import { TeacherRecord } from "@/components/admin/teachers/TeacherRecord";
@@ -17,13 +17,19 @@ import {
 import { useDynamicSearchParams } from "@/hooks/useDynamicSearchParams";
 import { useGlobalStore } from "@/store/useGlobalStore";
 import type { UseQueryResult } from "@tanstack/react-query";
-import { useEffect, useState, type ChangeEvent, type MouseEvent } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+  type ChangeEvent,
+  type MouseEvent,
+} from "react";
 import toast from "react-hot-toast";
 import DeleteModalTeacher from "@/components/ui/admin/DeleteModalTeacher";
 import { useQueryAdminIndexCourse } from "@/hooks/admin/coursesQueries";
 import { useQueryAdminIndexSubject } from "@/hooks/admin/subjectsQueries";
-import type { Subjects } from "react-hook-form";
 import { SubjectSelect } from "@/components/student/SubjectSelect";
+import { debounce } from "lodash";
 
 export const TeacherIndex = () => {
   // * global store
@@ -56,8 +62,8 @@ export const TeacherIndex = () => {
 
   const {
     data: teachers,
-    isLoading: isAssigmentsLoading,
-    isError: isAssigmentsError,
+    isLoading: isTeachersLoading,
+    isError: isTeachersError,
   } = useQueryAdminIndexTeacher(
     queryParams,
     "course_id" in queryParams
@@ -101,15 +107,17 @@ export const TeacherIndex = () => {
     );
   };
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement>): void => {
-    const key = "search";
-    const search = e.target.value;
-    if (search) {
-      updateSearchParams([{ key, value: search }]);
-    } else {
-      removeSearchParam(key);
-    }
-  };
+  const debouncedHandleInputChange = useRef(
+    debounce((e: ChangeEvent<HTMLInputElement>) => {
+      const key = "search";
+      const search = e.target.value;
+      if (search) {
+        updateSearchParams([{ key, value: search }]);
+      } else {
+        removeSearchParam(key);
+      }
+    }, 500)
+  ).current;
 
   const teacher = teachers?.data?.find((teacher) => teacher?.id == teacherId);
   console.log(teacher);
@@ -141,7 +149,16 @@ export const TeacherIndex = () => {
   console.log(subjects);
 
   // * views
-  if (isAssigmentsError) return <pre>teacher error - da gestire</pre>;
+
+  if (isTeachersError)
+    return (
+      <div className="h-full w-full flex flex-col gap-3 justify-center items-center">
+        <h1 className=" text-4xl ">An error occurred</h1>
+        <button className="btn-pretty" onClick={() => window.location.reload()}>
+          Refresh Page
+        </button>
+      </div>
+    );
   return (
     <>
       <div className="px-5 py-2">
@@ -158,7 +175,7 @@ export const TeacherIndex = () => {
                         type="search"
                         id="search"
                         placeholder="Mario Rossi, example@mail.com"
-                        onChange={(e) => handleChange(e)}
+                        onChange={debouncedHandleInputChange}
                         className="text-sm"
                       />
                     </div>
@@ -234,7 +251,7 @@ export const TeacherIndex = () => {
               onClick={handleSortingColClick}
             />
             <div className="border rounded-b-sm overflow-hidden bg-zinc-900">
-              {isAssigmentsLoading ? (
+              {isTeachersLoading ? (
                 <div className="h-[425px] animate-pulse bg-zinc-800"></div>
               ) : (
                 teachers?.data.map((teacher) => (
