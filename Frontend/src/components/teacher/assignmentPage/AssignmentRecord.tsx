@@ -68,7 +68,7 @@ export const AssignmentRecord = ({
             <form
                 className={`${
                     isModifying && "italic"
-                } grid grid-cols-7 w-full odd:bg-zinc-700 even:bg-zinc-800`}
+                } grid grid-cols-[repeat(7,minmax(170px,_1fr))] w-fit 2xl:w-full odd:bg-zinc-700 even:bg-zinc-800`}
                 onSubmit={handleSubmit(updateAssignment)}
             >
                 <input
@@ -76,14 +76,14 @@ export const AssignmentRecord = ({
                     disabled={!isModifying}
                     {...register("assignment_date")}
                     defaultValue={assignment.assignment_date.split(" ")[0]}
-                    className="m-2 w-40  flex items-center"
+                    className="m-2 col-span-1 flex items-center"
                 />
                 <input
                     type="date"
                     disabled={!isModifying}
                     {...register("deadline")}
                     defaultValue={assignment.deadline.split(" ")[0]}
-                    className="m-2 flex items-center"
+                    className="m-2 col-span-1 flex items-center"
                 />
                 <textarea
                     disabled={!isModifying}

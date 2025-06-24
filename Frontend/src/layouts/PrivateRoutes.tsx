@@ -60,9 +60,6 @@ export default function PrivateRoutes() {
                                         {
                                             socket_id: socketId,
                                             channel_name: channel.name,
-                                        },
-                                        {
-                                            withCredentials: true, // fondamentale per inviare cookie!
                                         }
                                     );
                                     // Nessun errore: passa null come primo argomento

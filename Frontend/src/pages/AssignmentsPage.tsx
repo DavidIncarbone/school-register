@@ -240,18 +240,18 @@ export const AssignmentsPage = () => {
                 )}
 
                 {/* assignments list (per corso) */}
-                <div className="max-lg:w-[92dvw] mx-auto overflow-auto">
-                    <div className="min-w-[1000px]">
-                        <AssignmentHead
-                            sortingCols={sortingCols}
-                            activeDir={activeDir}
-                            activeSort={activeSort}
-                            onClick={handleSortingColClick}
-                        />
+                <div className="min-h-[440px]">
+                    <div className="rounded-b-sm max-lg:w-[92dvw] mx-auto max-2xl:overflow-x-auto">
                         {!assignments || isAssigmentsLoading ? (
                             <SkeleAssignmentsList />
                         ) : (
-                            <div className="rounded-b-sm overflow-hidden">
+                            <>
+                                <AssignmentHead
+                                    sortingCols={sortingCols}
+                                    activeDir={activeDir}
+                                    activeSort={activeSort}
+                                    onClick={handleSortingColClick}
+                                />
                                 {assignments.data.map((as) => (
                                     <AssignmentRecord
                                         key={as.id}
@@ -264,7 +264,7 @@ export const AssignmentsPage = () => {
                                         queryParams={queryParams}
                                     />
                                 ))}
-                            </div>
+                            </>
                         )}
                     </div>
                 </div>
@@ -304,7 +304,7 @@ const initialSortingCols = [
         label: "Start",
         sort: SortOptionAssignment.BY_ASSIGNMENT_DATE,
         dir: "desc",
-        className: "w-40 flex justify-center items-center p-2",
+        className: "flex justify-center items-center p-2",
     },
     {
         label: "Deadline",

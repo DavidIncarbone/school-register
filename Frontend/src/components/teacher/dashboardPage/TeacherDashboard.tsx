@@ -24,7 +24,7 @@ export const TeacherDashboard = () => {
     // * views
     return (
         <div className="dashboard teacher-dashboard">
-            <div className="info max-md:overflow-auto max-md:flex md:grid md:grid-cols-3 lg:grid-cols-4  !px-4 gap-4 !bg-slate-800 max-lg:h-fit">
+            <div className="info max-md:overflow-auto max-sm:flex sm:grid sm:grid-cols-3 lg:grid-cols-4 max-md:place-items-center  !px-4 gap-4 !bg-slate-800 max-lg:h-fit">
                 <QuickActions takeAttendance={takeAttendance} />
             </div>
             <div className="daily-schedule flex flex-col !bg-teal-700/50">
