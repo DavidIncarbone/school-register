@@ -57,20 +57,32 @@ export const useMutationStoreTeacher = <T extends FieldValues>(
     },
   });
 };
-export const useMutationUpdateTeacher = (
+export const useMutationUpdateTeacher = <T extends FieldValues>(
   params: IndexTeachersParams,
-  teacherId: number
+  teacherId: number,
+  setError: UseFormSetError<T>
 ) => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationKey: ["teachers", teacherId],
-    mutationFn: async (teacher: Teacher) => {
+    mutationFn: async (teacher: T) => {
       console.log("try to update");
       const res = await api.patch(
         adminTeachersEndpoint + `/${teacherId}`,
         teacher
       );
       return res.data;
+    },
+
+    onError: (error: AxiosError<any>) => {
+      const serverError = error.response?.data;
+
+      if (serverError?.field && serverError?.message) {
+        setError(serverError.field as Path<T>, {
+          type: "server",
+          message: serverError.message,
+        });
+      }
     },
     onSuccess: () => {
       console.log("updated");

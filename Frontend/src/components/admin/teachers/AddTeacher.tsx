@@ -13,7 +13,10 @@ import {
   teachersSchema,
   type TeacherFormData,
 } from "@/schemas/admin/teachersSchema";
-import { useMutationStoreTeacher } from "@/hooks/admin/teachersQueries";
+import {
+  useMutationStoreTeacher,
+  useMutationUpdateTeacher,
+} from "@/hooks/admin/teachersQueries";
 
 // TYPES
 
@@ -91,6 +94,17 @@ export const AddTeacher = ({
     isPending: isStorePending,
   } = useMutationStoreTeacher(queryParams, setError);
 
+  const {
+    mutate: updateMutate,
+    isSuccess: isUpdateSuccess,
+    isPending: isUpdatePending,
+    data: updateData,
+  } = useMutationUpdateTeacher(
+    queryParams,
+    teacherToUpdate?.id as number,
+    setError
+  );
+
   // actions
 
   const createNewTeacher = async (formData: TeacherFormData) => {
@@ -99,11 +113,13 @@ export const AddTeacher = ({
     storeMutate(formData);
   };
 
-  // collaterals effects
+  const updateTeacher = async (formData: TeacherFormData) => {
+    console.log("try to update");
+    formData = { ...formData, id: 0 };
+    updateMutate(formData);
+  };
 
-  useEffect(() => {
-    console.log("ciao");
-  }, [teacherToUpdate]);
+  // collaterals effects
 
   useEffect(() => {
     if (isStoreSuccess) {
@@ -113,9 +129,32 @@ export const AddTeacher = ({
     }
   }, [isStoreSuccess, reset]);
 
+  useEffect(() => {
+    if (isUpdateSuccess) {
+      setIsModifying(false);
+      // if (updateData?.isClean) {
+      //   toast.success("No changes made.", {
+      //     style: {
+      //       border: "1px solid blue",
+      //       padding: "16px",
+      //       color: "blue",
+      //     },
+      //     iconTheme: {
+      //       primary: "blue",
+      //       secondary: "#FFFAEE",
+      //     },
+      //   });
+      // } else {
+      toast.success("Teacher updated succesfully");
+      setIsFormShowing(false);
+      // }
+    }
+  }, [isUpdateSuccess, reset]);
+
   // views
 
   console.log(errors);
+  console.log(isModifying);
 
   return (
     <section className="mt-5">
@@ -123,10 +162,16 @@ export const AddTeacher = ({
         action=""
         id="TeacherForm"
         className="w-full p-3"
-        onSubmit={handleSubmit(createNewTeacher)}
+        onSubmit={
+          isModifying
+            ? handleSubmit(updateTeacher)
+            : handleSubmit(createNewTeacher)
+        }
       >
         <div className="">
-          <h2 className="text-white text-2xl">Add Teacher for</h2>
+          <h2 className="text-white text-2xl">
+            {isModifying ? "Update" : "Add"} Teacher
+          </h2>
           <p className="text-gray-400 text-sm mb-3">
             The fields marked with * are required
           </p>
@@ -244,18 +289,26 @@ export const AddTeacher = ({
             className={`btn-pretty ${isStorePending && "!cursor-not-allowed"}`}
             disabled={isStorePending}
           >
-            {isStorePending ? (
+            {isStorePending || isUpdatePending ? (
               <>
                 <div className="absolute inset-0">
                   <Loader isContained={true} />
                 </div>
-                <span className="text-transparent">Add Teacher</span>
+                {isStorePending && (
+                  <span className="text-transparent">Add Teacher</span>
+                )}
+                {isUpdatePending && (
+                  <span className="text-transparent">Update Teacher</span>
+                )}
               </>
+            ) : isModifying ? (
+              "Update Teacher"
             ) : (
               "Add Teacher"
             )}
           </button>
           <button
+            type="button"
             className={`${
               isStorePending && "!cursor-not-allowed opacity-50"
             } btn-pretty`}

@@ -24,12 +24,14 @@ import DeleteModalTeacher from "@/components/ui/admin/DeleteModalTeacher";
 import { useQueryAdminIndexCourse } from "@/hooks/admin/coursesQueries";
 import { useQueryAdminIndexSubject } from "@/hooks/admin/subjectsQueries";
 import type { Subjects } from "react-hook-form";
+import { SubjectSelect } from "@/components/student/SubjectSelect";
 
 export const TeacherIndex = () => {
   // * global store
   const { authUser } = useGlobalStore();
   // * custom hooks
-  const { queryParams, updateSearchParams } = useDynamicSearchParams();
+  const { queryParams, updateSearchParams, removeSearchParam } =
+    useDynamicSearchParams();
 
   // vars
   const [isFormShowing, setIsFormShowing] = useState(false);
@@ -100,6 +102,16 @@ export const TeacherIndex = () => {
     );
   };
 
+  const handleChange = (e: ChangeEvent<HTMLInputElement>): void => {
+    const key = "search";
+    const search = e.target.value;
+    if (search) {
+      updateSearchParams([{ key, value: search }]);
+    } else {
+      removeSearchParam(key);
+    }
+  };
+
   const teacher = teachers?.data?.find((teacher) => teacher?.id == teacherId);
   console.log(teacher);
 
@@ -123,7 +135,11 @@ export const TeacherIndex = () => {
     }
   }, [isDestroySuccess]);
 
-  console.log(teachers);
+  useEffect(() => {
+    console.log("isModifying:", isModifying);
+  }, [isModifying]);
+
+  console.log(subjects);
 
   // * views
   if (isAssigmentsError) return <pre>teacher error - da gestire</pre>;
@@ -136,14 +152,28 @@ export const TeacherIndex = () => {
             <div className="flex justify-between items-center w-full ">
               <div>
                 {authUser?.type === UserType.ADMIN && (
-                  <>
-                    <p>Selected course:</p>
-                    <CourseSelect
-                      courses={courses}
-                      queryParams={queryParams}
-                      updateSearchParams={updateSearchParams}
-                    />
-                  </>
+                  <div className="flex items-start gap-5">
+                    <div className="flex ">
+                      <input type="search" onChange={(e) => handleChange(e)} />
+                    </div>
+                    <div>
+                      <p>Selected course:</p>
+                      <CourseSelect
+                        courses={courses}
+                        queryParams={queryParams}
+                        updateSearchParams={updateSearchParams}
+                      />
+                    </div>
+                    <div>
+                      <p>Selected subject:</p>
+                      <SubjectSelect
+                        subjects={subjects}
+                        queryParams={queryParams}
+                        updateSearchParams={updateSearchParams}
+                        removeSearchParam={removeSearchParam}
+                      />
+                    </div>
+                  </div>
                 )}
               </div>
 

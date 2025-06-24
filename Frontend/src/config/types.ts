@@ -40,7 +40,7 @@ export type LoginUser = {
 export type Teacher = {
   id?: number | undefined;
   subject_id: string;
-  courses_ids?: number[] | undefined;
+  courses_ids?: string[];
   first_name: string;
   last_name: string;
   email: string;

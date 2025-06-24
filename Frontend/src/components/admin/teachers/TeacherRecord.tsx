@@ -58,18 +58,7 @@ export const TeacherRecord = ({
 
   // queries
 
-  const {
-    mutate: updateMutate,
-    isSuccess: isUpdateSuccess,
-    isPending: isUpdatePending,
-    data: updateData,
-  } = useMutationUpdateTeacher(queryParams, teacher.id as number); // * actions
-
-  // const updateTeacher = async (formData: TeacherFormData) => {
-  //   console.log("try to update");
-  //   formData = { ...formData, id: 0 };
-  //   updateMutate(formData as Teacher);
-  // };
+  // * actions
 
   const onModifyClick = () => {
     !isModifying && setIsModifying(true);
@@ -77,29 +66,6 @@ export const TeacherRecord = ({
     setTeacherToUpdate(teacher);
     console.log(teacherToUpdate);
   };
-
-  // collaterals
-
-  useEffect(() => {
-    if (isUpdateSuccess) {
-      setIsModifying(false);
-      // if (updateData?.isClean) {
-      //   toast.success("No changes made.", {
-      //     style: {
-      //       border: "1px solid blue",
-      //       padding: "16px",
-      //       color: "blue",
-      //     },
-      //     iconTheme: {
-      //       primary: "blue",
-      //       secondary: "#FFFAEE",
-      //     },
-      //   });
-      // } else {
-      toast.success("Teacher updated succesfully");
-      // }
-    }
-  }, [updateData]);
 
   // * views
   return (
