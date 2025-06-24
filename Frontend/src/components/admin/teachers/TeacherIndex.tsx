@@ -29,6 +29,7 @@ import DeleteModalTeacher from "@/components/ui/admin/DeleteModalTeacher";
 import { useQueryAdminIndexCourse } from "@/hooks/admin/coursesQueries";
 import { useQueryAdminIndexSubject } from "@/hooks/admin/subjectsQueries";
 import { SubjectSelect } from "@/components/student/SubjectSelect";
+import { AnimatePresence, motion } from "framer-motion";
 import { debounce } from "lodash";
 
 export const TeacherIndex = () => {
@@ -225,22 +226,38 @@ export const TeacherIndex = () => {
             </div>
           </div>
         </div>
-        {isFormShowing && (
-          <section id="formSection" className="mb-5">
-            <AddOrUpdateTeacher
-              courses={courses}
-              subjects={subjects}
-              queryParams={queryParams}
-              isLoading={isLoading}
-              setIsLoading={setIsLoading}
-              setIsFormShowing={setIsFormShowing}
-              isModifying={isModifying}
-              setIsModifying={setIsModifying}
-              teacherToUpdate={teacherToUpdate}
-              setTeacherToUpdate={setTeacherToUpdate}
-            />
-          </section>
-        )}
+        <AnimatePresence>
+          <motion.section
+            id="formSection"
+            className="mb-5"
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.4, ease: "easeInOut" }}
+          >
+            <section
+              id="formSection"
+              className={`transition-all duration-500 ease-in-out overflow-hidden origin-top ${
+                isFormShowing
+                  ? "max-h-[1000px] opacity-100 scale-y-100"
+                  : "max-h-0 opacity-0 scale-y-0"
+              }`}
+            >
+              <AddOrUpdateTeacher
+                courses={courses}
+                subjects={subjects}
+                queryParams={queryParams}
+                isLoading={isLoading}
+                setIsLoading={setIsLoading}
+                setIsFormShowing={setIsFormShowing}
+                isModifying={isModifying}
+                setIsModifying={setIsModifying}
+                teacherToUpdate={teacherToUpdate}
+                setTeacherToUpdate={setTeacherToUpdate}
+              />
+            </section>
+          </motion.section>
+        </AnimatePresence>
         {/* teachers list (per corso) */}
         <div className="max-lg:w-[92dvw] mx-auto overflow-auto">
           <div className="min-w-fit">
