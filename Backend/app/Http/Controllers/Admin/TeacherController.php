@@ -105,6 +105,7 @@ class TeacherController extends Controller
         if (in_array($data["email"], $emailDB)) {
             return response()->json([
                 "error" => "conflict",
+                "field" => "email",
                 "message" => "Email già registrata"
             ], 409);
         }

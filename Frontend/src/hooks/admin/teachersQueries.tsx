@@ -1,6 +1,11 @@
-import type { Teacher, IndexTeachersParams } from "@/config/types";
+import type { Teacher, IndexTeachersParams, ServerError } from "@/config/types";
+import type { TeacherFormData } from "@/schemas/admin/teachersSchema";
 import { api, adminTeachersEndpoint } from "@/services/api";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { AxiosError } from "axios";
+import type { T } from "node_modules/react-router/dist/development/route-data-WyrduLgj.d.mts";
+import type { Dispatch, SetStateAction } from "react";
+import type { FieldValues, Path, UseFormSetError } from "react-hook-form";
 
 export const useQueryAdminIndexTeacher = (
   params: IndexTeachersParams,
@@ -19,14 +24,28 @@ export const useQueryAdminIndexTeacher = (
   });
 };
 
-export const useMutationStoreTeacher = (params: IndexTeachersParams) => {
+export const useMutationStoreTeacher = <T extends FieldValues>(
+  params: IndexTeachersParams,
+  setError: UseFormSetError<T>
+) => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationKey: ["teachers"],
-    mutationFn: async (newTeacher: unknown) => {
+    mutationFn: async (newTeacher: T) => {
       console.log("post");
       const res = await api.post(adminTeachersEndpoint, newTeacher);
       return res.data;
+    },
+
+    onError: (error: AxiosError<any>) => {
+      const serverError = error.response?.data;
+
+      if (serverError?.field && serverError?.message) {
+        setError(serverError.field as Path<T>, {
+          type: "server",
+          message: serverError.message,
+        });
+      }
     },
 
     onSuccess: () => {

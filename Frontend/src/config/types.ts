@@ -191,3 +191,11 @@ export enum SortOptionAdminTeacher {
   BY_LAST_NAME = "by_last_name",
   BY_EMAIL = "by_email",
 }
+
+// ERRORS
+
+export type ServerError = {
+  error?: string;
+  field: string;
+  message: string;
+};

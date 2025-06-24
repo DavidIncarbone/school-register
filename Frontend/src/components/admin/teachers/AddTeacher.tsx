@@ -74,6 +74,7 @@ export const AddTeacher = ({
     register,
     handleSubmit,
     formState: { errors },
+    setError,
     reset,
   } = useForm({
     resolver: zodResolver(teachersSchema),
@@ -88,7 +89,7 @@ export const AddTeacher = ({
     mutate: storeMutate,
     isSuccess: isStoreSuccess,
     isPending: isStorePending,
-  } = useMutationStoreTeacher(queryParams);
+  } = useMutationStoreTeacher(queryParams, setError);
 
   // actions
 
