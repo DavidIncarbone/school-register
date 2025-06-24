@@ -149,13 +149,17 @@ class TeacherController extends Controller
 
         ]);
 
-
         $data = $request->all();
+        $originalTeacher = Teacher::where("email", $data["email"])->findOrFail()->toArray();
+        $isSame = false;
 
-        $teacher->first_name = $data["first_name"];
+        $teacher["first_name"] = $data["first_name"];
         $teacher->last_name = $data["last_name"];
         $teacher->email = $data["email"];
-        // $teacher->subject_id = $data["subject_id"];
+        $teacher->subject_id = $data["subject_id"];
+
+        $teacherUnchanged = $teacher->isClean();
+
 
         $teacher->update();
 
@@ -166,7 +170,8 @@ class TeacherController extends Controller
         return response()->json([
             "success" => true,
             "message" => "Insegnante modificato con successo",
-            "data" => $teacher
+            "data" => $teacher,
+            "modified" => $isSame
         ]);
     }
 

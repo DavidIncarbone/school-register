@@ -28,7 +28,6 @@ type AddTeacherProps = {
   isLoading: boolean;
   setIsFormShowing: Dispatch<SetStateAction<boolean>>;
   setIsLoading: Dispatch<SetStateAction<boolean>>;
-  teacherId: number;
   teacherToUpdate?: Teacher;
 
   setTeacherToUpdate: Dispatch<SetStateAction<Teacher | undefined>>;
@@ -43,7 +42,6 @@ export const AddTeacher = ({
   setIsFormShowing,
   isModifying,
   setIsModifying,
-  teacherId,
   teacherToUpdate,
 }: AddTeacherProps) => {
   // vars
@@ -98,7 +96,6 @@ export const AddTeacher = ({
     mutate: updateMutate,
     isSuccess: isUpdateSuccess,
     isPending: isUpdatePending,
-    data: updateData,
   } = useMutationUpdateTeacher(
     queryParams,
     teacherToUpdate?.id as number,
@@ -159,16 +156,15 @@ export const AddTeacher = ({
   return (
     <section className="mt-5">
       <form
-        action=""
         id="TeacherForm"
-        className="w-full p-3"
+        className="w-full p-3 bg-black drop-shadow-[0_0_10px_white]"
         onSubmit={
           isModifying
             ? handleSubmit(updateTeacher)
             : handleSubmit(createNewTeacher)
         }
       >
-        <div className="">
+        <div>
           <h2 className="text-white text-2xl">
             {isModifying ? "Update" : "Add"} Teacher
           </h2>
@@ -177,7 +173,7 @@ export const AddTeacher = ({
           </p>
         </div>
         <div className="flex flex-col">
-          <div className="grid grid-cols-3 gap-7 mb-3 max-[640px]:grid-cols-1">
+          <div className="grid lg:grid-cols-3 gap-7 mb-3 grid-cols-1">
             <div className="flex flex-col gap-2">
               <div className="flex flex-col gap-0.5">
                 <label htmlFor="first_name">First Name*</label>
@@ -189,7 +185,6 @@ export const AddTeacher = ({
                   {...register("first_name")}
                   id="first_name"
                   className="border border-white "
-                  // value={isModifying ? teacherToUpdate?.first_name : ""}
                 />
               </div>
               {errors.last_name && (
@@ -209,7 +204,6 @@ export const AddTeacher = ({
                   {...register("last_name")}
                   id="last_name"
                   className="border border-white "
-                  // value={isModifying ? teacherToUpdate?.last_name : ""}
                 />
               </div>
               {errors.last_name && (
@@ -228,7 +222,6 @@ export const AddTeacher = ({
                   id="email"
                   {...register("email")} // name assegnato tramite useForm
                   className="w-full border border-white "
-                  // value={isModifying ? teacherToUpdate?.email : ""}
                 ></input>
               </div>
               {errors.email && (
@@ -240,7 +233,9 @@ export const AddTeacher = ({
             <div className="flex flex-col gap-2 my-3">
               <p>Select Subject*</p>
               <select {...register("subject_id")} id="subject_id">
-                {/* <option value="">Select Subject</option> */}
+                <option value="" selected>
+                  Select Subject
+                </option>
                 {subjects?.map((subject, i) => (
                   <option key={i} value={subject?.id}>
                     {subject?.name}
@@ -255,7 +250,7 @@ export const AddTeacher = ({
             </div>
           </div>
           <p>Select courses*:</p>
-          <div className="grid grid-cols-6 max-[640px]:grid-cols-2 my-3">
+          <div className="grid lg:grid-cols-6 grid-cols-2 my-3">
             {courses?.map((course, i) => {
               return (
                 <div key={i} className="flex gap-2">

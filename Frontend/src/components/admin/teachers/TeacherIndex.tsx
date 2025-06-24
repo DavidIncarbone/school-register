@@ -194,7 +194,11 @@ export const TeacherIndex = () => {
                           +
                         </button>
                       ) : (
-                        <button className="btn-pretty" onClick={handleForm}>
+                        <button
+                          className="btn-pretty text-base"
+                          onClick={handleForm}
+                        >
+                          <span className="md:hidden lg:inline">Hide Form</span>{" "}
                           -
                         </button>
                       )}
@@ -216,7 +220,6 @@ export const TeacherIndex = () => {
               setIsFormShowing={setIsFormShowing}
               isModifying={isModifying}
               setIsModifying={setIsModifying}
-              teacherId={teacherId}
               teacherToUpdate={teacherToUpdate}
               setTeacherToUpdate={setTeacherToUpdate}
             />
