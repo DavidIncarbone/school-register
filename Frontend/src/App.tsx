@@ -24,109 +24,96 @@ import { TeacherIndex } from "./components/admin/teachers/TeacherIndex";
 import { useGlobalStore } from "./store/useGlobalStore";
 import { useQueryClient } from "@tanstack/react-query";
 import { StudentExamsPage } from "./pages/student/StudentExamsPage";
+import { AuthSuccess } from "./pages/admin/AuthSuccess";
 
 function App() {
-    const { setQueryClient } = useGlobalStore();
+  const { setQueryClient } = useGlobalStore();
 
-    const queryClient = useQueryClient();
+  const queryClient = useQueryClient();
 
-    // collaterals effect
-    useEffect(() => {
-        const fetchCsrfCookie = async () => {
-            try {
-                await api.get("/sanctum/csrf-cookie");
-            } catch (err) {
-                console.error(err);
-            }
-        };
-        setQueryClient(queryClient);
-        fetchCsrfCookie();
-    }, []);
+  // collaterals effect
+  useEffect(() => {
+    const fetchCsrfCookie = async () => {
+      try {
+        await api.get("/sanctum/csrf-cookie");
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    setQueryClient(queryClient);
+    fetchCsrfCookie();
+  }, []);
 
-    return (
-        <>
-            {/* <Debug /> */}
-            <Routes>
-                <Route path="/" Component={DefaultLayout}>
-                    {/* pagine con auth */}
-                    <Route Component={PrivateRoutes}>
-                        <Route index Component={DashboardPage} />
-                        <Route
-                            path="/courses/:id"
-                            Component={CourseDetailPage}
-                        />
-                        <Route
-                            path="/students/:id"
-                            Component={StudentDetailPage}
-                        />
-                        <Route
-                            path="/weekly-schedule"
-                            Component={WeeklySchedulePage}
-                        />
-                        <Route
-                            path="/assignments"
-                            Component={AssignmentsPage}
-                        />
-                        <Route
-                            path="/teacher-exams"
-                            element={
-                                <RequireRole role={UserType.TEACHER}>
-                                    <TeacherExamsPage />
-                                </RequireRole>
-                            }
-                        />
-                        <Route
-                            path="/search-students"
-                            element={
-                                <RequireRole role={UserType.TEACHER}>
-                                    <SearchStudentsPage />
-                                </RequireRole>
-                            }
-                        />
-                        <Route
-                            path="/attendance-form"
-                            element={
-                                <RequireRole role={UserType.TEACHER}>
-                                    <AttendanceFormPage />
-                                </RequireRole>
-                            }
-                        />
-                        <Route
-                            path="/subjects"
-                            element={
-                                <RequireRole role={UserType.STUDENT}>
-                                    <SubjectsPage />
-                                </RequireRole>
-                            }
-                        />
-                        <Route
-                            path="/student-exams"
-                            element={
-                                <RequireRole role={UserType.STUDENT}>
-                                    <StudentExamsPage />
-                                </RequireRole>
-                            }
-                        />
+  return (
+    <>
+      {/* <Debug /> */}
+      <Routes>
+        <Route path="/" Component={DefaultLayout}>
+          {/* pagine con auth */}
+          <Route Component={PrivateRoutes}>
+            <Route index Component={DashboardPage} />
+            <Route path="/courses/:id" Component={CourseDetailPage} />
+            <Route path="/students/:id" Component={StudentDetailPage} />
+            <Route path="/weekly-schedule" Component={WeeklySchedulePage} />
+            <Route path="/assignments" Component={AssignmentsPage} />
+            <Route
+              path="/teacher-exams"
+              element={
+                <RequireRole role={UserType.TEACHER}>
+                  <TeacherExamsPage />
+                </RequireRole>
+              }
+            />
+            <Route
+              path="/search-students"
+              element={
+                <RequireRole role={UserType.TEACHER}>
+                  <SearchStudentsPage />
+                </RequireRole>
+              }
+            />
+            <Route
+              path="/attendance-form"
+              element={
+                <RequireRole role={UserType.TEACHER}>
+                  <AttendanceFormPage />
+                </RequireRole>
+              }
+            />
+            <Route
+              path="/subjects"
+              element={
+                <RequireRole role={UserType.STUDENT}>
+                  <SubjectsPage />
+                </RequireRole>
+              }
+            />
+            <Route
+              path="/student-exams"
+              element={
+                <RequireRole role={UserType.STUDENT}>
+                  <StudentExamsPage />
+                </RequireRole>
+              }
+            />
 
-                        {/* ADMIN ROUTES */}
+            {/* ADMIN ROUTES */}
 
-                        <Route
-                            path="/admin/teachers"
-                            element={<TeacherIndex />}
-                        />
-                    </Route>
+            <Route path="/admin/teachers" element={<TeacherIndex />} />
+          </Route>
 
-                    {/* pagine senza auth */}
-                    <Route Component={PublicRoutes}>
-                        <Route path="/login" Component={LoginPage} />
-                        <Route path="/register" Component={RegistrationPage} />
-                        <Route path="/unauthorized" Component={Unauthorized} />
-                    </Route>
-                </Route>
-            </Routes>
-            <Toaster position="top-right" reverseOrder={false} />
-        </>
-    );
+          {/* pagine senza auth */}
+          <Route Component={PublicRoutes}>
+            <Route path="/login" Component={LoginPage} />
+            <Route path="/register" Component={RegistrationPage} />
+            <Route path="/unauthorized" Component={Unauthorized} />
+          </Route>
+          <Route path="auth/success" Component={AuthSuccess}></Route>
+        </Route>
+      </Routes>
+      <Toaster position="top-right" reverseOrder={false} />
+    </>
+  );
 }
 
 export default App;

@@ -8,12 +8,14 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema } from "@/schemas/loginSchema";
 import toast from "react-hot-toast";
+import GoogleLoginBadge from "@/components/ui/buttons/GoogleLoginBadge";
 
 export default function LoginPage() {
   // * vars
   const navigate = useNavigate();
   const { authUser, setAuthUser, profile } = useGlobalStore();
   const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingGoogle, setIsLoadingGoogle] = useState(false);
 
   // * actions
 
@@ -86,13 +88,20 @@ export default function LoginPage() {
               <span className="text-red-500">{errors?.password?.message}</span>
             </div>
             <button
-              disabled={isLoading}
+              disabled={isLoading || isLoadingGoogle}
               type="submit"
-              className={`${isLoading && "cursor-not-allowed"} capitalize`}
+              className={`${
+                isLoading || isLoadingGoogle ? "cursor-not-allowed" : ""
+              } capitalize`}
             >
               {isLoading ? <Loader isContained={true} /> : "Sign in"}
             </button>
           </form>
+          <GoogleLoginBadge
+            isLoadingGoogle={isLoadingGoogle}
+            setIsLoadingGoogle={setIsLoadingGoogle}
+            isLoading={isLoading}
+          />
 
           <div className="text-sm space-x-1">
             <span>Don't have an account?</span>

@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\TeacherController as AdminTeacherController;
 use App\Http\Controllers\Admin\CourseController as AdminCourseController;
 use App\Http\Controllers\Admin\SubjectController as AdminSubjectController;
 use App\Http\Controllers\Admin\PresenceController as AdminPresenceController;
+use App\Http\Controllers\Auth\GoogleAuthController;
 use App\Http\Controllers\Guest\AnnouncementController;
 use App\Http\Controllers\Guest\AssignmentController;
 use App\Http\Controllers\Guest\CourseController;
@@ -25,15 +26,6 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Validation\Rule;
-// GOOGLE OAUTH2
-use App\Http\Controllers\Auth\GoogleAuthController;
-use Laravel\Socialite\Facades\Socialite;
-
-Route::get('/test-socialite', function () {
-    $provider = Socialite::driver('google');
-    dd(get_class_methods($provider)); // Mostra tutti i metodi disponibili
-});
-
 
 
 Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
@@ -168,5 +160,5 @@ Route::post("/retrieve-temp-user", function () {
 
 // GOOGLE OAUTH2
 
-Route::get('/auth/google/redirect', [GoogleAuthController::class, 'redirect']);
-Route::get('/auth/google/callback', [GoogleAuthController::class, 'callback']);
+Route::get('/auth/google/redirect', [GoogleAuthController::class, 'redirect'])->name('google.redirect');
+Route::get('/auth/google/callback', [GoogleAuthController::class, 'callback'])->name('google.callback');
