@@ -18,6 +18,7 @@ import { useDynamicSearchParams } from "@/hooks/useDynamicSearchParams";
 import { useGlobalStore } from "@/store/useGlobalStore";
 import type { UseQueryResult } from "@tanstack/react-query";
 import {
+  useCallback,
   useEffect,
   useRef,
   useState,
@@ -29,8 +30,8 @@ import DeleteModalTeacher from "@/components/ui/admin/DeleteModalTeacher";
 import { useQueryAdminIndexCourse } from "@/hooks/admin/coursesQueries";
 import { useQueryAdminIndexSubject } from "@/hooks/admin/subjectsQueries";
 import { SubjectSelect } from "@/components/student/SubjectSelect";
-import { AnimatePresence, motion } from "framer-motion";
 import { debounce } from "lodash";
+import { Heading3 } from "lucide-react";
 
 export const TeacherIndex = () => {
   // * global store
@@ -86,6 +87,12 @@ export const TeacherIndex = () => {
     isModifying && setIsModifying(false);
   };
 
+  useEffect(() => {
+    if (!isModifying) {
+      setTeacherToUpdate(undefined);
+    }
+  }, [isModifying]);
+
   const destroyTeacher = async (teacherId: number) => {
     console.log("destroy");
     destroyMutate(teacherId);
@@ -108,17 +115,44 @@ export const TeacherIndex = () => {
     );
   };
 
-  const debouncedHandleInputChange = useRef(
-    debounce((e: ChangeEvent<HTMLInputElement>) => {
+  // const debouncedHandleInputChange = useRef(
+  //   debounce((e: ChangeEvent<HTMLInputElement>) => {
+  //     const key = "search";
+  //     const search = e.target.value;
+  //     if (search) {
+  //       updateSearchParams([{ key, value: search }]);
+  //     } else {
+  //       removeSearchParam(key);
+  //     }
+  //   }, 500)
+  // ).current;
+
+  // const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
+  //   const key = "search";
+  //   const search = e.target.value;
+  //   if (search) {
+  //     updateSearchParams([{ key, value: search }]);
+  //   } else {
+  //     removeSearchParam(key);
+  //   }
+  // };
+
+  const handleInputChange = useCallback(
+    debounce((value: string) => {
       const key = "search";
-      const search = e.target.value;
-      if (search) {
-        updateSearchParams([{ key, value: search }]);
+      if (value) {
+        updateSearchParams([{ key, value }]);
       } else {
         removeSearchParam(key);
       }
-    }, 500)
-  ).current;
+    }, 500),
+    [updateSearchParams, removeSearchParam]
+  );
+
+  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    handleInputChange(e.target.value);
+    console.log(teachers?.data);
+  };
 
   const teacher = teachers?.data?.find((teacher) => teacher?.id == teacherId);
   console.log(teacher);
@@ -176,8 +210,9 @@ export const TeacherIndex = () => {
                         type="search"
                         id="search"
                         placeholder="Mario Rossi, example@mail.com"
-                        onChange={debouncedHandleInputChange}
+                        onChange={onChange}
                         className="text-sm"
+                        defaultValue={queryParams?.search}
                       />
                     </div>
                     <div className="flex justify-between">
@@ -226,73 +261,70 @@ export const TeacherIndex = () => {
             </div>
           </div>
         </div>
-        <AnimatePresence>
-          <motion.section
+        {isFormShowing && (
+          <section
             id="formSection"
-            className="mb-5"
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.4, ease: "easeInOut" }}
+            className={`transition-all duration-500 ease-in-out  origin-top my-5 ${
+              isFormShowing
+                ? "max-h-[1000px] opacity-100 scale-y-100"
+                : "max-h-0 opacity-0 scale-y-0"
+            }`}
           >
-            <section
-              id="formSection"
-              className={`transition-all duration-500 ease-in-out overflow-hidden origin-top ${
-                isFormShowing
-                  ? "max-h-[1000px] opacity-100 scale-y-100"
-                  : "max-h-0 opacity-0 scale-y-0"
-              }`}
-            >
-              <AddOrUpdateTeacher
-                courses={courses}
-                subjects={subjects}
-                queryParams={queryParams}
-                isLoading={isLoading}
-                setIsLoading={setIsLoading}
-                setIsFormShowing={setIsFormShowing}
-                isModifying={isModifying}
-                setIsModifying={setIsModifying}
-                teacherToUpdate={teacherToUpdate}
-                setTeacherToUpdate={setTeacherToUpdate}
-              />
-            </section>
-          </motion.section>
-        </AnimatePresence>
-        {/* teachers list (per corso) */}
-        <div className="max-lg:w-[92dvw] mx-auto overflow-auto">
-          <div className="min-w-fit">
-            <TeacherHead
-              sortingCols={sortingCols}
-              activeDir={activeDir}
-              activeSort={activeSort}
-              onClick={handleSortingColClick}
+            <AddOrUpdateTeacher
+              courses={courses}
+              subjects={subjects}
+              queryParams={queryParams}
+              isLoading={isLoading}
+              setIsLoading={setIsLoading}
+              setIsFormShowing={setIsFormShowing}
+              isModifying={isModifying}
+              setIsModifying={setIsModifying}
+              teacherToUpdate={teacherToUpdate}
+              setTeacherToUpdate={setTeacherToUpdate}
             />
-            <div className="border rounded-b-sm overflow-hidden bg-zinc-900">
-              {isTeachersLoading ? (
-                <div className="h-[425px] animate-pulse bg-zinc-800"></div>
-              ) : (
-                teachers?.data.map((teacher) => (
-                  <TeacherRecord
-                    key={teacher.id}
-                    teacher={teacher}
-                    setIsOpen={setIsOpen}
-                    setTeacherId={setTeacherId}
-                    setTeacherEmail={setTeacherEmail}
-                    isFormShowing={isFormShowing}
-                    setIsFormShowing={setIsFormShowing}
-                    isModifying={isModifying}
-                    setIsModifying={setIsModifying}
-                    queryParams={queryParams}
-                    width="w-80"
-                    teacherToUpdate={teacherToUpdate}
-                    setTeacherToUpdate={setTeacherToUpdate}
-                  />
-                ))
-              )}
+          </section>
+        )}
+        {/* teachers list (per corso) */}
+
+        {teachers?.data.length == 0 ? (
+          <h3 className="text-center mt-5 text-3xl">
+            Nessun risultato per questa ricerca
+          </h3>
+        ) : (
+          <div className="max-lg:w-[92dvw] mx-auto overflow-auto">
+            <div className="min-w-fit">
+              <TeacherHead
+                sortingCols={sortingCols}
+                activeDir={activeDir}
+                activeSort={activeSort}
+                onClick={handleSortingColClick}
+              />
+              <div className="border rounded-b-sm overflow-hidden bg-zinc-900">
+                {isTeachersLoading ? (
+                  <div className="h-[425px] animate-pulse bg-zinc-800"></div>
+                ) : (
+                  teachers?.data.map((teacher) => (
+                    <TeacherRecord
+                      key={teacher.id}
+                      teacher={teacher}
+                      setIsOpen={setIsOpen}
+                      setTeacherId={setTeacherId}
+                      setTeacherEmail={setTeacherEmail}
+                      isFormShowing={isFormShowing}
+                      setIsFormShowing={setIsFormShowing}
+                      isModifying={isModifying}
+                      setIsModifying={setIsModifying}
+                      queryParams={queryParams}
+                      width="w-80"
+                      teacherToUpdate={teacherToUpdate}
+                      setTeacherToUpdate={setTeacherToUpdate}
+                    />
+                  ))
+                )}
+              </div>
             </div>
           </div>
-        </div>
-
+        )}
         <p className="mt-2 landscape:hidden">
           Rotate the device for better visualization
         </p>

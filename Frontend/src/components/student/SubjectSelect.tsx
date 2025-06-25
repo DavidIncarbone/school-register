@@ -1,4 +1,9 @@
-import type { IndexAssignmentsParams, Subject } from "@/config/types";
+import {
+  UserType,
+  type IndexAssignmentsParams,
+  type Subject,
+} from "@/config/types";
+import { useGlobalStore } from "@/store/useGlobalStore";
 import type { ChangeEvent } from "react";
 
 export const SubjectSelect = ({
@@ -12,15 +17,16 @@ export const SubjectSelect = ({
   queryParams: IndexAssignmentsParams;
   cb?: () => void;
   updateSearchParams: (params: { key: string; value: string }[]) => void;
-  removeSearchParam: (key: string) => void;
+  removeSearchParam?: (key: string) => void;
 }) => {
+  const { authUser } = useGlobalStore();
   const handleSubjectSelected = async (e: ChangeEvent<HTMLSelectElement>) => {
     const key = "subject_id";
     const selectedSubjectId = e.target.value;
     if (selectedSubjectId) {
       updateSearchParams([{ key, value: selectedSubjectId }]);
     } else {
-      removeSearchParam(key);
+      removeSearchParam && removeSearchParam(key);
     }
     if (cb) cb();
   };
@@ -32,9 +38,15 @@ export const SubjectSelect = ({
         name="subject_id"
         className="no-default w-fit capitalize italic cursor-pointer"
       >
-        <option selected value="" className="text-base not-italic">
-          Show all
-        </option>
+        {authUser?.type === UserType.ADMIN ? (
+          <option selected value="" className="text-base not-italic">
+            Show all
+          </option>
+        ) : (
+          <option selected hidden disabled className="text-base not-italic">
+            Selected Subject
+          </option>
+        )}
         {subjects &&
           subjects.map((subject, i) => (
             <option
