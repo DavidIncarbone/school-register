@@ -155,4 +155,4 @@ school-register-1/
 
 ---
 
-For more details, see [`Backend/README.md`](Backend/README.md ) and
+For more details, see [`Backend/README.md`](Backend/README.md ) and [`Frontend/README.md`](Frontend/README.md ).
